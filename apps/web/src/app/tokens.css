@@ -1,0 +1,50 @@
+/*
+ * Design tokens: the only place for colours, spacing, typography, borders.
+ * Components reference these variables; a designer can restyle the site by editing this file.
+ * Current look: lo-fi wireframe (greys, one blue accent for primary buttons only).
+ */
+:root {
+  /* Colour */
+  --color-bg: #ffffff;
+  --color-surface: #f4f4f4;
+  --color-surface-strong: #e6e6e6;
+  --color-text: #1a1a1a;
+  --color-text-muted: #555555; /* 7.4:1 on white */
+  --color-border: #c4c4c4;
+  --color-border-strong: #6b6b6b;
+  --color-bar: #8a8a8a;
+  --color-accent: #2f5d8a; /* primary buttons only; 6.9:1 with white text */
+  --color-accent-text: #ffffff;
+  --color-focus: #1a1a1a;
+  --color-placeholder-bg: #fff2a8; /* highlighted [placeholders] in the PPID letter */
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --leading: 1.5;
+  --weight-bold: 650;
+
+  /* Shape */
+  --radius: 4px;
+  --border-width: 1px;
+  --focus-width: 3px;
+
+  /* Layout */
+  --content-max: 1200px;
+  --bar-height: 1rem;
+}

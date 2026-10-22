@@ -1,0 +1,449 @@
+{
+  "id": "ab0404cf-0c91-49c6-bd8a-8443f854d8fd",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.bidang_urusan": {
+      "name": "bidang_urusan",
+      "schema": "",
+      "columns": {
+        "kode": {
+          "name": "kode",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nama": {
+          "name": "nama",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pagu_indikatif_2026": {
+          "name": "pagu_indikatif_2026",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proporsi": {
+          "name": "proporsi",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_document_id": {
+          "name": "source_document_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "page_ref": {
+          "name": "page_ref",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "bidang_urusan_source_document_id_source_document_id_fk": {
+          "name": "bidang_urusan_source_document_id_source_document_id_fk",
+          "tableFrom": "bidang_urusan",
+          "tableTo": "source_document",
+          "columnsFrom": [
+            "source_document_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.evidence": {
+      "name": "evidence",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "program_kode": {
+          "name": "program_kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "jenis": {
+          "name": "jenis",
+          "type": "evidence_jenis",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_document_id": {
+          "name": "source_document_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "page_ref": {
+          "name": "page_ref",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cakupan_pencarian": {
+          "name": "cakupan_pencarian",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "checked_at": {
+          "name": "checked_at",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "catatan": {
+          "name": "catatan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "evidence_program_kode_program_kode_fk": {
+          "name": "evidence_program_kode_program_kode_fk",
+          "tableFrom": "evidence",
+          "tableTo": "program",
+          "columnsFrom": [
+            "program_kode"
+          ],
+          "columnsTo": [
+            "kode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "evidence_source_document_id_source_document_id_fk": {
+          "name": "evidence_source_document_id_source_document_id_fk",
+          "tableFrom": "evidence",
+          "tableTo": "source_document",
+          "columnsFrom": [
+            "source_document_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.funding": {
+      "name": "funding",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "program_kode": {
+          "name": "program_kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tahun": {
+          "name": "tahun",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "jenis": {
+          "name": "jenis",
+          "type": "funding_jenis",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "jumlah_juta_rp": {
+          "name": "jumlah_juta_rp",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_document_id": {
+          "name": "source_document_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "page_ref": {
+          "name": "page_ref",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "funding_program_kode_program_kode_fk": {
+          "name": "funding_program_kode_program_kode_fk",
+          "tableFrom": "funding",
+          "tableTo": "program",
+          "columnsFrom": [
+            "program_kode"
+          ],
+          "columnsTo": [
+            "kode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "funding_source_document_id_source_document_id_fk": {
+          "name": "funding_source_document_id_source_document_id_fk",
+          "tableFrom": "funding",
+          "tableTo": "source_document",
+          "columnsFrom": [
+            "source_document_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "funding_program_kode_tahun_jenis_unique": {
+          "name": "funding_program_kode_tahun_jenis_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "program_kode",
+            "tahun",
+            "jenis"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.program": {
+      "name": "program",
+      "schema": "",
+      "columns": {
+        "kode": {
+          "name": "kode",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nama": {
+          "name": "nama",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bidang_kode": {
+          "name": "bidang_kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "indikator": {
+          "name": "indikator",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "satuan": {
+          "name": "satuan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kondisi_awal": {
+          "name": "kondisi_awal",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "target_2026": {
+          "name": "target_2026",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_document_id": {
+          "name": "source_document_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "page_ref": {
+          "name": "page_ref",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "verified": {
+          "name": "verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "program_bidang_kode_bidang_urusan_kode_fk": {
+          "name": "program_bidang_kode_bidang_urusan_kode_fk",
+          "tableFrom": "program",
+          "tableTo": "bidang_urusan",
+          "columnsFrom": [
+            "bidang_kode"
+          ],
+          "columnsTo": [
+            "kode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "program_source_document_id_source_document_id_fk": {
+          "name": "program_source_document_id_source_document_id_fk",
+          "tableFrom": "program",
+          "tableTo": "source_document",
+          "columnsFrom": [
+            "source_document_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.source_document": {
+      "name": "source_document",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "source_document_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "checked_at": {
+          "name": "checked_at",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "source_document_type_version_unique": {
+          "name": "source_document_type_version_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "type",
+            "version"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.evidence_jenis": {
+      "name": "evidence_jenis",
+      "schema": "public",
+      "values": [
+        "RENCANA",
+        "ANGGARAN",
+        "PELAKSANAAN"
+      ]
+    },
+    "public.funding_jenis": {
+      "name": "funding_jenis",
+      "schema": "public",
+      "values": [
+        "INDIKATIF_RPJMD"
+      ]
+    },
+    "public.source_document_type": {
+      "name": "source_document_type",
+      "schema": "public",
+      "values": [
+        "RPJMD",
+        "RKPD"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

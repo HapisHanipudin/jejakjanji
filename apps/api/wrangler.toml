@@ -1,0 +1,16 @@
+name = "jejakjanji-api"
+main = "src/index.ts"
+compatibility_date = "2026-10-22"
+# Required by node-postgres (pg) on Workers.
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Comma-separated list of origins allowed by CORS.
+CORS_ORIGINS = "http://localhost:3000"
+
+# PLACEHOLDER: replace with the id from `wrangler hyperdrive create` once the Postgres host is chosen.
+# Local dev does not use this id: `wrangler dev` reads
+# CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE from the environment / .env instead.
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "00000000000000000000000000000000"

@@ -1,0 +1,7 @@
+bun.lock
+drizzle/
+.wrangler/
+.next/
+data/*.csv
+apps/api/worker-configuration.d.ts
+apps/web/next-env.d.ts

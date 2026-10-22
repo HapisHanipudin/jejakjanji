@@ -1,0 +1,18 @@
+{
+  "name": "@jejakjanji/shared",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts",
+    "./format": "./src/format.ts",
+    "./status": "./src/status.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.4",
+    "zod": "^4.6.7"
+  }
+}

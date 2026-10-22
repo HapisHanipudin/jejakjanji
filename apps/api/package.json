@@ -1,0 +1,20 @@
+{
+  "name": "@jejakjanji/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --env-file ../../.env",
+    "cf-typegen": "wrangler types",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@jejakjanji/shared": "workspace:*",
+    "drizzle-orm": "^0.45.4",
+    "hono": "^4.13.13",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1",
+    "wrangler": "^4.151.3"
+  }
+}
