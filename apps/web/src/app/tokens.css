@@ -1,10 +1,13 @@
 /*
  * Design tokens: the only place for colours, spacing, typography, borders.
- * Components reference these variables; a designer can restyle the site by editing this file.
+ * Declared in Tailwind's @theme, so each token is both a CSS variable (globals.css) and a utility
+ * (`bg-surface`, `text-text-muted`, `font-mono`, `text-sm`). A designer restyles the site here only.
+ * `static` keeps every variable in the output even when no utility uses it.
  * Current look: lo-fi wireframe (greys, one blue accent for primary buttons only).
  */
-:root {
-  /* Colour */
+@theme static {
+  /* Colour: drop Tailwind's palette so these are the only colours. */
+  --color-*: initial;
   --color-bg: #ffffff;
   --color-surface: #f4f4f4;
   --color-surface-strong: #e6e6e6;
@@ -37,7 +40,7 @@
   --text-xl: 1.5rem;
   --text-2xl: 2rem;
   --leading: 1.5;
-  --weight-bold: 650;
+  --font-weight-bold: 650;
 
   /* Shape */
   --radius: 4px;

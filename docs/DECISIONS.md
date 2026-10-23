@@ -123,9 +123,12 @@ tidak berubah.
 
 - **Next.js 16.4.2** (dari `create-next-app@latest`), App Router, TypeScript strict (`tsconfig` mewarisi
   `tsconfig.base.json`). Kode di `apps/web/src/`. Tanpa adapter deploy; hosting web belum diputuskan.
-- **Token desain: CSS variables**, bukan Tailwind. Semua warna, jarak, tipografi, dan bentuk ada di satu
-  berkas `src/app/tokens.css`; `globals.css` hanya memakai variabel itu. Alasan: tanpa dependensi
-  tambahan, dan desainer cukup mengubah satu berkas. Tampilan masih wireframe lo-fi (abu-abu, aksen
+- **Token desain: Tailwind v4 `@theme static`** di satu berkas `src/app/tokens.css` (diimpor dari
+  `globals.css` setelah `@import 'tailwindcss'`). Setiap token jadi CSS variable sekaligus utility
+  (`bg-surface`, `font-mono`). Palet warna bawaan Tailwind dihapus (`--color-*: initial`) supaya hanya
+  warna token yang tersedia. Preflight Tailwind tidak diimpor (hanya `theme.css` dan `utilities.css`)
+  karena komponen ditulis di atas gaya bawaan browser; preflight menghapus bullet daftar, tebal heading,
+  dan garis bawah tautan. Desainer cukup mengubah satu berkas. Tampilan masih wireframe lo-fi (abu-abu, aksen
   `#2f5d8a` hanya untuk tombol utama).
 - **`cacheComponents` dimatikan** (create-next-app menyalakannya bawaan). Dengan Cache Components,
   `notFound()` setelah streaming dimulai tetap berstatus 200 (dokumentasi Next "Streaming > Status

@@ -1,4 +1,9 @@
 /* Layout and component styles. Values come from tokens.css only. */
+/* Tailwind without Preflight: keep browser defaults the components were written against. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import './tokens.css';
 
 *,
 *::before,
@@ -84,7 +89,7 @@ a {
   padding-block: var(--space-3);
 }
 .logo {
-  font-weight: var(--weight-bold);
+  font-weight: var(--font-weight-bold);
   font-size: var(--text-lg);
   text-decoration: none;
 }
@@ -103,7 +108,7 @@ a {
 }
 .nav a[aria-current='page'] {
   border-bottom-color: var(--color-text);
-  font-weight: var(--weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 .site-footer {
   border-top: var(--border-width) solid var(--color-border);
@@ -354,7 +359,7 @@ th.num {
   font-variant-numeric: tabular-nums;
 }
 tfoot td {
-  font-weight: var(--weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 .table-wrap {
   overflow-x: auto;
@@ -374,7 +379,7 @@ tfoot td {
 }
 .field label,
 legend {
-  font-weight: var(--weight-bold);
+  font-weight: var(--font-weight-bold);
   font-size: var(--text-sm);
 }
 input,
