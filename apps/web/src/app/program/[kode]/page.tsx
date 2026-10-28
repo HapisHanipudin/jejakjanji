@@ -66,9 +66,9 @@ export default async function ProgramDetailPage({ params }: PageProps<'/program/
 
       <div className="detail-grid">
         <section className="area-indikator box" aria-labelledby="indikator-title">
-          <h2 id="indikator-title">Indikator kinerja</h2>
+          <h2 id="indikator-title">Indikator utama</h2>
           <dl>
-            <dt className="small muted">Indikator</dt>
+            <dt className="small muted">Indikator utama</dt>
             <dd>
               {p.indikator} ({p.satuan})
             </dd>

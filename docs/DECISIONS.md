@@ -152,8 +152,8 @@ tidak berubah.
   di dalam kartu tetap bisa difokus tanpa elemen interaktif bersarang.
 - **Status bukti** di UI memakai garis solid (ada) atau putus-putus (belum diketahui) plus teks, tidak
   pernah hanya warna. "Belum diketahui" tidak memakai merah.
-- **"Sudah dikurasi"** di beranda = jumlah program yang dikembalikan API. Angka 295 program RPJMD adalah
-  konstanta `TOTAL_PROGRAM_RPJMD` bertanda TODO di `src/content/site.ts`.
+- **"Sudah dikurasi"** di beranda = jumlah program yang dikembalikan API. Angka 82 program prioritas daerah bersumber pada
+  RPJMD Tabel III.28, mulai PDF 337, diperiksa 22 Oktober 2026; disimpan di `TOTAL_PROGRAM_RPJMD`.
 - **"Dipakai untuk"** pada tabel dokumen sumber adalah teks editorial per tipe dokumen
   (`DIPAKAI_UNTUK` di `site.ts`), karena API tidak punya field itu.
 - **Bagan bidang urusan**: API tidak punya nomor tabel, jadi baris sumber hanya menampilkan dokumen,

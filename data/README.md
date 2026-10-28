@@ -1,7 +1,6 @@
 # data/
 
-`scripts/seed.ts` membaca dua file berikut. Keduanya **belum ada di repo** dan harus diekspor
-dari Google Sheet tim. Seed berhenti dengan pesan galat bila salah satunya tidak ada. Jangan
+`scripts/seed.ts` membaca dua file berikut. Keduanya tersedia di repo: 10 program dan 44 bidang urusan berkode, ditambah satu baris jumlah tanpa kode yang dilewati seed. Berkas berasal dari ekspor Google Sheet tim. Seed berhenti dengan pesan galat bila salah satunya tidak ada. Jangan
 mengisi file ini dengan data karangan.
 
 ## Cara ekspor

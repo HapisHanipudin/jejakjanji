@@ -1,5 +1,5 @@
 // TODO: replace with a count from the API once the full RPJMD program list is imported.
-export const TOTAL_PROGRAM_RPJMD = 295;
+export const TOTAL_PROGRAM_RPJMD = 82;
 
 // TODO: replace with the real correction contact (email or form URL).
 export const KONTAK_KOREKSI = '[kontak koreksi]';

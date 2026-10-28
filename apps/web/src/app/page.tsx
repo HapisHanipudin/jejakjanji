@@ -35,13 +35,13 @@ export default async function HomePage() {
         <div className="box" aria-label="Ringkasan">
           {programs.ok ? (
             <p>
-              <strong>{TOTAL_PROGRAM_RPJMD} program RPJMD</strong>, {programs.data.data.length}{' '}
-              sudah dikurasi
+              <strong>{TOTAL_PROGRAM_RPJMD} program prioritas daerah</strong>,{' '}
+              {programs.data.data.length} sudah dikurasi
             </p>
           ) : (
             <>
               <p>
-                <strong>{TOTAL_PROGRAM_RPJMD} program RPJMD</strong>
+                <strong>{TOTAL_PROGRAM_RPJMD} program prioritas daerah</strong>
               </p>
               <ErrorState
                 pesan={programs.pesan}
@@ -49,6 +49,9 @@ export default async function HomePage() {
               />
             </>
           )}
+          <p className="source">
+            Sumber: RPJMD Tabel III.28, mulai hal. PDF 337, diperiksa 22 Oktober 2026.
+          </p>
         </div>
       </section>
 

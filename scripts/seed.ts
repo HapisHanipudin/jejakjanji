@@ -22,7 +22,7 @@ const SOURCES = {
   RKPD: {
     title: 'RKPD Provinsi DKI Jakarta 2026',
     type: 'RKPD',
-    url: null,
+    url: 'https://bappeda.jakarta.go.id/show_file/doc_list/kO5eh8zrQTzJVKQFtpoYr0wXrAvXKvMdOlUcxwCt.pdf',
     version: 'Pergub Nomor 21 Tahun 2025',
     checkedAt: CHECKED_AT,
   },
