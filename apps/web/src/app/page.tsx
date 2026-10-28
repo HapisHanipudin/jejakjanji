@@ -5,7 +5,7 @@ import { SourceBox } from '@/components/SourceBox';
 import { EmptyState, ErrorState, PaguLabel } from '@/components/States';
 import { TOTAL_PROGRAM_RPJMD } from '@/content/site';
 import { getBidangList, getProgramList, getSumberList } from '@/lib/data';
-import { formatAngka } from '@/lib/format';
+import { formatPersen } from '@/lib/format';
 
 export default async function HomePage() {
   const [programs, bidang, sumber] = await Promise.all([
@@ -63,12 +63,10 @@ export default async function HomePage() {
           <EmptyState>Belum ada data bidang urusan.</EmptyState>
         ) : (
           (() => {
-            const top = [...bidang.data.data]
+            const top = bidang.data.data
+              .filter((b) => ['1', '2', '3'].includes(b.kode.split('.')[0]!))
               .sort((a, b) => b.paguIndikatif2026 - a.paguIndikatif2026)
               .slice(0, 6);
-            const withPrograms = new Set(
-              programs.ok ? programs.data.data.map((p) => p.bidangKode) : [],
-            );
             const docs = sumber.ok ? sumber.data.data : [];
             const docIds = [...new Set(top.map((b) => b.sourceDocumentId))];
             return (
@@ -82,14 +80,11 @@ export default async function HomePage() {
                     key: b.kode,
                     label: b.nama,
                     value: b.paguIndikatif2026,
-                    href: withPrograms.has(b.kode)
-                      ? `/program?bidang=${encodeURIComponent(b.kode)}`
-                      : undefined,
+                    href: `/program?bidang=${encodeURIComponent(b.kode)}`,
                     display: (
                       <>
                         <Money jumlah={b.paguIndikatif2026} satuan="rp" /> (
-                        {formatAngka(b.proporsi, 2)}
-                        %)
+                        {formatPersen(b.proporsi)})
                       </>
                     ),
                   }))}

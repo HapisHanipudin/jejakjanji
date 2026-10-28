@@ -167,3 +167,9 @@ tidak berubah.
 - **Nama komponen** dalam bahasa Inggris sesuai aturan identifier: `Header`, `Footer`, `ProgramCard`
   (Kartu Program), `StatusBadge` (Lencana Status), `Money` (Angka Uang), `BarChart` (Bagan Batang),
   `SourceBox` (KotakSumber), `PpidDraft`, `RequestTracker` (Pelacak).
+
+## Pemeriksaan klasifikasi bagan — 28 Oktober 2026
+
+CSV dan RKPD PDF 480–483 mengonfirmasi: Tabel 5.16 memakai segmen pertama 1 (urusan wajib pelayanan dasar), Tabel 5.17 memakai 2 (urusan wajib nonpelayanan dasar), Tabel 5.18 memakai 3 (urusan pilihan). Tabel 5.19–5.23 memakai 4–8 untuk unsur pendukung, penunjang, pengawasan, kewilayahan, dan pemerintahan umum. Keuangan berkode 5.02 termasuk unsur penunjang Tabel 5.20. Jadi aturan semua urusan pemerintahan mencakup 1/2/3, bukan hanya 1/2. Perubahan filter menunggu klarifikasi lingkup dari PM; belum diterapkan. Pada kedua cakupan, bidang keenam adalah 1.05 dengan pagu Rp2.978.345.596.653.
+
+Keputusan PM 29 Oktober 2026: bagan memasukkan segmen pertama 1, 2, dan 3 sebelum pengurutan pagu dan pemilihan enam terbesar. Semua batang bertaut ke daftar program terfilter, termasuk bidang tanpa program dikurasi (halaman menampilkan keadaan kosong). Proporsi tetap terhadap total belanja RKPD; tidak dihitung ulang terhadap enam batang.
