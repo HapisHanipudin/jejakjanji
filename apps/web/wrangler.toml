@@ -2,7 +2,8 @@ name = "jejakjanji-web"
 account_id = "4f77a350cc69eb1611b74f9c54259d7c"
 main = ".open-next/worker.js"
 compatibility_date = "2026-10-29"
-compatibility_flags = ["nodejs_compat"]
+# Route API fetches through the public Worker endpoint, including within the same zone.
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 workers_dev = true
 keep_vars = true
 
@@ -18,3 +19,6 @@ binding = "WORKER_SELF_REFERENCE"
 service = "jejakjanji-web"
 
 # Do not put database credentials in the web Worker.
+
+[previews.vars]
+API_BASE_URL = "https://jejakjanji-api.hapishanipudin.workers.dev"
