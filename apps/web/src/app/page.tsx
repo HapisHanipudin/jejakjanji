@@ -3,7 +3,7 @@ import { BarChart } from '@/components/BarChart';
 import { Money } from '@/components/Money';
 import { SourceBox } from '@/components/SourceBox';
 import { EmptyState, ErrorState, PaguLabel } from '@/components/States';
-import { TOTAL_PROGRAM_RPJMD } from '@/content/site';
+import { TOTAL_PROGRAM_RPJMD, TOTAL_PROGRAM_SUMBER } from '@/content/site';
 import { getBidangList, getProgramList, getSumberList } from '@/lib/data';
 import { formatPersen } from '@/lib/format';
 
@@ -49,9 +49,7 @@ export default async function HomePage() {
               />
             </>
           )}
-          <p className="source">
-            Sumber: RPJMD Tabel III.28, mulai hal. PDF 337, diperiksa 22 Oktober 2026.
-          </p>
+          <p className="source">Sumber: {TOTAL_PROGRAM_SUMBER}</p>
         </div>
       </section>
 
@@ -72,7 +70,9 @@ export default async function HomePage() {
             return (
               <>
                 <p className="muted small">
-                  Enam bidang urusan dengan pagu indikatif 2026 terbesar.
+                  Enam bidang urusan pemerintahan (kode 1-3) dengan pagu indikatif 2026 terbesar.
+                  Unsur pendukung, penunjang, pengawasan, kewilayahan, dan pemerintahan umum (kode
+                  4-8) tidak termasuk.
                 </p>
                 <BarChart
                   caption="Pagu indikatif 2026 per bidang urusan"

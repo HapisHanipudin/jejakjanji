@@ -1,5 +1,7 @@
-// TODO: replace with a count from the API once the full RPJMD program list is imported.
+// Count of regional priority programs; keep the number and its source together.
 export const TOTAL_PROGRAM_RPJMD = 82;
+export const TOTAL_PROGRAM_SUMBER =
+  'RPJMD Tabel III.28, mulai hal. PDF 337, diperiksa 22 Oktober 2026.';
 
 // TODO: replace with the real correction contact (email or form URL).
 export const KONTAK_KOREKSI = '[kontak koreksi]';

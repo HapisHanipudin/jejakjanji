@@ -168,8 +168,8 @@ tidak berubah.
   (Kartu Program), `StatusBadge` (Lencana Status), `Money` (Angka Uang), `BarChart` (Bagan Batang),
   `SourceBox` (KotakSumber), `PpidDraft`, `RequestTracker` (Pelacak).
 
-## Pemeriksaan klasifikasi bagan — 28 Oktober 2026
+## Cakupan bagan bidang urusan — 29 Oktober 2026
 
-CSV dan RKPD PDF 480–483 mengonfirmasi: Tabel 5.16 memakai segmen pertama 1 (urusan wajib pelayanan dasar), Tabel 5.17 memakai 2 (urusan wajib nonpelayanan dasar), Tabel 5.18 memakai 3 (urusan pilihan). Tabel 5.19–5.23 memakai 4–8 untuk unsur pendukung, penunjang, pengawasan, kewilayahan, dan pemerintahan umum. Keuangan berkode 5.02 termasuk unsur penunjang Tabel 5.20. Jadi aturan semua urusan pemerintahan mencakup 1/2/3, bukan hanya 1/2. Perubahan filter menunggu klarifikasi lingkup dari PM; belum diterapkan. Pada kedua cakupan, bidang keenam adalah 1.05 dengan pagu Rp2.978.345.596.653.
+RKPD PDF 480–483: segmen pertama kode 1 (Tabel 5.16, urusan wajib pelayanan dasar), 2 (5.17, wajib nonpelayanan dasar), dan 3 (5.18, pilihan) adalah urusan pemerintahan; 4–8 (Tabel 5.19–5.23) adalah unsur pendukung, penunjang, pengawasan, kewilayahan, dan pemerintahan umum (Keuangan 5.02 termasuk unsur penunjang).
 
-Keputusan PM 29 Oktober 2026: bagan memasukkan segmen pertama 1, 2, dan 3 sebelum pengurutan pagu dan pemilihan enam terbesar. Semua batang bertaut ke daftar program terfilter, termasuk bidang tanpa program dikurasi (halaman menampilkan keadaan kosong). Proporsi tetap terhadap total belanja RKPD; tidak dihitung ulang terhadap enam batang.
+Keputusan PM 29 Oktober 2026: bagan memfilter segmen 1, 2, dan 3 sebelum pengurutan pagu dan pemilihan enam terbesar; teks bagan menyebut bahwa kode 4–8 tidak termasuk, karena beberapa unsur (5.02, 7.01) berpagu lebih besar dari bidang keenam (1.05, Rp2.978.345.596.653). Semua batang bertaut ke daftar program terfilter, termasuk bidang tanpa program dikurasi (halaman menampilkan keadaan kosong). Proporsi tetap terhadap total belanja RKPD; tidak dihitung ulang terhadap enam batang.
