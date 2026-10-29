@@ -111,6 +111,22 @@ domain publik terpisah dari localhost; gunakan ekspor/impor untuk memindahkan da
 
 ## Batas kesiapan
 
+### Web menampilkan "Server data mengembalikan status 404"
+
+Jika API publik mengembalikan data tetapi web menerima 404, periksa compatibility
+flags Worker web. `global_fetch_strictly_public` harus aktif bersama `nodejs_compat`
+agar `fetch()` ke API `workers.dev` dalam zona yang sama mengikuti rute publik.
+Tanpa flag ini, request dapat melewati Worker API dan diarahkan ke origin zona.
+Flag ini tidak otomatis aktif hanya karena compatibility date baru.
+
+Pada 29 Oktober 2026, `/api/program` memberi HTTP 200 dengan 10 program dan
+`/api/sumber` memberi 2 dokumen, sementara Beranda/Daftar menampilkan 404 dari
+subrequest. Versi web `7e5ed446-45e1-4f8d-82d9-9b5416a5d6c8` hanya memiliki
+`nodejs_compat`, dengan `API_BASE_URL` yang benar. Konfigurasi repo ditambah flag
+tersebut; keberhasilan perbaikan harus diperiksa setelah build GitHub diterapkan.
+
+Rujukan: [Global fetch strictly public](https://developers.cloudflare.com/workers/configuration/compatibility-flags/#global-fetch-strictly-public).
+
 Konfigurasi tidak membuktikan deployment berhasil. Laporkan login, build, migrasi,
 seed, deployment, dan pemeriksaan URL publik sesuai hasil aktual. Kontak koreksi
 dan tinjauan teks hukum PPID masih menjadi pekerjaan produk.
