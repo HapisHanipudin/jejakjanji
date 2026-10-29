@@ -3,9 +3,9 @@ import { BarChart } from '@/components/BarChart';
 import { Money } from '@/components/Money';
 import { SourceBox } from '@/components/SourceBox';
 import { EmptyState, ErrorState, PaguLabel } from '@/components/States';
-import { TOTAL_PROGRAM_RPJMD } from '@/content/site';
+import { TOTAL_PROGRAM_RPJMD, TOTAL_PROGRAM_SUMBER } from '@/content/site';
 import { getBidangList, getProgramList, getSumberList } from '@/lib/data';
-import { formatAngka } from '@/lib/format';
+import { formatPersen } from '@/lib/format';
 
 export default async function HomePage() {
   const [programs, bidang, sumber] = await Promise.all([
@@ -35,13 +35,13 @@ export default async function HomePage() {
         <div className="box" aria-label="Ringkasan">
           {programs.ok ? (
             <p>
-              <strong>{TOTAL_PROGRAM_RPJMD} program RPJMD</strong>, {programs.data.data.length}{' '}
-              sudah dikurasi
+              <strong>{TOTAL_PROGRAM_RPJMD} program prioritas daerah</strong>,{' '}
+              {programs.data.data.length} sudah dikurasi
             </p>
           ) : (
             <>
               <p>
-                <strong>{TOTAL_PROGRAM_RPJMD} program RPJMD</strong>
+                <strong>{TOTAL_PROGRAM_RPJMD} program prioritas daerah</strong>
               </p>
               <ErrorState
                 pesan={programs.pesan}
@@ -49,6 +49,7 @@ export default async function HomePage() {
               />
             </>
           )}
+          <p className="source">Sumber: {TOTAL_PROGRAM_SUMBER}</p>
         </div>
       </section>
 
@@ -60,18 +61,18 @@ export default async function HomePage() {
           <EmptyState>Belum ada data bidang urusan.</EmptyState>
         ) : (
           (() => {
-            const top = [...bidang.data.data]
+            const top = bidang.data.data
+              .filter((b) => ['1', '2', '3'].includes(b.kode.split('.')[0]!))
               .sort((a, b) => b.paguIndikatif2026 - a.paguIndikatif2026)
               .slice(0, 6);
-            const withPrograms = new Set(
-              programs.ok ? programs.data.data.map((p) => p.bidangKode) : [],
-            );
             const docs = sumber.ok ? sumber.data.data : [];
             const docIds = [...new Set(top.map((b) => b.sourceDocumentId))];
             return (
               <>
                 <p className="muted small">
-                  Enam bidang urusan dengan pagu indikatif 2026 terbesar.
+                  Enam bidang urusan pemerintahan (kode 1-3) dengan pagu indikatif 2026 terbesar.
+                  Unsur pendukung, penunjang, pengawasan, kewilayahan, dan pemerintahan umum (kode
+                  4-8) tidak termasuk.
                 </p>
                 <BarChart
                   caption="Pagu indikatif 2026 per bidang urusan"
@@ -79,14 +80,11 @@ export default async function HomePage() {
                     key: b.kode,
                     label: b.nama,
                     value: b.paguIndikatif2026,
-                    href: withPrograms.has(b.kode)
-                      ? `/program?bidang=${encodeURIComponent(b.kode)}`
-                      : undefined,
+                    href: `/program?bidang=${encodeURIComponent(b.kode)}`,
                     display: (
                       <>
                         <Money jumlah={b.paguIndikatif2026} satuan="rp" /> (
-                        {formatAngka(b.proporsi, 2)}
-                        %)
+                        {formatPersen(b.proporsi)})
                       </>
                     ),
                   }))}

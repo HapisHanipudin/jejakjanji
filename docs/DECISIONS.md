@@ -152,8 +152,8 @@ tidak berubah.
   di dalam kartu tetap bisa difokus tanpa elemen interaktif bersarang.
 - **Status bukti** di UI memakai garis solid (ada) atau putus-putus (belum diketahui) plus teks, tidak
   pernah hanya warna. "Belum diketahui" tidak memakai merah.
-- **"Sudah dikurasi"** di beranda = jumlah program yang dikembalikan API. Angka 295 program RPJMD adalah
-  konstanta `TOTAL_PROGRAM_RPJMD` bertanda TODO di `src/content/site.ts`.
+- **"Sudah dikurasi"** di beranda = jumlah program yang dikembalikan API. Angka 82 program prioritas daerah bersumber pada
+  RPJMD Tabel III.28, mulai PDF 337, diperiksa 22 Oktober 2026; disimpan di `TOTAL_PROGRAM_RPJMD`.
 - **"Dipakai untuk"** pada tabel dokumen sumber adalah teks editorial per tipe dokumen
   (`DIPAKAI_UNTUK` di `site.ts`), karena API tidak punya field itu.
 - **Bagan bidang urusan**: API tidak punya nomor tabel, jadi baris sumber hanya menampilkan dokumen,
@@ -167,3 +167,9 @@ tidak berubah.
 - **Nama komponen** dalam bahasa Inggris sesuai aturan identifier: `Header`, `Footer`, `ProgramCard`
   (Kartu Program), `StatusBadge` (Lencana Status), `Money` (Angka Uang), `BarChart` (Bagan Batang),
   `SourceBox` (KotakSumber), `PpidDraft`, `RequestTracker` (Pelacak).
+
+## Cakupan bagan bidang urusan — 29 Oktober 2026
+
+RKPD PDF 480–483: segmen pertama kode 1 (Tabel 5.16, urusan wajib pelayanan dasar), 2 (5.17, wajib nonpelayanan dasar), dan 3 (5.18, pilihan) adalah urusan pemerintahan; 4–8 (Tabel 5.19–5.23) adalah unsur pendukung, penunjang, pengawasan, kewilayahan, dan pemerintahan umum (Keuangan 5.02 termasuk unsur penunjang).
+
+Keputusan PM 29 Oktober 2026: bagan memfilter segmen 1, 2, dan 3 sebelum pengurutan pagu dan pemilihan enam terbesar; teks bagan menyebut bahwa kode 4–8 tidak termasuk, karena beberapa unsur (5.02, 7.01) berpagu lebih besar dari bidang keenam (1.05, Rp2.978.345.596.653). Semua batang bertaut ke daftar program terfilter, termasuk bidang tanpa program dikurasi (halaman menampilkan keadaan kosong). Proporsi tetap terhadap total belanja RKPD; tidak dihitung ulang terhadap enam batang.

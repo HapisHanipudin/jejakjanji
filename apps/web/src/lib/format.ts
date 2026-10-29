@@ -12,3 +12,7 @@ export function formatRupiahPenuh(jumlah: number, satuan: 'juta_rp' | 'rp'): str
     ? `${formatAngka(jumlah)} juta rupiah (Rp${formatAngka(jumlah * 1e6)})`
     : `Rp${formatAngka(jumlah)}`;
 }
+
+/** Input is a percentage in points, e.g. 22.4, not a fraction. */
+export const formatPersen = (n: number) =>
+  `${new Intl.NumberFormat('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n)}%`;

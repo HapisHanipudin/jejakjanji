@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { formatRupiahPenuh, formatTanggal } from './format.ts';
+import { formatPersen, formatRupiahPenuh, formatTanggal } from './format.ts';
 import { totalPagu } from './pagu.ts';
 
 test('angka penuh untuk tooltip', () => {
@@ -19,4 +19,14 @@ test('total pagu menjumlah angka per tahun dan memberi label rentang jujur', () 
     rentang: '4 tahun tersedia (2026, 2027, 2029, 2030)',
   });
   expect(totalPagu([])).toBeNull();
+});
+
+test('persen memakai tepat satu desimal', () => {
+  expect([22.4, 14.12, 13.68, 0, 100].map(formatPersen)).toEqual([
+    '22,4%',
+    '14,1%',
+    '13,7%',
+    '0,0%',
+    '100,0%',
+  ]);
 });

@@ -22,6 +22,8 @@ Prasyarat: [bun](https://bun.com) 1.4.4 (package manager dan penjalan skrip), No
 (Wrangler, Next.js, drizzle-kit, dan vitest tetap berjalan di Node), Docker.
 
 ```sh
+git clone https://github.com/HapisHanipudin/jejakjanji.git
+cd jejakjanji
 bun install
 cp .env.example .env          # ubah POSTGRES_PORT dan kedua URL bila port 5432 sudah terpakai
 
@@ -56,7 +58,7 @@ curl http://127.0.0.1:8787/api/program/2.11.11
 - `API_BASE_URL` (server saja) dibaca dari `.env` root; lihat `.env.example`.
 - Token desain (warna, jarak, tipografi): `apps/web/src/app/tokens.css`.
 - Teks hukum dan konstanta tenggat: `apps/web/src/content/legal.ts` (bertanda `TODO-REVIEW`).
-- Konstanta lain yang perlu diganti: `apps/web/src/content/site.ts` (jumlah program RPJMD, kontak koreksi).
+- Konstanta lain yang perlu diganti: `apps/web/src/content/site.ts` (jumlah program prioritas dan kontak koreksi; kontak masih placeholder).
 - Build produksi: `bun run --cwd apps/web build`, lalu `bun run --cwd apps/web start`.
 
 ## Endpoint
@@ -80,3 +82,15 @@ bun run test          # vitest (jangan `bun test`: itu test runner bawaan bun)
 bun run db:generate   # buat migrasi baru setelah mengubah packages/shared/src/schema.ts
 bun run --cwd apps/api cf-typegen   # perbarui worker-configuration.d.ts setelah ubah wrangler.toml
 ```
+
+## Tech stack
+
+Next.js dan React untuk web; Hono di Cloudflare Workers untuk API; PostgreSQL, Drizzle ORM, Zod, dan bun workspaces. Tailwind CSS v4 dan token CSS untuk tampilan; Vitest untuk tes.
+
+## Progress first draft
+
+Enam layar dan empat endpoint baca sudah tersedia, berikut CSV 10 program dan 44 bidang urusan, migrasi, seed, draf PPID, serta pelacak lokal. Cakupan data awal adalah 10 dari 82 program prioritas daerah (RPJMD Tabel III.28, mulai PDF 337, diperiksa 22 Oktober 2026).
+
+API belum di-deploy; ID Hyperdrive di wrangler.toml masih placeholder. Hosting web dan PostgreSQL produksi belum dipilih. Teks hukum PPID belum ditinjau; hitungan hari kerja belum memasukkan hari libur. Uji pengguna belum dilakukan. Kontak koreksi di halaman Metodologi masih placeholder. Screenshot di docs/screenshots/contoh-data-fiktif tidak boleh dipakai untuk PDF lomba.
+
+Hasil verifikasi sesi ini dicatat di docs/first-draft-verification.md; keberadaan kode tidak berarti seluruh alur telah diuji.

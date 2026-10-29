@@ -54,7 +54,7 @@ export function PpidDraft({ program }: { program: Program }) {
             <dd>{program.nama}</dd>
             <dt className="small muted">Bidang</dt>
             <dd>{program.bidang}</dd>
-            <dt className="small muted">Indikator</dt>
+            <dt className="small muted">Indikator utama</dt>
             <dd>{program.indikator}</dd>
             <dt className="small muted">Rujukan</dt>
             <dd>

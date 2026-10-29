@@ -15,14 +15,14 @@ const SOURCES = {
   RPJMD: {
     title: 'RPJMD Provinsi DKI Jakarta 2025-2029',
     type: 'RPJMD',
-    url: 'https://bappeda.jakarta.go.id/rpjmd/storage/documents/files/TSkak06jYdL7FKLrgZORdCW0MyLm36oR0ckv6m9p.pdf',
+    url: 'https://bappeda.jakarta.go.id/show_file/doc_list/EyJrGwJ8u84AkWxoQW7VWuTgpTz1TMr45Q3dbRAF.pdf',
     version: 'Perda Nomor 2 Tahun 2025',
     checkedAt: CHECKED_AT,
   },
   RKPD: {
     title: 'RKPD Provinsi DKI Jakarta 2026',
     type: 'RKPD',
-    url: null,
+    url: 'https://bappeda.jakarta.go.id/show_file/doc_list/kO5eh8zrQTzJVKQFtpoYr0wXrAvXKvMdOlUcxwCt.pdf',
     version: 'Pergub Nomor 21 Tahun 2025',
     checkedAt: CHECKED_AT,
   },

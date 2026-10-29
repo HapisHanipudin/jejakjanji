@@ -55,7 +55,7 @@ Kebutuhan dan hambatan pengguna adalah hipotesis sampai wawancara dilakukan.
 
 ## 4. Ruang lingkup MVP
 
-**Masuk:** satu daerah (DKI Jakarta), 10 program awal dari 295 program RPJMD, enam layar (di bawah), empat endpoint baca, draf PPID di browser, pelacak di browser.
+**Masuk:** satu daerah (DKI Jakarta), 10 program awal dari 82 program prioritas daerah, enam layar (di bawah), empat endpoint baca, draf PPID di browser, pelacak di browser.
 
 **Di luar MVP:** perbandingan antardaerah, label keterbandingan, laporan warga atau bukti dari warga, agregat hasil permohonan, daerah kedua, halaman admin, notifikasi pengingat (pengingat tenggat hanya teks di halaman), pemetaan program ke item APBD, cetak ringkasan (US-09, P2), prediksi, putusan benar atau salah atas klaim pihak mana pun.
 
@@ -106,7 +106,7 @@ Aturan implementasi (keputusan saat scaffold): hanya evidence yang punya `source
 
 Sumber:
 
-- **RPJMD DKI Jakarta 2025-2029** (Perda 2 Tahun 2025), 393 halaman PDF. Program prioritas, indikator, pagu indikatif 2026-2030 dalam **juta rupiah**. Daftar program prioritas ada di PDF 337-374 (295 baris terekstrak).
+- **RPJMD DKI Jakarta 2025-2029** (Perda 2 Tahun 2025), 393 halaman PDF. Program prioritas, indikator, pagu indikatif 2026-2030 dalam **juta rupiah**. Tabel III.28 Program Prioritas Daerah (mulai PDF 337) memuat 83 baris untuk 82 program. Tabel IV.1 Program Perangkat Daerah (mulai PDF 351) memuat 212 baris untuk 173 program, termasuk 82 program prioritas tadi. Jumlah baris kedua tabel bukan jumlah program unik. Diperiksa 22 Oktober 2026.
 - **RKPD 2026** (Pergub 21 Tahun 2025), 549 halaman PDF. Pagu indikatif **per bidang urusan** dalam **rupiah penuh** (Tabel 5.16 sampai 5.23, PDF 480-483). RKPD memuat pagu per bidang urusan dan per perangkat daerah, **bukan per program**.
 - Awal: dua Google Sheet (10 program; pagu per bidang urusan) diekspor ke `data/program.csv` dan `data/bidang_urusan.csv`. CSV hanya sumber impor; data hidup di database.
 
@@ -294,7 +294,8 @@ Masih terbuka:
 - Peninjauan hukum untuk teks permohonan dan hitungan tenggat PPID; kontak koreksi.
 - Klarifikasi panitia: tabel bobot final di guidebook hanya menjumlah 80%; guidebook menyebut satu kali 2 November untuk first draft (1 November dipakai sebagai target aman).
 - Cek acak 2 sampai 3 baris Sheet ke PDF asli oleh tim sebelum dipakai di pitch.
-- Jumlah "295 program" di Beranda adalah konstanta sementara sampai ada sumbernya di API.
+- Beranda menampilkan 82 program prioritas daerah, bersumber pada RPJMD Tabel III.28, mulai PDF 337 (diperiksa 22 Oktober 2026).
+- Skema MVP menyimpan indikator pertama sebagai indikator utama. Program 2.11.11 memiliki dua indikator dan 1.04.02 memiliki tiga; tabel seluruh indikator ditunda tanpa mengubah skema.
 
 Hipotesis dan status validasi:
 
