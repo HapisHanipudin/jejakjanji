@@ -19,3 +19,6 @@ binding = "WORKER_SELF_REFERENCE"
 service = "jejakjanji-web"
 
 # Do not put database credentials in the web Worker.
+
+[previews.vars]
+API_BASE_URL = "https://jejakjanji-api.hapishanipudin.workers.dev"

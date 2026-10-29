@@ -15,3 +15,11 @@ CORS_ORIGINS = "http://localhost:3000,https://jejakjanji-web.hapishanipudin.work
 [[hyperdrive]]
 binding = "HYPERDRIVE"
 id = "b9016926dedf4fe495eb78edd35b8531"
+
+
+[previews.vars]
+CORS_ORIGINS = "https://jejakjanji-web.hapishanipudin.workers.dev"
+
+[[previews.hyperdrive]]
+binding = "HYPERDRIVE"
+id = "b9016926dedf4fe495eb78edd35b8531"
