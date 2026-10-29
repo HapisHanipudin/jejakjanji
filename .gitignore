@@ -5,6 +5,8 @@ node_modules/
 .dev.vars
 .wrangler/
 .next/
+.open-next/
+.tmp-bun/
 dist/
 coverage/
 *.tsbuildinfo

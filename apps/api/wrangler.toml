@@ -1,4 +1,5 @@
 name = "jejakjanji-api"
+account_id = "4f77a350cc69eb1611b74f9c54259d7c"
 main = "src/index.ts"
 compatibility_date = "2026-10-22"
 # Required by node-postgres (pg) on Workers.
@@ -6,11 +7,11 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 # Comma-separated list of origins allowed by CORS.
-CORS_ORIGINS = "http://localhost:3000"
+CORS_ORIGINS = "http://localhost:3000,https://jejakjanji-web.hapishanipudin.workers.dev"
 
-# PLACEHOLDER: replace with the id from `wrangler hyperdrive create` once the Postgres host is chosen.
+# Neon direct endpoint, using the read-only jejakjanji_reader role.
 # Local dev does not use this id: `wrangler dev` reads
 # CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE from the environment / .env instead.
 [[hyperdrive]]
 binding = "HYPERDRIVE"
-id = "00000000000000000000000000000000"
+id = "b9016926dedf4fe495eb78edd35b8531"

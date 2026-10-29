@@ -85,12 +85,14 @@ bun run --cwd apps/api cf-typegen   # perbarui worker-configuration.d.ts setelah
 
 ## Tech stack
 
+Panduan persiapan dan deployment Cloudflare Workers + Neon: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
 Next.js dan React untuk web; Hono di Cloudflare Workers untuk API; PostgreSQL, Drizzle ORM, Zod, dan bun workspaces. Tailwind CSS v4 dan token CSS untuk tampilan; Vitest untuk tes.
 
 ## Progress first draft
 
 Enam layar dan empat endpoint baca sudah tersedia, berikut CSV 10 program dan 44 bidang urusan, migrasi, seed, draf PPID, serta pelacak lokal. Cakupan data awal adalah 10 dari 82 program prioritas daerah (RPJMD Tabel III.28, mulai PDF 337, diperiksa 22 Oktober 2026).
 
-API belum di-deploy; ID Hyperdrive di wrangler.toml masih placeholder. Hosting web dan PostgreSQL produksi belum dipilih. Teks hukum PPID belum ditinjau; hitungan hari kerja belum memasukkan hari libur. Uji pengguna belum dilakukan. Kontak koreksi di halaman Metodologi masih placeholder. Screenshot di docs/screenshots/contoh-data-fiktif tidak boleh dipakai untuk PDF lomba.
+API sudah di-deploy ke Cloudflare Workers dan terhubung ke PostgreSQL Neon melalui Hyperdrive; lihat docs/DEPLOYMENT.md untuk URL dan hasil verifikasi. Web sedang disiapkan untuk Workers melalui OpenNext. Teks hukum PPID belum ditinjau; hitungan hari kerja belum memasukkan hari libur. Uji pengguna belum dilakukan. Kontak koreksi di halaman Metodologi masih placeholder. Screenshot di docs/screenshots/contoh-data-fiktif tidak boleh dipakai untuk PDF lomba.
 
 Hasil verifikasi sesi ini dicatat di docs/first-draft-verification.md; keberadaan kode tidak berarti seluruh alur telah diuji.
