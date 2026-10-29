@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev --env-file ../../.env",
+    "deploy": "wrangler deploy --keep-vars",
     "cf-typegen": "wrangler types",
     "typecheck": "tsc -p ."
   },

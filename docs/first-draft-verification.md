@@ -1,5 +1,31 @@
 # Verifikasi first draft — 28 Oktober 2026
 
+## Deployment — 29 Oktober 2026
+
+Pembaruan arahan: pengguna memilih koneksi GitHub di dashboard Cloudflare. Build
+OpenNext Linux berhasil; proses deploy web manual dihentikan sebelum publikasi.
+Web belum aktif dan keenam halaman publik belum diuji. API yang telah terbit
+tetap aktif. Koneksi GitHub dan build pertama Cloudflare belum dikonfigurasi atau
+diverifikasi. Tidak ada commit/push konfigurasi lokal pada sesi ini.
+
+Pengguna memilih Cloudflare Workers dan Neon. Akun Cloudflare `hapishanipudin`
+berhasil login ulang. Migrasi pada database Neon dengan schema publik kosong
+berhasil, kemudian seed menghasilkan 2 dokumen, 44 bidang, 10 program, 50 pagu,
+dan 10 evidence rencana. Role baca `jejakjanji_reader` diuji: SELECT berhasil,
+UPDATE ditolak (42501). Hyperdrive menggunakan role ini dan query caching dimatikan.
+
+API diterbitkan di https://jejakjanji-api.hapishanipudin.workers.dev. Empat endpoint
+baca memberi HTTP 200 dengan jumlah data yang benar; detail 2.11.11 memberi
+1.322.664 juta rupiah untuk 2026. Respons 404 dan CORS origin web juga diperiksa.
+Rincian konfigurasi dan versi ada di DEPLOYMENT.md. Kredensial hanya di file lokal
+yang diabaikan Git; password pemilik database yang diberikan melalui chat perlu
+dirotasi oleh pengguna.
+
+Konfigurasi web OpenNext, skrip build/deploy, dan header aset disiapkan. Build
+Next.js di Windows berhasil; bundling Workers gagal pada symbolic link dependensi
+(Access is denied). Build ulang Linux dilakukan terpisah. Typecheck, lint, dan
+29 tes lulus setelah perubahan konfigurasi. Tidak ada commit atau push sesi ini.
+
 ## Hasil
 
 - Docker Compose PostgreSQL berhasil dijalankan dan sehat; migrasi berhasil.

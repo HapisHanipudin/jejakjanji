@@ -1,5 +1,30 @@
 # Keputusan
 
+## Deployment Cloudflare dan Neon — 29 Oktober 2026
+
+Jalur deployment pilihan pengguna adalah integrasi GitHub di dashboard Cloudflare
+(Workers Builds). Web dan API menghubungkan repo yang sama dengan root directory
+masing-masing `apps/web` dan `apps/api`. Deployment web manual dihentikan; API
+sebelumnya sudah diterbitkan untuk memeriksa koneksi Neon. Konfigurasi lokal perlu
+masuk ke branch GitHub sebelum Workers Builds dapat memakainya.
+
+Pengguna memilih Cloudflare untuk deployment dan Neon untuk PostgreSQL. Web
+Next.js memakai adapter OpenNext pada Worker terpisah dari API Hono. API tetap
+memakai `pg` melalui Hyperdrive; koneksi origin Neon menggunakan endpoint direct,
+bukan pooled. Konfigurasi awal menonaktifkan query caching Hyperdrive agar hasil
+kurasi langsung terlihat. Akun Cloudflare dan target database harus ditentukan
+sebelum membuat resource atau menulis data. Panduan ada di `DEPLOYMENT.md`.
+
+OpenNext dipilih untuk mempertahankan build Next.js aplikasi yang ada. Panduan
+Cloudflare saat pemeriksaan merekomendasikan vinext untuk aplikasi baru; migrasi
+toolchain tersebut di luar pekerjaan deployment ini. Keberhasilan build lokal
+dan deployment publik dicatat terpisah, bukan diasumsikan dari konfigurasi.
+
+Pengguna juga mengarahkan pengelolaan data berikutnya ke dashboard impor Excel/CSV
+dengan login admin. Ini arah pengembangan setelah MVP publik, belum fitur yang
+diimplementasikan atau alasan menambahkan login pengunjung. Seed tetap dipakai
+untuk data awal. Rincian dashboard dan otorisasi perlu ditetapkan saat dikerjakan.
+
 ## Ditetapkan oleh tim (final)
 
 - Monorepo dengan bun workspaces (sebelumnya pnpm, lihat "Package manager: bun"), TypeScript strict.

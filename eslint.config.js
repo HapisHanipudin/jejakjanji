@@ -7,6 +7,8 @@ export default tseslint.config(
       '**/node_modules/',
       '**/.wrangler/',
       '**/.next/',
+      '**/.open-next/',
+      '.tmp-bun/',
       '**/worker-configuration.d.ts',
       '**/next-env.d.ts',
       'drizzle/',

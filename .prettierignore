@@ -2,6 +2,8 @@ bun.lock
 drizzle/
 .wrangler/
 .next/
+.open-next/
+.tmp-bun/
 data/*.csv
 apps/api/worker-configuration.d.ts
 apps/web/next-env.d.ts
