@@ -153,6 +153,95 @@ a {
   transform-origin: left;
   animation: bar-enter 480ms ease-out both;
 }
+.bar-row {
+  position: relative;
+  border-radius: var(--radius);
+  transition: background-color 180ms ease;
+}
+.bar-track {
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.bar-fill {
+  transition: background-color 180ms ease;
+}
+/* The whole linked row opens its own field; exact-value tooltips stay above it. */
+.bar-label a::after {
+  content: '';
+  position: absolute;
+  inset: -6px -8px;
+  z-index: 1;
+}
+.bar-row .money {
+  position: relative;
+  z-index: 2;
+}
+.bar-row:focus-within {
+  background: var(--color-accent-soft);
+}
+.bar-row:focus-within .bar-fill {
+  background: var(--color-accent);
+}
+.bar-row:has(.bar-label a:focus-visible) {
+  outline: var(--focus-width) solid var(--color-focus);
+  outline-offset: 6px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .bar-row:hover {
+    background: var(--color-accent-soft);
+  }
+  .bar-row:hover .bar-track {
+    transform: scaleY(1.18);
+  }
+  .bar-row:hover .bar-fill {
+    background: var(--color-accent);
+  }
+}
+.program-filter[data-pending='true'] {
+  border-color: var(--color-accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .landing-title {
+    animation: landing-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .landing-hero .lead,
+  .landing-actions {
+    animation: landing-support 500ms ease-out both;
+  }
+  .program-results {
+    animation: results-enter 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bar-row:focus-within .bar-track {
+    transform: scaleY(1.18);
+  }
+}
+@keyframes landing-open {
+  from {
+    opacity: 0.65;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes landing-support {
+  from {
+    opacity: 0.85;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes results-enter {
+  from {
+    opacity: 0.85;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 .program-row {
   transition: background-color 160ms ease;
 }
@@ -221,6 +310,9 @@ a {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
+  }
+  .bar-row .bar-track {
+    transform: none !important;
   }
 }
 

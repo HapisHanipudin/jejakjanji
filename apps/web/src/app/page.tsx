@@ -11,7 +11,7 @@ export default async function LandingPage() {
     <>
       <section className="band band-hero landing-hero">
         <div className="container">
-          <h1>
+          <h1 className="landing-title">
             Telusuri program daerahmu,
             <br className="desktop-only" /> dari rencana sampai bukti.
           </h1>
@@ -19,7 +19,9 @@ export default async function LandingPage() {
             Dari dokumen resmi ke informasi yang bisa diperiksa: program, pagu indikatif, dan bukti
             pelaksanaan. Pilih daerah yang ingin Anda telusuri.
           </p>
-          <RegionPicker regions={regions} error={result.ok ? undefined : result.pesan} landing />
+          <div className="landing-actions">
+            <RegionPicker regions={regions} error={result.ok ? undefined : result.pesan} landing />
+          </div>
           <p className="small muted">
             Lokasi bersifat opsional. Saran daerah tetap Anda konfirmasi.
           </p>

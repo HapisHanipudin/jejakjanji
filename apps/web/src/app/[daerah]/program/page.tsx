@@ -3,6 +3,7 @@ import { programQuerySchema } from '@jejakjanji/shared';
 import { JejakLangkah } from '@/components/JejakBukti';
 import { PageHeader } from '@/components/PageHeader';
 import { ProgramCard } from '@/components/ProgramCard';
+import { ProgramFilter } from '@/components/ProgramFilter';
 import { EmptyState, ErrorState } from '@/components/States';
 import { TOTAL_PROGRAM_RPJMD } from '@/content/site';
 import { getBidangList, getProgramList, getSumberList, getRegion } from '@/lib/data';
@@ -28,6 +29,7 @@ export default async function ProgramListPage({
     q: first(sp.q) || undefined,
   });
   const filter = parsed.success ? parsed.data : {};
+  const filterKey = JSON.stringify(filter);
 
   const [filtered, all, bidang, sumber] = await Promise.all([
     getProgramList({ ...filter, daerah }),
@@ -56,14 +58,7 @@ export default async function ProgramListPage({
 
       <div className="section container">
         {/* Plain GET form: works without JavaScript and keeps filters in the shareable URL. */}
-        <form
-          method="get"
-          action={`/${daerah}/program`}
-          className="box form-row"
-          style={{ padding: 'var(--space-5)' }}
-          role="search"
-          aria-label="Saring program"
-        >
+        <ProgramFilter action={`/${daerah}/program`} filterKey={filterKey}>
           <div className="field">
             <label htmlFor="q">Cari</label>
             <input
@@ -94,10 +89,7 @@ export default async function ProgramListPage({
               <option value="belum_diketahui">Belum diketahui</option>
             </select>
           </div>
-          <button type="submit" className="btn btn-primary">
-            Terapkan
-          </button>
-        </form>
+        </ProgramFilter>
 
         {!parsed.success && (
           <ErrorState judul="Filter tidak valid" pesan="Sebagian filter di alamat diabaikan." />
@@ -126,7 +118,9 @@ export default async function ProgramListPage({
                 </p>
               </div>
               {filtered.data.data.length === 0 ? (
-                <EmptyState>Tidak ada program yang cocok dengan filter ini.</EmptyState>
+                <div className="program-results" key={filterKey}>
+                  <EmptyState>Tidak ada program yang cocok dengan filter ini.</EmptyState>
+                </div>
               ) : (
                 <>
                   <div className="program-head" aria-hidden="true">
@@ -134,7 +128,7 @@ export default async function ProgramListPage({
                     <span className="num">Pagu indikatif 2026</span>
                     <span>Jejak bukti</span>
                   </div>
-                  <ul className="program-list">
+                  <ul className="program-list program-results" key={filterKey}>
                     {filtered.data.data.map((p) => (
                       <ProgramCard
                         key={p.kode}
