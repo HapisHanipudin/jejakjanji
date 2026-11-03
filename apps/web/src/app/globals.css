@@ -1433,6 +1433,23 @@ input[type='search']::-webkit-search-cancel-button {
 input[type='search']::-webkit-search-cancel-button:hover {
   background: var(--color-heading);
 }
+/*
+ * iOS Safari gives date inputs an intrinsic min width, centered text, and no height when
+ * empty, so they overflow their column. Reset to a plain block field that fills the column.
+ */
+input[type='date'] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  text-align: left;
+}
+input[type='date']::-webkit-date-and-time-value {
+  margin: 0;
+  text-align: left;
+}
 input[type='date']::-webkit-calendar-picker-indicator {
   width: 16px;
   height: 16px;

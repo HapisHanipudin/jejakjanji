@@ -7,3 +7,4 @@ drizzle/
 data/*.csv
 apps/api/worker-configuration.d.ts
 apps/web/next-env.d.ts
+.impeccable/hook.cache.json

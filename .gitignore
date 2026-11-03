@@ -11,3 +11,6 @@ dist/
 coverage/
 *.tsbuildinfo
 next-env.d.ts
+
+# Impeccable design-hook cache (local, regenerated)
+.impeccable/hook.cache.json
