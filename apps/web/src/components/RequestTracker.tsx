@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { PERPANJANGAN_HARI_KERJA, TENGGAT_HARI_KERJA } from '@/content/legal';
+import { CATATAN_TINJAU_HUKUM, PERPANJANGAN_HARI_KERJA, TENGGAT_HARI_KERJA } from '@/content/legal';
 import { formatTanggal } from '@/lib/format';
 import { hariIni, selisihHariKerja, tambahHariKerja } from '@/lib/hari-kerja';
 import {
@@ -111,63 +111,106 @@ export function RequestTracker({
 
   return (
     <div className="stack">
-      <form className="box form-row" onSubmit={tambah} aria-label="Tambah permohonan">
-        <div className="field">
-          <label htmlFor="program">Program</label>
-          <select
-            id="program"
-            name="program"
-            required
-            defaultValue={pilihAwal ?? ''}
-            disabled={!adaProgram}
-          >
-            <option value="" disabled>
-              {adaProgram ? 'Pilih program' : 'Daftar program kosong'}
-            </option>
-            {programs.map((p) => (
-              <option key={p.kode} value={p.kode}>
-                {p.kode} {p.nama}
+      <form className="box" onSubmit={tambah} aria-labelledby="catat-title">
+        <h2 id="catat-title">Catat permohonan baru</h2>
+        <div className="form-row">
+          <div className="field">
+            <label htmlFor="program">Program</label>
+            <select
+              id="program"
+              name="program"
+              required
+              defaultValue={pilihAwal ?? ''}
+              disabled={!adaProgram}
+            >
+              <option value="" disabled>
+                {adaProgram ? 'Pilih program' : 'Daftar program kosong'}
               </option>
-            ))}
-          </select>
+              {programs.map((p) => (
+                <option key={p.kode} value={p.kode}>
+                  {p.nama} ({p.kode})
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="perangkat">Perangkat daerah tujuan</label>
+            <input id="perangkat" name="perangkat" required maxLength={PERANGKAT_DAERAH_MAX} />
+          </div>
+          <div className="field">
+            <label htmlFor="tanggal">Tanggal kirim</label>
+            <input
+              id="tanggal"
+              name="tanggal"
+              type="date"
+              required
+              defaultValue={today}
+              key={today}
+            />
+          </div>
         </div>
-        <div className="field">
-          <label htmlFor="perangkat">Perangkat daerah tujuan</label>
-          <input id="perangkat" name="perangkat" required maxLength={PERANGKAT_DAERAH_MAX} />
-        </div>
-        <div className="field">
-          <label htmlFor="tanggal">Tanggal kirim</label>
-          <input
-            id="tanggal"
-            name="tanggal"
-            type="date"
-            required
-            defaultValue={today}
-            key={today}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary" disabled={!adaProgram || items == null}>
+        <button
+          type="submit"
+          className="btn btn-primary"
+          style={{ marginBlock: 'var(--space-4)' }}
+          disabled={!adaProgram || items == null}
+        >
           Simpan dan hitung tenggat
         </button>
+        <div className="notice small">
+          <p>
+            Tenggat perkiraan: {TENGGAT_HARI_KERJA} hari kerja setelah tanggal kirim, ditambah{' '}
+            {PERPANJANGAN_HARI_KERJA} hari kerja bila diperpanjang. Hanya Sabtu dan Minggu yang
+            dilewati; hari libur nasional belum diperhitungkan, jadi anggap tanggal ini perkiraan.
+          </p>
+          <p>{CATATAN_TINJAU_HUKUM}</p>
+        </div>
       </form>
 
       <p role="status">{pesan}</p>
 
-      <section aria-labelledby="daftar-title">
-        <h2 id="daftar-title">Permohonan saya ({daftar.length})</h2>
+      <section className="box" aria-labelledby="daftar-title">
+        <div className="box-head">
+          <h2 id="daftar-title">Permohonan saya ({daftar.length})</h2>
+          <div className="btn-row">
+            <button
+              type="button"
+              className="btn"
+              disabled={!daftar.length}
+              onClick={() =>
+                unduh(
+                  `pelacak-jejakjanji-${hariIni()}.json`,
+                  JSON.stringify({ versi: 1, permohonan: daftar }, null, 2),
+                  'application/json',
+                )
+              }
+            >
+              Ekspor<span className="sr-only"> (unduh JSON)</span>
+            </button>
+            <label className="btn">
+              Impor<span className="sr-only"> (unggah JSON)</span>
+              <input
+                type="file"
+                accept="application/json,.json"
+                className="sr-only"
+                onChange={impor}
+              />
+            </label>
+          </div>
+        </div>
         {items == null ? (
           <p className="muted">Memuat data dari browser ini...</p>
         ) : daftar.length === 0 ? (
           <p className="notice">Belum ada permohonan yang dicatat di browser ini.</p>
         ) : (
           <div className="table-wrap">
-            <table>
+            <table className="table-plain table-cards">
               <thead>
                 <tr>
                   <th scope="col">Program</th>
                   <th scope="col">Tanggal kirim</th>
                   <th scope="col">Tenggat (perkiraan)</th>
-                  <th scope="col">Status</th>
+                  <th scope="col">Status (ubah di sini)</th>
                   <th scope="col">
                     <span className="sr-only">Aksi</span>
                   </th>
@@ -181,33 +224,29 @@ export function RequestTracker({
                   return (
                     <tr key={p.id}>
                       <td>
-                        {p.programNama}
+                        <strong style={{ color: 'var(--color-heading)' }}>{p.programNama}</strong>
                         <br />
-                        <span className="kode">{p.programKode}</span>
-                        <span className="small muted"> | {p.perangkatDaerah}</span>
+                        <span className="xsmall muted">
+                          <span className="kode">{p.programKode}</span> | {p.perangkatDaerah}
+                        </span>
                       </td>
-                      <td>{formatTanggal(p.tanggalKirim)}</td>
-                      <td>
+                      <td data-label="Dikirim">{formatTanggal(p.tanggalKirim)}</td>
+                      <td data-label="Tenggat perkiraan">
                         {formatTanggal(t)}
                         {!selesai && sisa != null && (
-                          <span className="small muted">
+                          <span className="xsmall muted">
                             <br />
                             {sisa >= 0 ? `sisa ${sisa} hari kerja` : `lewat ${-sisa} hari kerja`}
                           </span>
                         )}
                       </td>
-                      <td>
-                        <span
-                          className={p.status === 'belum_dijawab' ? 'badge badge-unknown' : 'badge'}
-                        >
-                          {STATUS_LABEL[p.status]}
-                        </span>
-                        <br />
+                      <td data-label="Status permohonan">
                         <label className="sr-only" htmlFor={`status-${p.id}`}>
                           Ubah status permohonan {p.programKode}
                         </label>
                         <select
                           id={`status-${p.id}`}
+                          className="select-sm"
                           value={p.status}
                           onChange={(e) =>
                             simpan(
@@ -227,10 +266,11 @@ export function RequestTracker({
                           ))}
                         </select>
                       </td>
-                      <td>
+                      <td className="num">
                         <button
                           type="button"
                           className="btn"
+                          style={{ padding: '8px 14px' }}
                           onClick={() =>
                             confirm(`Hapus permohonan ${p.programKode}?`) &&
                             simpan(
@@ -249,31 +289,6 @@ export function RequestTracker({
             </table>
           </div>
         )}
-        <div className="btn-row" style={{ marginTop: 'var(--space-4)' }}>
-          <button
-            type="button"
-            className="btn"
-            disabled={!daftar.length}
-            onClick={() =>
-              unduh(
-                `pelacak-jejakjanji-${hariIni()}.json`,
-                JSON.stringify({ versi: 1, permohonan: daftar }, null, 2),
-                'application/json',
-              )
-            }
-          >
-            Ekspor (unduh JSON)
-          </button>
-          <label className="btn">
-            Impor (unggah JSON)
-            <input
-              type="file"
-              accept="application/json,.json"
-              className="sr-only"
-              onChange={impor}
-            />
-          </label>
-        </div>
       </section>
     </div>
   );

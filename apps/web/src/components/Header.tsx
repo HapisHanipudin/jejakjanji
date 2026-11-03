@@ -5,8 +5,10 @@ export function Header() {
   return (
     <header className="site-header">
       <div className="container">
-        {/* Logo placeholder: plain text, replace freely. */}
         <Link href="/" className="logo">
+          <span className="logo-mark" aria-hidden="true">
+            J
+          </span>
           JejakJanji
         </Link>
         <NavLinks />

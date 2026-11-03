@@ -8,14 +8,11 @@ const ITEMS = [
   { href: '/program', label: 'Program' },
   { href: '/pelacak', label: 'Pelacak' },
   { href: '/metodologi', label: 'Metodologi' },
-  { href: '/metodologi#netralitas', label: 'Netralitas' },
 ];
 
 export function NavLinks() {
   const pathname = usePathname();
-  // ponytail: Netralitas is an anchor on /metodologi, so only Metodologi is marked active there.
-  const active = (href: string) =>
-    href === '/' ? pathname === '/' : !href.includes('#') && pathname.startsWith(href);
+  const active = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
   return (
     <nav className="nav" aria-label="Menu utama">
       <ul>

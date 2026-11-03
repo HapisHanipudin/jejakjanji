@@ -25,6 +25,18 @@ dengan login admin. Ini arah pengembangan setelah MVP publik, belum fitur yang
 diimplementasikan atau alasan menambahkan login pengunjung. Seed tetap dipakai
 untuk data awal. Rincian dashboard dan otorisasi perlu ditetapkan saat dikerjakan.
 
+## Tampilan Hi-Fi V4 — 3 November 2026
+
+Web mengikuti Figma "JejakJanji Wireframe", halaman "Hi-Fi V4 — Final + Prototype" (desktop 1440 dan ponsel 390). Token warna diambil dari variabel Figma ke `src/app/tokens.css`; font Plus Jakarta Sans dimuat `next/font` saat build (tidak ada permintaan font ke pihak ketiga saat runtime). Ikon penanda jejak, chevron, dan kalender diunduh dari Figma ke `public/ikon/`.
+
+Penyesuaian terhadap Figma:
+
+- Teks dan angka tetap dari API dan konstanta repo, bukan dari teks contoh di Figma. Contoh: angka ringkas memakai `formatRupiahRingkas` (Rp8,02 T, bukan Rp8,0 T); label pagu memakai label lengkap dari API; surat PPID tetap dari `lib/surat.ts` dan `legal.ts` (TODO-REVIEW).
+- Nama program dari RPJMD tercetak kapital dengan awalan "PROGRAM". Tampilan memakai `namaProgram` (hanya mengubah huruf dan membuang awalan; akronim di daftar tangan). Surat PPID tetap memakai nama resmi. Nama bidang memakai `namaBidangRingkas` (membuang "Urusan Pemerintahan Bidang").
+- Kartu "Data program" di PPID tidak menampilkan perangkat daerah karena data itu belum ada di skema; diganti bidang dan indikator utama.
+- Menu memakai empat tautan seperti Figma. "Netralitas" tetap bisa dibuka lewat `/netralitas` (redirect ke `/metodologi#netralitas`).
+- Catatan "belum ditinjau hukum" dan perkiraan tenggat tetap tampil di PPID dan Pelacak walau tidak ada di Figma.
+
 ## Ditetapkan oleh tim (final)
 
 - Monorepo dengan bun workspaces (sebelumnya pnpm, lihat "Package manager: bun"), TypeScript strict.

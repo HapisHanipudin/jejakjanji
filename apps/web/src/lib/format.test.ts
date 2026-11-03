@@ -1,5 +1,11 @@
 import { expect, test } from 'vitest';
-import { formatPersen, formatRupiahPenuh, formatTanggal } from './format.ts';
+import {
+  formatPersen,
+  formatRupiahPenuh,
+  formatTanggal,
+  namaBidangRingkas,
+  namaProgram,
+} from './format.ts';
 import { totalPagu } from './pagu.ts';
 
 test('angka penuh untuk tooltip', () => {
@@ -29,4 +35,23 @@ test('persen memakai tepat satu desimal', () => {
     '0,0%',
     '100,0%',
   ]);
+});
+
+test('nama bidang ringkas hanya membuang awalan formal', () => {
+  expect(namaBidangRingkas('Urusan Pemerintahan Bidang Pendidikan')).toBe('Pendidikan');
+  expect(namaBidangRingkas('Keuangan')).toBe('Keuangan');
+});
+
+test('nama program: buang awalan PROGRAM, ubah kapital, pertahankan akronim', () => {
+  expect(namaProgram('PROGRAM PENGELOLAAN PERSAMPAHAN')).toBe('Pengelolaan Persampahan');
+  expect(namaProgram('PROGRAM PENYELENGGARAAN LALU LINTAS DAN ANGKUTAN JALAN (LLAJ)')).toBe(
+    'Penyelenggaraan Lalu Lintas dan Angkutan Jalan (LLAJ)',
+  );
+  expect(
+    namaProgram(
+      'PROGRAM PENCEGAHAN, PENANGGULANGAN, PENYELAMATAN KEBAKARAN DAN PENYELAMATAN NON KEBAKARAN',
+    ),
+  ).toBe('Pencegahan, Penanggulangan, Penyelamatan Kebakaran dan Penyelamatan Non Kebakaran');
+  expect(namaProgram('PROGRAM PENGEMBANGAN UMKM')).toBe('Pengembangan UMKM');
+  expect(namaProgram('Program Sudah Rapi')).toBe('Sudah Rapi');
 });

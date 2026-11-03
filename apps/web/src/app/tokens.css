@@ -3,23 +3,30 @@
  * Declared in Tailwind's @theme, so each token is both a CSS variable (globals.css) and a utility
  * (`bg-surface`, `text-text-muted`, `font-mono`, `text-sm`). A designer restyles the site here only.
  * `static` keeps every variable in the output even when no utility uses it.
- * Current look: lo-fi wireframe (greys, one blue accent for primary buttons only).
+ * Current look: Figma "JejakJanji Wireframe", page "Hi-Fi V4 — Final + Prototype".
  */
 @theme static {
   /* Colour: drop Tailwind's palette so these are the only colours. */
   --color-*: initial;
-  --color-bg: #ffffff;
-  --color-surface: #f4f4f4;
-  --color-surface-strong: #e6e6e6;
-  --color-text: #1a1a1a;
-  --color-text-muted: #555555; /* 7.4:1 on white */
-  --color-border: #c4c4c4;
-  --color-border-strong: #6b6b6b;
-  --color-bar: #8a8a8a;
-  --color-accent: #2f5d8a; /* primary buttons only; 6.9:1 with white text */
+  --color-bg: #fcfbf7;
+  --color-band: #f6f8fa; /* page title band */
+  --color-surface: #f4f3ee; /* bar tracks, chips, notes, letter preview */
+  --color-surface-strong: #f2efe7;
+  --color-heading: #13263b;
+  --color-text: #17202a;
+  --color-text-muted: #4f5b66; /* 6.9:1 on bg */
+  --color-border: #d5cfc0;
+  --color-border-strong: #6b7480;
+  --color-bar: #5b84ab;
+  --color-accent: #1f4e79; /* primary buttons, active nav, solid status; 8.9:1 with white */
   --color-accent-text: #ffffff;
-  --color-focus: #1a1a1a;
-  --color-placeholder-bg: #fff2a8; /* highlighted [placeholders] in the PPID letter */
+  --color-accent-soft: #dce8f3; /* "ada" status pill, correction band */
+  --color-link: #2b5982;
+  --color-focus: #1f4e79;
+  --color-placeholder-bg: #fff2a8; /* [placeholders] in the PPID letter, correction contact */
+  --color-footer: #13263b;
+  --color-footer-text: #f4f1e8;
+  --color-footer-muted: #b9c8d8;
 
   /* Spacing scale */
   --space-1: 0.25rem;
@@ -29,25 +36,36 @@
   --space-5: 1.5rem;
   --space-6: 2rem;
   --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 5rem;
 
-  /* Typography */
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Typography: Plus Jakarta Sans is loaded by next/font in layout.tsx (--font-jakarta). */
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
-  --text-xs: 0.8125rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.25rem;
-  --text-xl: 1.5rem;
-  --text-2xl: 2rem;
+  --text-xs: 0.8125rem; /* 13 */
+  --text-sm: 0.875rem; /* 14 */
+  --text-base: 1rem; /* 16 */
+  --text-lg: 1.125rem; /* 18 */
+  --text-xl: 1.375rem; /* 22 */
+  --text-2xl: 1.625rem; /* 26: card titles */
+  --text-3xl: 2.25rem; /* 36: page and section titles */
+  --text-4xl: 3rem; /* 48: home hero */
+  --text-display: 4.5rem; /* 72: home coverage number */
   --leading: 1.5;
-  --font-weight-bold: 650;
+  --font-weight-normal: 400;
+  --font-weight-bold: 600;
+  --font-weight-extrabold: 800;
 
   /* Shape */
-  --radius: 4px;
+  --radius: 6px; /* buttons, inputs */
+  --radius-md: 8px; /* chips, notes */
+  --radius-lg: 12px; /* cards */
+  --radius-pill: 999px;
   --border-width: 1px;
   --focus-width: 3px;
 
   /* Layout */
   --content-max: 1200px;
-  --bar-height: 1rem;
+  --gutter: 1.25rem;
+  --bar-height: 1.5rem;
 }

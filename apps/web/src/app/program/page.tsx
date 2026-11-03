@@ -1,8 +1,12 @@
 import type { Metadata } from 'next';
 import { programQuerySchema } from '@jejakjanji/shared';
+import { JejakLangkah } from '@/components/JejakBukti';
+import { PageHeader } from '@/components/PageHeader';
 import { ProgramCard } from '@/components/ProgramCard';
 import { EmptyState, ErrorState } from '@/components/States';
+import { TOTAL_PROGRAM_RPJMD } from '@/content/site';
 import { getBidangList, getProgramList, getSumberList } from '@/lib/data';
+import { namaBidangRingkas } from '@/lib/format';
 
 export const metadata: Metadata = { title: 'Daftar program' };
 
@@ -29,83 +33,117 @@ export default async function ProgramListPage({ searchParams }: PageProps<'/prog
 
   return (
     <>
-      <h1>Program prioritas RPJMD DKI Jakarta</h1>
-      <p className="muted">
-        {all.ok ? `${all.data.data.length} program sudah dikurasi. ` : ''}
-        Pagu yang ditampilkan adalah pagu indikatif RPJMD, bukan APBD dan bukan realisasi.
-      </p>
-
-      {/* Plain GET form: works without JavaScript and keeps filters in the shareable URL. */}
-      <form
-        method="get"
-        action="/program"
-        className="box form-row"
-        role="search"
-        aria-label="Saring program"
-      >
-        <div className="field">
-          <label htmlFor="q">Cari nama atau kode</label>
-          <input id="q" name="q" type="search" maxLength={200} defaultValue={filter.q ?? ''} />
-        </div>
-        <div className="field">
-          <label htmlFor="bidang">Bidang</label>
-          <select id="bidang" name="bidang" defaultValue={filter.bidang ?? ''}>
-            <option value="">Semua bidang</option>
-            {bidangDenganProgram.map((k) => (
-              <option key={k} value={k}>
-                {k} {bidangNama.get(k) ?? ''}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="field">
-          <label htmlFor="status">Status bukti</label>
-          <select id="status" name="status" defaultValue={filter.status ?? ''}>
-            <option value="">Semua</option>
-            <option value="ada">Ada laporan pelaksanaan</option>
-            <option value="belum_diketahui">Belum diketahui</option>
-          </select>
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Terapkan
-        </button>
-      </form>
-
-      {!parsed.success && (
-        <ErrorState judul="Filter tidak valid" pesan="Sebagian filter di alamat diabaikan." />
-      )}
-      {!bidang.ok && <ErrorState judul="Nama bidang belum bisa dimuat" pesan={bidang.pesan} />}
-
-      <section aria-labelledby="hasil-title" style={{ marginTop: 'var(--space-5)' }}>
-        <h2 id="hasil-title" className="sr-only">
-          Hasil
-        </h2>
-        {!filtered.ok ? (
-          <ErrorState pesan={filtered.pesan} />
-        ) : (
+      <PageHeader
+        title="Program prioritas RPJMD DKI Jakarta"
+        lead={
           <>
-            <p aria-live="polite">
-              Menampilkan {filtered.data.data.length} dari {all.ok ? all.data.data.length : '?'}{' '}
-              program
-            </p>
-            {filtered.data.data.length === 0 ? (
-              <EmptyState>Tidak ada program yang cocok dengan filter ini.</EmptyState>
-            ) : (
-              <div className="grid-3">
-                {filtered.data.data.map((p) => (
-                  <ProgramCard
-                    key={p.kode}
-                    program={p}
-                    bidangNama={bidangNama.get(p.bidangKode)}
-                    doc={docs.find((d) => d.id === p.paguPerTahun[0]?.sourceDocumentId)}
-                    label={filtered.data.label}
-                  />
-                ))}
-              </div>
-            )}
+            {all.ok
+              ? `${all.data.data.length} program sudah dikurasi dari ${TOTAL_PROGRAM_RPJMD} program prioritas daerah dalam RPJMD 2025 sampai 2029. `
+              : ''}
+            Pagu adalah pagu indikatif RPJMD, bukan APBD.
           </>
+        }
+      />
+
+      <div className="section container">
+        {/* Plain GET form: works without JavaScript and keeps filters in the shareable URL. */}
+        <form
+          method="get"
+          action="/program"
+          className="box form-row"
+          style={{ padding: 'var(--space-5)' }}
+          role="search"
+          aria-label="Saring program"
+        >
+          <div className="field">
+            <label htmlFor="q">Cari</label>
+            <input
+              id="q"
+              name="q"
+              type="search"
+              maxLength={200}
+              placeholder="Nama atau kode program"
+              defaultValue={filter.q ?? ''}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="bidang">Bidang</label>
+            <select id="bidang" name="bidang" defaultValue={filter.bidang ?? ''}>
+              <option value="">Semua bidang</option>
+              {bidangDenganProgram.map((k) => (
+                <option key={k} value={k}>
+                  {k} {namaBidangRingkas(bidangNama.get(k) ?? '')}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="status">Status bukti</label>
+            <select id="status" name="status" defaultValue={filter.status ?? ''}>
+              <option value="">Semua status</option>
+              <option value="ada">Ada laporan pelaksanaan</option>
+              <option value="belum_diketahui">Belum diketahui</option>
+            </select>
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Terapkan
+          </button>
+        </form>
+
+        {!parsed.success && (
+          <ErrorState judul="Filter tidak valid" pesan="Sebagian filter di alamat diabaikan." />
         )}
-      </section>
+        {!bidang.ok && <ErrorState judul="Nama bidang belum bisa dimuat" pesan={bidang.pesan} />}
+
+        <section aria-labelledby="hasil-title" style={{ marginTop: 'var(--space-5)' }}>
+          <h2 id="hasil-title" className="sr-only">
+            Hasil
+          </h2>
+          {!filtered.ok ? (
+            <ErrorState pesan={filtered.pesan} />
+          ) : (
+            <>
+              <div className="list-meta">
+                <p aria-live="polite">
+                  Menampilkan {filtered.data.data.length} dari {all.ok ? all.data.data.length : '?'}{' '}
+                  program
+                </p>
+                <p className="legend" aria-hidden="true">
+                  <JejakLangkah label="Ada bukti" status="ada" />
+                  <JejakLangkah
+                    label="Belum diketahui, bukan berarti gagal"
+                    status="belum_diketahui"
+                  />
+                </p>
+              </div>
+              {filtered.data.data.length === 0 ? (
+                <EmptyState>Tidak ada program yang cocok dengan filter ini.</EmptyState>
+              ) : (
+                <>
+                  <div className="program-head" aria-hidden="true">
+                    <span>Program dan sumber</span>
+                    <span className="num">Pagu indikatif 2026</span>
+                    <span>Jejak bukti</span>
+                  </div>
+                  <ul className="program-list">
+                    {filtered.data.data.map((p) => (
+                      <ProgramCard
+                        key={p.kode}
+                        program={p}
+                        bidangNama={bidangNama.get(p.bidangKode)}
+                        doc={docs.find((d) => d.id === p.paguPerTahun[0]?.sourceDocumentId)}
+                      />
+                    ))}
+                  </ul>
+                  <p className="small muted" style={{ marginTop: 'var(--space-4)' }}>
+                    {filtered.data.label}. M = miliar; T = triliun rupiah.
+                  </p>
+                </>
+              )}
+            </>
+          )}
+        </section>
+      </div>
     </>
   );
 }
