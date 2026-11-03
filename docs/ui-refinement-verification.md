@@ -96,6 +96,37 @@ GDocs tidak diubah. Selisih yang ditemukan:
 - PRD DT-2 meminta tahun tanpa pagu tertulis "Belum diketahui". Data Jakarta
   saat ini lengkap untuk 2026–2030, jadi tampilan tahun kosong belum teruji.
 
+## Lanjutan: motion penjelas dan scroll
+
+Commit `93de522` dan `24f243d`, diterbitkan ke Worker preview versi
+`7f856b6d-9e83-436f-bb1b-fd09fdbb07f8` setelah build Linux lulus
+([run 41613341921](https://github.com/HapisHanipudin/jejakjanji/actions/runs/41613341921))
+dan dry run Wrangler.
+
+- Detail: jejak bukti Rencana, Anggaran, Bukti tergambar berurutan.
+- Beranda daerah: meter cakupan "10 dari 82" (angka dan sumber yang sama) terisi
+  sekali; berlabel untuk pembaca layar.
+- Daftar: baris hasil masuk berurutan setelah filter.
+- PPID: baris surat yang baru dicentang disorot sesaat; tombol salin berubah
+  menjadi "Tersalin ✓" selama dua detik. Isi surat dan clipboard tidak berubah.
+- Pelacak: baris yang baru disimpan disorot sesaat; chip filter muncul halus.
+- Scroll: bagan bidang, pagu per tahun, kartu "Dari rencana sampai bukti",
+  langkah landing, dan "Daerah lain" diputar sekali saat pertama kali masuk
+  layar. Blok yang sudah terlihat saat halaman dibuka tidak dianimasikan.
+
+Animasi scroll memakai IntersectionObserver kecil. Elemen utuh secara bawaan;
+JavaScript hanya memicu animasi sekali. CSS scroll timeline sempat dicoba lalu
+dibatalkan karena screenshot full-page membekukan batang pada panjang parsial,
+yang menyesatkan untuk data. Semua animasi hilang saat reduced motion.
+
+Pemeriksaan pada build lokal dan preview HTTPS: 22 cek scroll (batang utuh
+sebelum digulir dan tanpa JavaScript, diputar sekali saat masuk layar pada 390
+px, tidak diputar saat sudah terlihat, proporsi batang sama dengan data, kartu
+akhir penuh, navigasi client, reduced motion), 44 cek motion (dengan dan tanpa
+reduced motion), dan 48 cek regresi lulus. Typecheck, lint, 38 tes unit lulus;
+3 tes integrasi PostgreSQL lulus pada cluster lokal sebelum commit `93de522`
+(API tidak berubah setelahnya).
+
 ## Batas
 
 Uji di atas adalah uji teknis browser, bukan wawancara atau uji tugas lima
