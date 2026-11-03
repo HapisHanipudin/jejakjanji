@@ -195,11 +195,11 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
       </section>
 
       <section className="section-lg section-alt" aria-labelledby="cara-title">
-        <div className="container">
+        <div className="container jejak-section">
           <h2 id="cara-title" className="section-title">
             Dari rencana sampai bukti
           </h2>
-          <p className="muted" style={{ maxWidth: '47.5rem', marginBottom: 'var(--space-6)' }}>
+          <p className="muted jejak-intro">
             Setiap program punya jejak tiga langkah. Titik penuh berarti buktinya ada; titik
             putus-putus berarti belum diketahui, bukan berarti program gagal.
           </p>

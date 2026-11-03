@@ -577,8 +577,20 @@ button.trail-card:focus-visible {
   font-size: var(--text-sm);
   font-weight: var(--font-weight-normal);
 }
+/* A symmetric three-card section: heading, intro, and the dot panel sit on the centre axis. */
+.jejak-section > .section-title {
+  text-align: center;
+}
+.jejak-intro {
+  max-width: 47.5rem;
+  margin: 0 auto var(--space-6);
+  text-align: center;
+  text-wrap: balance;
+}
 .trail-panel {
   max-width: 47.5rem;
+  margin-inline: auto;
+  text-align: center;
 }
 .trail-panel + .trail-panel {
   margin-top: var(--space-6);
@@ -589,6 +601,7 @@ button.trail-card:focus-visible {
 .dot-grid {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--space-3);
   margin: var(--space-4) 0;
 }
@@ -626,6 +639,7 @@ button.trail-card:focus-visible {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2) var(--space-5);
   margin: 0;
   color: var(--color-text-muted);
