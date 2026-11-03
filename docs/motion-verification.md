@@ -36,4 +36,24 @@ sekadar meniru deklarasi CSS. Review Impeccable mengikuti refinement atas
 desain yang sudah ada. Inspeksi Design Taste sebelum/sesudah disimpan sebagai
 artifact lokal, tanpa mengganti tipografi atau menambah ilustrasi di luar scope.
 
-Status build Linux dan deployment preview berikutnya dicatat setelah selesai.
+Inspektor Design Taste mencatat 0 elemen bergerak sebelum perubahan dan 3
+sesudahnya pada landing desktop. Gate generiknya tetap melaporkan 4 FAIL dan
+6 WARN: jumlah gambar/video, skala judul, panjang judul mobile, ambang jumlah
+gerakan, serta konvensi visual lama. Ini bukan hasil gate desain yang hijau.
+Layout, palet, judul, dan anggaran gerak terbatas dipertahankan sesuai scope
+refinement; tidak ditambahkan foto, video, atau gerakan acak untuk mengejar skor.
+
+## Preview publik
+
+Commit aplikasi `5387934` dipush pada `feat/multi-daerah-local`.
+[Build Linux](https://github.com/HapisHanipudin/jejakjanji/actions/runs/41598292646)
+lulus. Bundle diterbitkan ke
+https://jejakjanji-web-preview.hapishanipudin.workers.dev/ dengan versi Worker
+`7fe38e5a-0624-4811-883c-c1fe282117e0`.
+
+Seluruh skenario browser di atas diulang pada domain HTTPS preview dan lulus,
+termasuk pending filter dengan jaringan diperlambat, Back/Forward, GET tanpa
+JavaScript, dan reduced motion. Lint sumber Design Taste pada landing mencatat
+0 FAIL/0 WARN; itu terpisah dari gate visual yang masih memiliki catatan di atas.
+Screenshot dan hasil terstruktur disimpan di folder output lokal `motion/`.
+Main, Worker development lama, API, dan database tidak diubah dalam sesi motion.

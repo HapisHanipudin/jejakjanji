@@ -1,5 +1,9 @@
 # Lanjutan preview — 3 November 2026
 
+Pembaruan motion berikutnya beserta versi Worker terbaru dicatat di
+[motion-verification.md](motion-verification.md). Bagian deployment di bawah
+mencatat versi saat verifikasi multi-daerah awal.
+
 Pengguna mengizinkan commit, push, dan deploy preview, lalu secara eksplisit
 menyetujui migrasi database development Neon yang dipakai Hyperdrive
 `jejakjanji-db`. Branch kerja `feat/multi-daerah-local`; main tidak diubah.
@@ -68,7 +72,7 @@ https://github.com/HapisHanipudin/jejakjanji/actions/runs/41594607386.
 Web preview:
 https://jejakjanji-web-preview.hapishanipudin.workers.dev/
 
-Versi web terbaru: `6a22ee5f-c8e1-4d03-83ae-dbe9e2120246`. Bundle Linux
+Versi web saat verifikasi awal: `6a22ee5f-c8e1-4d03-83ae-dbe9e2120246`. Bundle Linux
 divalidasi dengan Wrangler lalu diterbitkan ke Worker preview terpisah.
 Commit awal implementasi `9e29736`, pembetulan mobile `52a46c6`, keduanya
 dipush ke branch tersebut. Main dan Worker development lama tidak diganti.
