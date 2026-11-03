@@ -12,6 +12,7 @@ import {
 } from '@/lib/surat';
 import { namaProgram } from '@/lib/format';
 import { unduh } from '@/lib/unduh';
+import { Icon } from './Icon';
 import type { Daerah } from '@jejakjanji/shared';
 
 type Program = {
@@ -181,7 +182,13 @@ export function PpidDraft({
               onClick={salin}
               disabled={!adaPilihan}
             >
-              {tersalin ? 'Tersalin ✓' : 'Salin teks'}
+              {tersalin ? (
+                <>
+                  <Icon name="check" /> Tersalin
+                </>
+              ) : (
+                'Salin teks'
+              )}
             </button>
             <button
               type="button"
@@ -210,7 +217,7 @@ export function PpidDraft({
             </p>
           )}
           <Link className="link-strong" href={pelacakHref}>
-            Lanjut ke Pelacak Permohonan →
+            Lanjut ke Pelacak Permohonan <Icon name="arrow" />
           </Link>
         </section>
       </div>

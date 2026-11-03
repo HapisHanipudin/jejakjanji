@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import type { ProgramList } from '@jejakjanji/shared';
+import { Icon } from './Icon';
 import { JejakBukti } from './JejakBukti';
 import { Money } from './Money';
 import type { SourceDoc } from './SourceBox';
@@ -53,6 +54,9 @@ export function ProgramCard({
         <span className="label-mobile"> · pagu 2026</span>
       </p>
       <JejakBukti status={program.statusBukti} />
+      <span className="row-go" aria-hidden="true">
+        <Icon name="arrow" />
+      </span>
     </li>
   );
 }

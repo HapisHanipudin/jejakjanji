@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Icon } from '@/components/Icon';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { ProgramDetail } from '@jejakjanji/shared';
@@ -224,7 +225,7 @@ function StatusCard({ p, docs, regionSlug }: { p: Detail; docs: SourceDoc[]; reg
                   href={`/${regionSlug}/program/${encodeURIComponent(p.kode)}/ppid?minta=${k}`}
                 >
                   Minta bukti tahap ini<span className="sr-only">: {STATUS_TEKS[k].judul}</span>
-                  <span aria-hidden="true"> →</span>
+                  <Icon name="arrow" />
                 </Link>
               )}
             </li>

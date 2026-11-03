@@ -34,7 +34,7 @@ Sebelum menyatakan pekerjaan selesai: jalankan `typecheck`, `lint`, dan `test`. 
 - Status bukti dihitung dari tabel `evidence`, tidak disimpan sebagai kolom.
 - Jangan menebak versi library; pasang versi stabil terbaru lewat bun dan biarkan lockfile mencatatnya. Untuk Workers, Drizzle, dan Next.js, baca dokumentasi resmi terbaru sebelum memilih pola.
 - Seed harus idempoten dan gagal dengan pesan jelas bila CSV tidak ada. Jangan membuat data tiruan di `data/` atau di DB dev.
-- Komponen UI bersama (Header, Footer, Kartu Program, Lencana Status, Angka Uang dengan tooltip, Bagan Batang, Kotak Sumber) dipakai ulang; token warna dan tipografi di satu tempat agar desainer bisa mengganti tampilan.
+- Komponen UI bersama (Header, Footer, Kartu Program, Lencana Status, Angka Uang dengan tooltip, Bagan Batang, Kotak Sumber, Pilihan bertema `ThemedSelect`, Kolom Tanggal `DateField`) dipakai ulang; token warna dan tipografi di satu tempat agar desainer bisa mengganti tampilan.
 - Aksesibilitas dasar: heading berurutan, fokus terlihat, kontras cukup, label form, tooltip dapat diakses keyboard.
 
 ## Git
