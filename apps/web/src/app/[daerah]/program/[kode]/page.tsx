@@ -218,6 +218,15 @@ function StatusCard({ p, docs, regionSlug }: { p: Detail; docs: SourceDoc[]; reg
                 ) : (
                   <p>Belum ada catatan pencarian bukti.</p>
                 ))}
+              {p.statusBukti[k] === 'belum_diketahui' && k !== 'rencana' && (
+                <Link
+                  className="stage-action"
+                  href={`/${regionSlug}/program/${encodeURIComponent(p.kode)}/ppid?minta=${k}`}
+                >
+                  Minta bukti tahap ini<span className="sr-only">: {STATUS_TEKS[k].judul}</span>
+                  <span aria-hidden="true"> →</span>
+                </Link>
+              )}
             </li>
           );
         })}

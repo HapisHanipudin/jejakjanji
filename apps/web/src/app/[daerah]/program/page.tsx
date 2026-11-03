@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { programQuerySchema } from '@jejakjanji/shared';
 import { JejakLangkah } from '@/components/JejakBukti';
 import { PageHeader } from '@/components/PageHeader';
@@ -40,6 +41,28 @@ export default async function ProgramListPage({
   const bidangNama = new Map(bidang.ok ? bidang.data.data.map((b) => [b.kode, b.nama]) : []);
   const bidangDenganProgram = all.ok ? [...new Set(all.data.data.map((p) => p.bidangKode))] : [];
   const docs = sumber.ok ? sumber.data.data : [];
+  const base = `/${daerah}/program`;
+  const tanpa = (key: keyof typeof filter) => {
+    const u = new URLSearchParams();
+    for (const [k, v] of Object.entries(filter)) if (k !== key && v) u.set(k, v);
+    const q = u.toString();
+    return q ? `${base}?${q}` : base;
+  };
+  const aktif = [
+    filter.q ? { key: 'q' as const, label: `Kata kunci “${filter.q}”` } : null,
+    filter.bidang
+      ? {
+          key: 'bidang' as const,
+          label: `Bidang ${namaBidangRingkas(bidangNama.get(filter.bidang) ?? filter.bidang)}`,
+        }
+      : null,
+    filter.status
+      ? {
+          key: 'status' as const,
+          label: filter.status === 'ada' ? 'Ada laporan pelaksanaan' : 'Belum diketahui',
+        }
+      : null,
+  ].filter((f) => f !== null);
 
   return (
     <>
@@ -91,6 +114,24 @@ export default async function ProgramListPage({
           </div>
         </ProgramFilter>
 
+        {aktif.length > 0 && (
+          <div className="filter-summary" aria-label="Filter aktif">
+            <span className="muted">Filter aktif:</span>
+            {aktif.map((f) => (
+              <Link key={f.key} className="filter-chip" href={tanpa(f.key)} scroll={false}>
+                {f.label}
+                <span aria-hidden="true">×</span>
+                <span className="sr-only"> (hapus filter)</span>
+              </Link>
+            ))}
+            {aktif.length > 1 && (
+              <Link className="filter-clear" href={base} scroll={false}>
+                Hapus semua
+              </Link>
+            )}
+          </div>
+        )}
+
         {!parsed.success && (
           <ErrorState judul="Filter tidak valid" pesan="Sebagian filter di alamat diabaikan." />
         )}
@@ -119,7 +160,13 @@ export default async function ProgramListPage({
               </div>
               {filtered.data.data.length === 0 ? (
                 <div className="program-results" key={filterKey}>
-                  <EmptyState>Tidak ada program yang cocok dengan filter ini.</EmptyState>
+                  <EmptyState>
+                    Tidak ada program yang cocok dengan filter ini.{' '}
+                    <Link href={base} scroll={false}>
+                      Tampilkan semua program
+                    </Link>{' '}
+                    atau ubah kata kunci.
+                  </EmptyState>
                 </div>
               ) : (
                 <>

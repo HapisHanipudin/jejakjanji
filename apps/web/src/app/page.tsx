@@ -1,57 +1,75 @@
 import Link from 'next/link';
 import { RegionPicker } from '@/components/RegionPicker';
 import { ErrorState } from '@/components/States';
-import { getDaerahList } from '@/lib/data';
+import { getDaerahList, getProgramList } from '@/lib/data';
 
 export default async function LandingPage() {
   const result = await getDaerahList();
   const regions = result.ok ? result.data.data : [];
   const active = regions.filter((region) => region.statusKurasi === 'AKTIF');
+  // Each active region's own curated count; never summed or ranked across regions.
+  const counts = await Promise.all(
+    active.map(async (region) => {
+      const list = await getProgramList({ daerah: region.slug });
+      return list.ok ? list.data.data.length : null;
+    }),
+  );
   return (
     <>
       <section className="band band-hero landing-hero">
-        <div className="container">
-          <h1 className="landing-title">
-            Telusuri program daerahmu,
-            <br className="desktop-only" /> dari rencana sampai bukti.
-          </h1>
-          <p className="lead">
-            Dari dokumen resmi ke informasi yang bisa diperiksa: program, pagu indikatif, dan bukti
-            pelaksanaan. Pilih daerah yang ingin Anda telusuri.
-          </p>
-          <div className="landing-actions">
-            <RegionPicker regions={regions} error={result.ok ? undefined : result.pesan} landing />
+        <div className="container landing-grid">
+          <div>
+            <h1 className="landing-title">
+              Telusuri program daerahmu,
+              <br className="desktop-only" /> dari rencana sampai bukti.
+            </h1>
+            <p className="lead">
+              Dari dokumen resmi ke informasi yang bisa diperiksa: program, pagu indikatif, dan
+              bukti pelaksanaan. Pilih daerah yang ingin Anda telusuri.
+            </p>
+            <div className="landing-actions">
+              <RegionPicker
+                regions={regions}
+                error={result.ok ? undefined : result.pesan}
+                landing
+              />
+            </div>
+            <p className="small muted">
+              Lokasi bersifat opsional. Saran daerah tetap Anda konfirmasi.
+            </p>
           </div>
-          <p className="small muted">
-            Lokasi bersifat opsional. Saran daerah tetap Anda konfirmasi.
-          </p>
-        </div>
-      </section>
-      <section className="section-lg section-alt">
-        <div className="container stack">
-          <h2>Data yang tersedia saat ini</h2>
-          {!result.ok ? (
-            <ErrorState pesan={result.pesan} />
-          ) : active.length ? (
-            active.map((region) => (
-              <div className="coverage-entry" key={region.kode}>
-                <h3>{region.nama}</h3>
-                <p>
-                  Program prioritas RPJMD dan konteks pagu RKPD dikurasi dengan sumber, halaman PDF,
-                  dan tanggal pemeriksaan.
-                </p>
-                <Link className="btn btn-primary" href={`/${region.slug}`}>
-                  Jelajahi {region.nama}
-                </Link>
-              </div>
-            ))
-          ) : (
-            <p>Belum ada daerah dengan data aktif.</p>
-          )}
-          <p className="small muted">
-            Daerah lain ditambahkan setelah sumber dan datanya diperiksa. Belum dikurasi bukan
-            penilaian kinerja pemerintah.
-          </p>
+          <section className="coverage-card" id="cakupan" aria-labelledby="cakupan-title">
+            <h2 id="cakupan-title">Data yang tersedia saat ini</h2>
+            {!result.ok ? (
+              <ErrorState pesan={result.pesan} />
+            ) : active.length ? (
+              <ul className="list-plain">
+                {active.map((region, i) => (
+                  <li className="coverage-entry" key={region.kode}>
+                    <p className="coverage-name">
+                      {region.nama}
+                      <span className="badge">Aktif</span>
+                    </p>
+                    <p className="muted small">
+                      {counts[i] != null
+                        ? `${counts[i]} program prioritas RPJMD dikurasi`
+                        : 'Program prioritas RPJMD dikurasi'}{' '}
+                      beserta konteks pagu RKPD, halaman PDF, dan tanggal cek.
+                    </p>
+                    <Link className="btn btn-primary btn-block" href={`/${region.slug}`}>
+                      Jelajahi {region.nama}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>Belum ada daerah dengan data aktif.</p>
+            )}
+            <p className="xsmall muted">
+              Daerah lain ditambahkan setelah sumber dan datanya diperiksa. Belum dikurasi bukan
+              penilaian kinerja pemerintah.
+            </p>
+          </section>
         </div>
       </section>
       <section className="section-lg" id="cara-kerja">

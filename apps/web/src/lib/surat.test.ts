@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { buatSurat, pilihanBawaan } from './surat.ts';
+import { buatSurat, isTahapDiminta, pilihanBawaan, pilihanUntukTahap } from './surat.ts';
 
 const program = {
   nama: 'Program Uji',
@@ -40,4 +40,17 @@ test('bagian dalam kurung siku tidak diisi sistem', () => {
   ]) {
     expect(s).toContain(p);
   }
+});
+
+test('tahap dari Detail memilih butir yang sesuai; nilai lain kembali ke bawaan', () => {
+  expect(pilihanUntukTahap('anggaran')).toEqual({ capaian: false, anggaran: true, dokumen: false });
+  expect(pilihanUntukTahap('pelaksanaan')).toEqual({
+    capaian: true,
+    anggaran: false,
+    dokumen: true,
+  });
+  expect(pilihanUntukTahap(undefined)).toEqual(pilihanBawaan());
+  expect(isTahapDiminta('anggaran')).toBe(true);
+  expect(isTahapDiminta('rencana')).toBe(false);
+  expect(isTahapDiminta(['anggaran'])).toBe(false);
 });

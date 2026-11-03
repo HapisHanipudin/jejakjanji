@@ -4,9 +4,9 @@ import { JejakLangkah } from '@/components/JejakBukti';
 import { Money } from '@/components/Money';
 import { SourceBox } from '@/components/SourceBox';
 import { EmptyState, ErrorState, PaguLabel } from '@/components/States';
-import { TOTAL_PROGRAM_RPJMD, TOTAL_PROGRAM_SUMBER } from '@/content/site';
-import { getBidangList, getProgramList, getSumberList, getRegion } from '@/lib/data';
-import { formatPersen, namaBidangRingkas } from '@/lib/format';
+import { KONTAK_KOREKSI, TOTAL_PROGRAM_RPJMD, TOTAL_PROGRAM_SUMBER } from '@/content/site';
+import { getBidangList, getDaerahList, getProgramList, getSumberList, getRegion } from '@/lib/data';
+import { formatPersen, namaBidangRingkas, namaProgram } from '@/lib/format';
 
 export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
   const { daerah } = await params;
@@ -14,11 +14,22 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
   if (!regionResult.ok || !regionResult.data) return null;
   const region = regionResult.data;
   if (region.statusKurasi !== 'AKTIF') return null;
-  const [programs, bidang, sumber] = await Promise.all([
+  const [programs, bidang, sumber, daerahList] = await Promise.all([
     getProgramList({ daerah }),
     getBidangList(daerah),
     getSumberList(daerah),
+    getDaerahList(),
   ]);
+  const aktif = daerahList.ok
+    ? daerahList.data.data.filter((d) => d.statusKurasi === 'AKTIF').map((d) => d.nama)
+    : [region.nama];
+  // Example keywords are this region's own shortest curated program names, never invented.
+  const contoh = programs.ok
+    ? programs.data.data
+        .map((p) => namaProgram(p.nama))
+        .sort((x, y) => x.length - y.length || x.localeCompare(y, 'id'))
+        .slice(0, 3)
+    : [];
 
   return (
     <>
@@ -30,14 +41,50 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
               Satu tempat untuk program prioritas {region.nama}, pagu indikatifnya, dan bukti
               pelaksanaannya. Setiap angka punya sumber, halaman, dan tanggal cek.
             </p>
-            <div className="btn-row">
-              <Link href={`/${daerah}/program`} className="btn btn-primary">
-                Lihat daftar program
+            {/* Plain GET form: opens the list with the keyword, with or without JavaScript. */}
+            <form
+              className="hero-search"
+              method="get"
+              action={`/${daerah}/program`}
+              role="search"
+              aria-label={`Cari program ${region.nama}`}
+            >
+              <label htmlFor="cari-program">Cari program</label>
+              <div className="hero-search-row">
+                <input
+                  id="cari-program"
+                  name="q"
+                  type="search"
+                  maxLength={200}
+                  placeholder="Nama atau awalan kode program"
+                />
+                <button type="submit" className="btn btn-primary">
+                  Cari
+                </button>
+              </div>
+            </form>
+            {contoh.length > 0 && (
+              <p className="quick-fields">
+                <span className="muted">Contoh:</span>
+                {contoh.map((q) => (
+                  <Link
+                    key={q}
+                    className="field-chip"
+                    href={`/${daerah}/program?q=${encodeURIComponent(q)}`}
+                  >
+                    {q}
+                  </Link>
+                ))}
+              </p>
+            )}
+            <p className="hero-links">
+              <Link className="link-strong" href={`/${daerah}/program`}>
+                Lihat semua program →
               </Link>
-              <Link href={`/${daerah}/metodologi`} className="btn">
+              <Link className="link-strong" href={`/${daerah}/metodologi`}>
                 Cara kami bekerja
               </Link>
-            </div>
+            </p>
           </div>
           <div aria-label="Cakupan data">
             {programs.ok ? (
@@ -165,6 +212,34 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
               </p>
             </li>
           </ol>
+        </div>
+      </section>
+
+      <section className="section-lg" aria-labelledby="daerah-lain-title">
+        <div className="container other-regions">
+          <div>
+            <h2 id="daerah-lain-title" className="section-title">
+              Daerah lain
+            </h2>
+            <p>
+              JejakJanji disiapkan untuk banyak daerah. Data aktif saat ini:{' '}
+              <strong>{aktif.join(', ')}</strong>. Tiap daerah ditampilkan sendiri, tanpa
+              perbandingan pagu atau peringkat.
+            </p>
+            <p className="muted">
+              Punya dokumen RPJMD daerah lain? Kirim tautannya ke{' '}
+              <a href={`mailto:${KONTAK_KOREKSI}`}>{KONTAK_KOREKSI}</a>. Belum dikurasi bukan
+              penilaian kinerja pemerintah.
+            </p>
+          </div>
+          <div className="btn-row">
+            <Link className="btn" href="/#cakupan">
+              Lihat cakupan daerah
+            </Link>
+            <Link className="btn" href={`/${daerah}/metodologi`}>
+              Baca Metodologi
+            </Link>
+          </div>
         </div>
       </section>
     </>

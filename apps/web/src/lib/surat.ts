@@ -12,6 +12,20 @@ export type Pilihan = Record<InformasiKey, boolean>;
 export const pilihanBawaan = (): Pilihan =>
   Object.fromEntries(INFORMASI.map((i) => [i.key, i.bawaan])) as Pilihan;
 
+/** Evidence stages a Detail page can ask about; "rencana" always has a source, so it is not one. */
+export const TAHAP_DIMINTA = ['anggaran', 'pelaksanaan'] as const;
+export type TahapDiminta = (typeof TAHAP_DIMINTA)[number];
+
+export const isTahapDiminta = (v: unknown): v is TahapDiminta =>
+  typeof v === 'string' && (TAHAP_DIMINTA as readonly string[]).includes(v);
+
+/** Pre-ticked items when the requester arrives from one unknown evidence stage. */
+export function pilihanUntukTahap(tahap: TahapDiminta | undefined): Pilihan {
+  if (tahap === 'anggaran') return { capaian: false, anggaran: true, dokumen: false };
+  if (tahap === 'pelaksanaan') return { capaian: true, anggaran: false, dokumen: true };
+  return pilihanBawaan();
+}
+
 /** Square-bracket parts are never filled by the system; the requester fills them after copying. */
 export const PLACEHOLDER = /(\[[^\]]+\])/;
 

@@ -7,11 +7,17 @@ import { PpidDraft } from '@/components/PpidDraft';
 import { CATATAN_TINJAU_HUKUM } from '@/content/legal';
 import { getBidangList, getProgram } from '@/lib/data';
 import { namaBidangRingkas, namaProgram } from '@/lib/format';
+import { isTahapDiminta } from '@/lib/surat';
 
 export const metadata: Metadata = { title: 'Draf permohonan PPID' };
 
-export default async function PpidPage({ params }: PageProps<'/[daerah]/program/[kode]/ppid'>) {
+export default async function PpidPage({
+  params,
+  searchParams,
+}: PageProps<'/[daerah]/program/[kode]/ppid'>) {
   const { kode, daerah } = await params;
+  const minta = (await searchParams).minta;
+  const tahap = isTahapDiminta(minta) ? minta : undefined;
   const [res, bidang] = await Promise.all([getProgram(kode, daerah), getBidangList(daerah)]);
   if (!res.ok && res.status === 404) notFound();
 
@@ -48,6 +54,7 @@ export default async function PpidPage({ params }: PageProps<'/[daerah]/program/
         {res.ok && program && res.data.daerah ? (
           <PpidDraft
             region={res.data.daerah}
+            tahap={tahap}
             program={{
               kode: program.kode,
               nama: program.nama,
