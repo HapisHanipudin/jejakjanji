@@ -44,7 +44,7 @@ export default async function MetodologiPage({ params }: PageProps<'/[daerah]/me
             <EmptyState>Belum ada dokumen sumber di data.</EmptyState>
           ) : (
             <div className="table-wrap">
-              <table className="table-plain">
+              <table className="table-plain table-cards">
                 <thead>
                   <tr>
                     <th scope="col">Dokumen</th>
@@ -67,8 +67,12 @@ export default async function MetodologiPage({ params }: PageProps<'/[daerah]/me
                           ({d.version})
                         </span>
                       </th>
-                      <td className="muted">{DIPAKAI_UNTUK[d.type]}</td>
-                      <td style={{ whiteSpace: 'nowrap' }}>{formatTanggal(d.checkedAt)}</td>
+                      <td className="muted" data-label="Dipakai untuk">
+                        {DIPAKAI_UNTUK[d.type]}
+                      </td>
+                      <td data-label="Diperiksa" style={{ whiteSpace: 'nowrap' }}>
+                        {formatTanggal(d.checkedAt)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

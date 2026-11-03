@@ -1198,7 +1198,8 @@ fieldset legend {
   .table-cards,
   .table-cards tbody,
   .table-cards tr,
-  .table-cards td {
+  .table-cards td,
+  .table-cards tbody th {
     display: block;
   }
   .table-cards tr {
@@ -1209,7 +1210,8 @@ fieldset legend {
   .table-cards tr + tr {
     margin-top: var(--space-4);
   }
-  .table-cards td {
+  .table-cards td,
+  .table-cards tbody th {
     border: 0;
     padding: var(--space-1) 0;
     text-align: left;

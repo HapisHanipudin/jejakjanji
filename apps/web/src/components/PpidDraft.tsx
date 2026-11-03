@@ -104,9 +104,11 @@ export function PpidDraft({ program, region }: { program: Program; region: Daera
           {pesan}
         </p>
         {region.ppidUrl ? (
-          <a href={region.ppidUrl} rel="noreferrer" target="_blank">
-            Buka kanal PPID {region.nama}
-          </a>
+          <p>
+            <a href={region.ppidUrl} rel="noreferrer" target="_blank">
+              Buka kanal PPID {region.nama}
+            </a>
+          </p>
         ) : (
           <p className="small muted">
             Tautan kanal PPID {region.nama} belum diverifikasi. Cari kanal resmi sebelum mengirim;
