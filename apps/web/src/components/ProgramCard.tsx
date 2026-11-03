@@ -1,55 +1,50 @@
 import Link from 'next/link';
 import type { ProgramList } from '@jejakjanji/shared';
+import { JejakBukti } from './JejakBukti';
 import { Money } from './Money';
-import { SourceBox, type SourceDoc } from './SourceBox';
-import { StatusBadge } from './StatusBadge';
-import { PaguLabel } from './States';
-import { totalPagu } from '@/lib/pagu';
+import type { SourceDoc } from './SourceBox';
+import { namaBidangRingkas, namaProgram } from '@/lib/format';
 
 type Item = ProgramList['data'][number];
 
+/** One program in the list: a table-like row on desktop, a card on narrow screens. */
 export function ProgramCard({
   program,
   bidangNama,
   doc,
-  label,
 }: {
   program: Item;
   bidangNama: string | undefined;
   doc: SourceDoc | undefined;
-  label: string;
 }) {
-  const total = totalPagu(program.paguPerTahun);
-  const pages = program.paguPerTahun.map((p) => p.pageRef);
+  const pages = [...new Set(program.paguPerTahun.map((p) => p.pageRef))].sort((a, b) => a - b);
   return (
-    <article className="card">
-      <p className="small muted">
-        <span className="kode">{program.kode}</span> | {bidangNama ?? program.bidangKode}
-      </p>
-      <h3>
-        <Link className="card-link" href={`/program/${encodeURIComponent(program.kode)}`}>
-          {program.nama}
-        </Link>
-      </h3>
-      <p>
-        Pagu indikatif 2026:{' '}
+    <li className="program-row">
+      <div>
+        <h3>
+          <Link className="card-link" href={`/program/${encodeURIComponent(program.kode)}`}>
+            {namaProgram(program.nama)}
+          </Link>
+        </h3>
+        <p>
+          <span className="kode">{program.kode}</span> ·{' '}
+          {bidangNama ? namaBidangRingkas(bidangNama) : program.bidangKode}
+        </p>
+        {pages.length > 0 && (
+          <p className="program-ref">
+            {doc?.type ?? 'Sumber'} · hal. PDF {pages.join(', ')}
+          </p>
+        )}
+      </div>
+      <p className="program-pagu">
         {program.pagu2026 ? (
           <Money jumlah={program.pagu2026.jumlahJutaRp} satuan="juta_rp" />
         ) : (
-          'tidak tercantum'
+          <span className="muted small">Tidak tercantum</span>
         )}
+        <span className="label-mobile"> · pagu 2026</span>
       </p>
-      {total && (
-        <p>
-          Total {total.rentang}: <Money jumlah={total.jumlahJutaRp} satuan="juta_rp" />
-        </p>
-      )}
-      <div className="badge-row">
-        <StatusBadge jenis="rencana" status={program.statusBukti.rencana} />
-        <StatusBadge jenis="pelaksanaan" status={program.statusBukti.pelaksanaan} />
-      </div>
-      <PaguLabel label={label} />
-      {pages.length > 0 && <SourceBox doc={doc} pages={pages} />}
-    </article>
+      <JejakBukti status={program.statusBukti} />
+    </li>
   );
 }

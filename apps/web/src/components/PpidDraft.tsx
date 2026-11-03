@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { INFORMASI, PLACEHOLDER, buatSurat, pilihanBawaan, type Pilihan } from '@/lib/surat';
+import { namaProgram } from '@/lib/format';
 import { unduh } from '@/lib/unduh';
 
 type Program = {
@@ -30,7 +31,7 @@ export function PpidDraft({ program }: { program: Program }) {
   }
 
   return (
-    <div className="grid-2">
+    <div className="grid-aside">
       <div className="stack">
         <fieldset>
           <legend>Informasi yang diminta</legend>
@@ -46,17 +47,19 @@ export function PpidDraft({ program }: { program: Program }) {
           ))}
         </fieldset>
         <section className="box" aria-labelledby="ringkasan-title">
-          <h2 id="ringkasan-title">Ringkasan program</h2>
-          <dl>
-            <dt className="small muted">Kode</dt>
-            <dd className="kode">{program.kode}</dd>
-            <dt className="small muted">Nama</dt>
-            <dd>{program.nama}</dd>
-            <dt className="small muted">Bidang</dt>
+          <h2 id="ringkasan-title" style={{ fontSize: 'var(--text-lg)' }}>
+            Data program
+          </h2>
+          <dl className="facts-stack">
+            <dt>Program</dt>
+            <dd>
+              {namaProgram(program.nama)} (<span className="kode">{program.kode}</span>)
+            </dd>
+            <dt>Bidang</dt>
             <dd>{program.bidang}</dd>
-            <dt className="small muted">Indikator utama</dt>
+            <dt>Indikator utama</dt>
             <dd>{program.indikator}</dd>
-            <dt className="small muted">Rujukan</dt>
+            <dt>Rujukan</dt>
             <dd>
               {program.sumber}, hal. PDF {program.halaman}
             </dd>
@@ -64,8 +67,11 @@ export function PpidDraft({ program }: { program: Program }) {
         </section>
       </div>
 
-      <section aria-labelledby="pratinjau-title" className="stack">
-        <h2 id="pratinjau-title">Pratinjau surat</h2>
+      <section className="box box-lg" aria-labelledby="pratinjau-title">
+        <div className="box-head">
+          <h2 id="pratinjau-title">Pratinjau draf</h2>
+          <span className="legend-chip">[ ] harus diisi pemohon</span>
+        </div>
         {!adaPilihan && (
           <p className="notice" role="status">
             Pilih minimal satu informasi yang diminta.
@@ -76,8 +82,7 @@ export function PpidDraft({ program }: { program: Program }) {
             .split(PLACEHOLDER)
             .map((part, n) => (PLACEHOLDER.test(part) ? <mark key={n}>{part}</mark> : part))}
         </pre>
-        <p className="small muted">Bagian yang disorot diisi sendiri oleh pemohon.</p>
-        <div className="btn-row">
+        <div className="btn-row" style={{ marginTop: 'var(--space-5)' }}>
           <button type="button" className="btn btn-primary" onClick={salin} disabled={!adaPilihan}>
             Salin teks
           </button>
@@ -89,13 +94,13 @@ export function PpidDraft({ program }: { program: Program }) {
           >
             Unduh sebagai dokumen (.txt)
           </button>
-          <Link href={`/pelacak?program=${encodeURIComponent(program.kode)}`}>
-            Lanjut ke Pelacak Permohonan
-          </Link>
         </div>
-        <p role="status" className="small">
+        <p role="status" className="small" style={{ marginTop: 'var(--space-3)' }}>
           {pesan}
         </p>
+        <Link className="link-strong" href={`/pelacak?program=${encodeURIComponent(program.kode)}`}>
+          Lanjut ke Pelacak Permohonan →
+        </Link>
       </section>
     </div>
   );

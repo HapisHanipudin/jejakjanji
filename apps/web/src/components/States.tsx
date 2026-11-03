@@ -26,5 +26,5 @@ export function EmptyState({ children }: { children: React.ReactNode }) {
 
 /** Required text on every block with spending numbers. Prefer the label sent by the API. */
 export function PaguLabel({ label = LABEL_PAGU }: { label?: string }) {
-  return <p className="pagu-label">{label}.</p>;
+  return <span className="chip">{label}</span>;
 }

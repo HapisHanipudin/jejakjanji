@@ -3,13 +3,15 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { ProgramDetail } from '@jejakjanji/shared';
 import { BarChart } from '@/components/BarChart';
+import { JejakBukti } from '@/components/JejakBukti';
 import { Money } from '@/components/Money';
+import { PageHeader } from '@/components/PageHeader';
 import { SourceBox, type SourceDoc } from '@/components/SourceBox';
 import { StatusBadge } from '@/components/StatusBadge';
 import { EmptyState, ErrorState, PaguLabel } from '@/components/States';
 import { BELUM_BUKAN_GAGAL, STATUS_TEKS } from '@/content/site';
 import { getBidangList, getProgram, getSumberList } from '@/lib/data';
-import { formatAngka, formatTanggal } from '@/lib/format';
+import { formatRupiahPenuh, formatTanggal, namaBidangRingkas, namaProgram } from '@/lib/format';
 import { totalPagu } from '@/lib/pagu';
 
 type Detail = ProgramDetail['data'];
@@ -32,8 +34,10 @@ export default async function ProgramDetailPage({ params }: PageProps<'/program/
   if (!res.ok) {
     return (
       <>
-        <h1>Program {kode}</h1>
-        <ErrorState pesan={res.pesan} />
+        <PageHeader title={`Program ${kode}`} />
+        <div className="section container">
+          <ErrorState pesan={res.pesan} />
+        </div>
       </>
     );
   }
@@ -44,68 +48,78 @@ export default async function ProgramDetailPage({ params }: PageProps<'/program/
   const bidangNama = bidang.ok
     ? bidang.data.data.find((b) => b.kode === p.bidangKode)?.nama
     : undefined;
+  const bidangRingkas = bidangNama ? namaBidangRingkas(bidangNama) : `Bidang ${p.bidangKode}`;
   const bidangHref = `/program?bidang=${encodeURIComponent(p.bidangKode)}`;
 
   return (
     <>
-      <nav className="breadcrumb" aria-label="Remah roti">
-        <ol>
-          <li>
-            <Link href="/program">Program</Link>
-          </li>
-          <li>
-            <Link href={bidangHref}>{bidangNama ?? `Bidang ${p.bidangKode}`}</Link>
-          </li>
-          <li aria-current="page">{p.kode}</li>
-        </ol>
-      </nav>
-      <h1>{p.nama}</h1>
-      <p className="muted">
-        <span className="kode">{p.kode}</span> | {bidangNama ?? p.bidangKode} | {p.sumber.title}
-      </p>
+      <PageHeader
+        title={namaProgram(p.nama)}
+        lead={
+          <>
+            Kode <span className="kode">{p.kode}</span> | Bidang {bidangRingkas} | {p.sumber.title}
+          </>
+        }
+        breadcrumb={
+          <nav className="breadcrumb" aria-label="Remah roti">
+            <ol>
+              <li>
+                <Link href="/program">Program</Link>
+              </li>
+              <li>
+                <Link href={bidangHref}>{bidangRingkas}</Link>
+              </li>
+              <li aria-current="page">{p.kode}</li>
+            </ol>
+          </nav>
+        }
+      />
 
-      <div className="detail-grid">
-        <section className="area-indikator box" aria-labelledby="indikator-title">
-          <h2 id="indikator-title">Indikator utama</h2>
-          <dl>
-            <dt className="small muted">Indikator utama</dt>
-            <dd>
+      <div className="section container">
+        <div className="detail-grid">
+          <section className="area-indikator box" aria-labelledby="indikator-title">
+            <h2 id="indikator-title">Indikator utama</h2>
+            <p className="lead" style={{ color: 'var(--color-heading)' }}>
               {p.indikator} ({p.satuan})
-            </dd>
-            <dt className="small muted">Kondisi awal</dt>
-            <dd>{p.kondisiAwal}</dd>
-            <dt className="small muted">Target 2026</dt>
-            <dd>{p.target2026}</dd>
-          </dl>
-          <SourceBox doc={p.sumber} pages={[p.pageRef]} />
-        </section>
+            </p>
+            <dl className="figures">
+              <div>
+                <dt>Kondisi awal</dt>
+                <dd>{p.kondisiAwal}</dd>
+              </div>
+              <div>
+                <dt>Target 2026</dt>
+                <dd>{p.target2026}</dd>
+              </div>
+            </dl>
+            <SourceBox doc={p.sumber} pages={[p.pageRef]} />
+          </section>
 
-        <StatusCard p={p} docs={docs} />
+          <StatusCard p={p} docs={docs} />
 
-        <PaguSection p={p} label={label} docs={docs} />
+          <PaguSection p={p} label={label} docs={docs} />
 
-        <section className="area-sumber box" aria-labelledby="sumber-title">
-          <h2 id="sumber-title">Sumber dan tanggal cek</h2>
-          <dl>
-            <dt className="small muted">Dokumen</dt>
-            <dd>
-              {p.sumber.title} ({p.sumber.version})
-            </dd>
-            <dt className="small muted">Halaman PDF</dt>
-            <dd>{p.pageRef}</dd>
-            <dt className="small muted">Diperiksa</dt>
-            <dd>{formatTanggal(p.sumber.checkedAt)}</dd>
-          </dl>
-          {p.sumber.url ? (
-            <p>
-              <a href={`${p.sumber.url}#page=${p.pageRef}`} rel="noopener">
+          <section className="area-sumber box" aria-labelledby="sumber-title">
+            <h2 id="sumber-title">Sumber dan tanggal cek</h2>
+            <dl className="facts">
+              <dt>Dokumen</dt>
+              <dd>
+                {p.sumber.title} ({p.sumber.version})
+              </dd>
+              <dt>Halaman</dt>
+              <dd>PDF {p.pageRef}</dd>
+              <dt>Diperiksa</dt>
+              <dd>{formatTanggal(p.sumber.checkedAt)}</dd>
+            </dl>
+            {p.sumber.url ? (
+              <a className="btn" href={`${p.sumber.url}#page=${p.pageRef}`} rel="noopener">
                 Buka dokumen sumber (hal. PDF {p.pageRef})
               </a>
-            </p>
-          ) : (
-            <p className="muted small">Tautan dokumen belum tersedia.</p>
-          )}
-        </section>
+            ) : (
+              <p className="muted small">Tautan dokumen belum tersedia.</p>
+            )}
+          </section>
+        </div>
       </div>
     </>
   );
@@ -113,66 +127,41 @@ export default async function ProgramDetailPage({ params }: PageProps<'/program/
 
 function PaguSection({ p, label, docs }: { p: Detail; label: string; docs: SourceDoc[] }) {
   const total = totalPagu(p.pagu);
+  const pertama = p.pagu[0];
   return (
     <section className="area-pagu box" aria-labelledby="pagu-title">
-      <h2 id="pagu-title">Pagu indikatif RPJMD</h2>
-      {p.pagu.length === 0 ? (
+      <div className="box-head">
+        <h2 id="pagu-title">Pagu indikatif RPJMD</h2>
+        <PaguLabel label={label} />
+      </div>
+      {!pertama ? (
         <EmptyState>Belum ada data pagu untuk program ini.</EmptyState>
       ) : (
         <>
-          <div className="table-wrap">
-            <table>
-              <caption className="sr-only">Pagu indikatif per tahun, juta rupiah</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Tahun</th>
-                  <th scope="col" className="num">
-                    Juta rupiah
-                  </th>
-                  <th scope="col" className="num">
-                    Ringkas
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {p.pagu.map((f) => (
-                  <tr key={f.tahun}>
-                    <th scope="row">{f.tahun}</th>
-                    <td className="num">{formatAngka(f.jumlahJutaRp)}</td>
-                    <td className="num">
-                      <Money jumlah={f.jumlahJutaRp} satuan="juta_rp" />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              {total && (
-                <tfoot>
-                  <tr>
-                    <td>Total {total.rentang}</td>
-                    <td className="num">{formatAngka(total.jumlahJutaRp)}</td>
-                    <td className="num">
-                      <Money jumlah={total.jumlahJutaRp} satuan="juta_rp" />
-                    </td>
-                  </tr>
-                </tfoot>
-              )}
-            </table>
-          </div>
-          <div style={{ marginTop: 'var(--space-4)' }}>
-            <BarChart
-              caption="Pagu indikatif per tahun"
-              bars={p.pagu.map((f) => ({
-                key: String(f.tahun),
-                label: f.tahun,
-                value: f.jumlahJutaRp,
-                display: <Money jumlah={f.jumlahJutaRp} satuan="juta_rp" />,
-              }))}
-            />
-          </div>
-          <p className="small muted">
-            Satuan: juta rupiah. Total adalah jumlah angka per tahun di atas.
+          <BarChart
+            compact
+            caption="Pagu indikatif per tahun, juta rupiah"
+            bars={p.pagu.map((f) => ({
+              key: String(f.tahun),
+              label: f.tahun,
+              value: f.jumlahJutaRp,
+              display: <Money jumlah={f.jumlahJutaRp} satuan="juta_rp" />,
+            }))}
+          />
+          <hr className="rule" style={{ marginBlock: 'var(--space-4)' }} />
+          {total && (
+            <p className="total-row">
+              <span>Total {total.rentang}</span>
+              <span className="total-value">
+                <Money jumlah={total.jumlahJutaRp} satuan="juta_rp" />
+              </span>
+            </p>
+          )}
+          <p className="source">
+            Satuan sumber: juta rupiah. Pagu {pertama.tahun}:{' '}
+            {formatRupiahPenuh(pertama.jumlahJutaRp, 'juta_rp')}. Total adalah jumlah angka per
+            tahun di atas.
           </p>
-          <PaguLabel label={label} />
           {[...new Set(p.pagu.map((f) => f.sourceDocumentId))].map((id) => (
             <SourceBox
               key={id}
@@ -195,7 +184,10 @@ function StatusCard({ p, docs }: { p: Detail; docs: SourceDoc[] }) {
   return (
     <section className="area-status box box-strong" aria-labelledby="status-title">
       <h2 id="status-title">Status bukti</h2>
-      <ul className="list-plain stack">
+      <div style={{ marginBottom: 'var(--space-5)' }}>
+        <JejakBukti status={p.statusBukti} />
+      </div>
+      <ul className="list-plain status-items">
         {(Object.keys(jenisMap) as (keyof typeof jenisMap)[]).map((k) => {
           const ev = p.evidence.filter((e) => e.jenis === jenisMap[k]);
           const bersumber = ev.filter((e) => e.sourceDocumentId != null);
@@ -211,33 +203,34 @@ function StatusCard({ p, docs }: { p: Detail; docs: SourceDoc[] }) {
                     doc={docs.find((d) => d.id === e.sourceDocumentId)}
                     pages={e.pageRef != null ? [e.pageRef] : []}
                   />
-                  {e.catatan && <p className="small">{e.catatan}</p>}
+                  {e.catatan && <p>{e.catatan}</p>}
                 </div>
               ))}
               {p.statusBukti[k] === 'belum_diketahui' &&
                 (pencarian.length > 0 ? (
                   pencarian.map((e) => (
-                    <p key={e.id} className="small muted">
+                    <p key={e.id}>
                       Sudah dicari{e.cakupanPencarian ? `: ${e.cakupanPencarian}` : ''} (diperiksa{' '}
                       {formatTanggal(e.checkedAt)}).{e.catatan ? ` ${e.catatan}` : ''}
                     </p>
                   ))
                 ) : (
-                  <p className="small muted">Belum ada catatan pencarian bukti.</p>
+                  <p>Belum ada catatan pencarian bukti.</p>
                 ))}
             </li>
           );
         })}
       </ul>
-      <p style={{ marginTop: 'var(--space-4)' }}>
-        <strong>{BELUM_BUKAN_GAGAL}</strong>
+      <p className="notice notice-strong" style={{ marginBlock: 'var(--space-5)' }}>
+        {BELUM_BUKAN_GAGAL}
       </p>
-      <p>
-        <Link href={`/program/${encodeURIComponent(p.kode)}/ppid`} className="btn btn-primary">
-          Minta informasi ke PPID
-        </Link>
-      </p>
-      <p className="small muted">Kami hanya membuat draf. Anda yang mengirimnya.</p>
+      <Link
+        href={`/program/${encodeURIComponent(p.kode)}/ppid`}
+        className="btn btn-primary btn-block"
+      >
+        Minta informasi ke PPID
+      </Link>
+      <p className="source">Kami hanya membuat draf. Anda yang mengirimnya.</p>
     </section>
   );
 }
