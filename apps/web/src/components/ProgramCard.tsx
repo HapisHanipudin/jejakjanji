@@ -12,8 +12,10 @@ export function ProgramCard({
   program,
   bidangNama,
   doc,
+  regionSlug,
 }: {
   program: Item;
+  regionSlug: string;
   bidangNama: string | undefined;
   doc: SourceDoc | undefined;
 }) {
@@ -22,7 +24,10 @@ export function ProgramCard({
     <li className="program-row">
       <div>
         <h3>
-          <Link className="card-link" href={`/program/${encodeURIComponent(program.kode)}`}>
+          <Link
+            className="card-link"
+            href={`/${regionSlug}/program/${encodeURIComponent(program.kode)}`}
+          >
             {namaProgram(program.nama)}
           </Link>
         </h3>

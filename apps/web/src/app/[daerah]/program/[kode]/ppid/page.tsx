@@ -10,10 +10,12 @@ import { namaBidangRingkas, namaProgram } from '@/lib/format';
 
 export const metadata: Metadata = { title: 'Draf permohonan PPID' };
 
-export default async function PpidPage({ params }: PageProps<'/program/[kode]/ppid'>) {
-  const kode = decodeURIComponent((await params).kode);
-  const [res, bidang] = await Promise.all([getProgram(kode), getBidangList()]);
+export default async function PpidPage({ params }: PageProps<'/[daerah]/program/[kode]/ppid'>) {
+  const { kode, daerah } = await params;
+  const [res, bidang] = await Promise.all([getProgram(kode, daerah), getBidangList(daerah)]);
   if (!res.ok && res.status === 404) notFound();
+
+  const program = res.ok ? res.data.data : null;
 
   return (
     <>
@@ -24,11 +26,13 @@ export default async function PpidPage({ params }: PageProps<'/program/[kode]/pp
           <nav className="breadcrumb" aria-label="Remah roti">
             <ol>
               <li>
-                <Link href="/program">Program</Link>
+                <Link href={`/${daerah}/program`}>
+                  {res.ok ? res.data.daerah?.nama : daerah} › Program
+                </Link>
               </li>
               <li>
-                <Link href={`/program/${encodeURIComponent(kode)}`}>
-                  {res.ok ? namaProgram(res.data.data.nama) : kode}
+                <Link href={`/${daerah}/program/${encodeURIComponent(kode)}`}>
+                  {res.ok && program ? namaProgram(program.nama) : kode}
                 </Link>
               </li>
               <li aria-current="page">Draf permohonan</li>
@@ -41,24 +45,25 @@ export default async function PpidPage({ params }: PageProps<'/program/[kode]/pp
         </p>
       </PageHeader>
       <div className="section container">
-        {res.ok ? (
+        {res.ok && program && res.data.daerah ? (
           <PpidDraft
+            region={res.data.daerah}
             program={{
-              kode: res.data.data.kode,
-              nama: res.data.data.nama,
-              halaman: res.data.data.pageRef,
-              indikator: res.data.data.indikator,
+              kode: program.kode,
+              nama: program.nama,
+              halaman: program.pageRef,
+              indikator: program.indikator,
               bidang: bidang.ok
                 ? namaBidangRingkas(
-                    bidang.data.data.find((b) => b.kode === res.data.data.bidangKode)?.nama ??
-                      res.data.data.bidangKode,
+                    bidang.data.data.find((b) => b.kode === program.bidangKode)?.nama ??
+                      program.bidangKode,
                   )
-                : res.data.data.bidangKode,
-              sumber: res.data.data.sumber.title,
+                : program.bidangKode,
+              sumber: program.sumber.title,
             }}
           />
         ) : (
-          <ErrorState pesan={res.pesan} />
+          <ErrorState pesan={res.ok ? 'Data program belum tersedia.' : res.pesan} />
         )}
       </div>
     </>

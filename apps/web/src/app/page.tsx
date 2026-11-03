@@ -1,163 +1,93 @@
 import Link from 'next/link';
-import { BarChart } from '@/components/BarChart';
-import { JejakLangkah } from '@/components/JejakBukti';
-import { Money } from '@/components/Money';
-import { SourceBox } from '@/components/SourceBox';
-import { EmptyState, ErrorState, PaguLabel } from '@/components/States';
-import { TOTAL_PROGRAM_RPJMD, TOTAL_PROGRAM_SUMBER } from '@/content/site';
-import { getBidangList, getProgramList, getSumberList } from '@/lib/data';
-import { formatPersen, namaBidangRingkas } from '@/lib/format';
+import { RegionPicker } from '@/components/RegionPicker';
+import { ErrorState } from '@/components/States';
+import { getDaerahList } from '@/lib/data';
 
-export default async function HomePage() {
-  const [programs, bidang, sumber] = await Promise.all([
-    getProgramList(),
-    getBidangList(),
-    getSumberList(),
-  ]);
-
+export default async function LandingPage() {
+  const result = await getDaerahList();
+  const regions = result.ok ? result.data.data : [];
+  const active = regions.filter((region) => region.statusKurasi === 'AKTIF');
   return (
     <>
-      <div className="band band-hero">
-        <section className="container hero" aria-labelledby="hero-title">
-          <div>
-            <h1 id="hero-title">Telusuri program prioritas DKI Jakarta</h1>
-            <p className="lead">
-              Satu tempat untuk program prioritas DKI Jakarta, pagu indikatifnya, dan bukti
-              pelaksanaannya. Setiap angka punya sumber, halaman, dan tanggal cek.
-            </p>
-            <div className="btn-row">
-              <Link href="/program" className="btn btn-primary">
-                Lihat daftar program
-              </Link>
-              <Link href="/metodologi" className="btn">
-                Cara kami bekerja
-              </Link>
-            </div>
-          </div>
-          <div aria-label="Cakupan data">
-            {programs.ok ? (
-              <>
-                <p className="coverage-number">
-                  <strong>{programs.data.data.length}</strong> dari {TOTAL_PROGRAM_RPJMD}
-                </p>
-                <p>program prioritas daerah sudah dikurasi dengan sumber dan halaman PDF.</p>
-              </>
-            ) : (
-              <>
-                <p className="coverage-number">
-                  <strong>{TOTAL_PROGRAM_RPJMD}</strong> program prioritas daerah
-                </p>
-                <ErrorState
-                  pesan={programs.pesan}
-                  judul="Jumlah program dikurasi belum bisa dimuat"
-                />
-              </>
-            )}
-            <p className="source">Sumber: {TOTAL_PROGRAM_SUMBER}</p>
-          </div>
-        </section>
-      </div>
-
-      <section className="section-lg" aria-labelledby="alokasi-title">
+      <section className="band band-hero landing-hero">
         <div className="container">
-          <div className="box-head">
-            <h2 id="alokasi-title" className="section-title">
-              Ke mana belanja daerah 2026 dialokasikan
-            </h2>
-            {bidang.ok && <PaguLabel label={bidang.data.label} />}
-          </div>
-          {!bidang.ok ? (
-            <ErrorState pesan={bidang.pesan} />
-          ) : bidang.data.data.length === 0 ? (
-            <EmptyState>Belum ada data bidang urusan.</EmptyState>
-          ) : (
-            (() => {
-              const top = bidang.data.data
-                .filter((b) => ['1', '2', '3'].includes(b.kode.split('.')[0]!))
-                .sort((a, b) => b.paguIndikatif2026 - a.paguIndikatif2026)
-                .slice(0, 6);
-              const docs = sumber.ok ? sumber.data.data : [];
-              const docIds = [...new Set(top.map((b) => b.sourceDocumentId))];
-              return (
-                <>
-                  <p className="lead">
-                    Enam bidang urusan pemerintahan (kode 1-3) dengan pagu terbesar. Unsur
-                    pendukung, penunjang, pengawasan, kewilayahan, dan pemerintahan umum (kode 4-8)
-                    tidak termasuk. Pilih satu bidang untuk melihat program di dalamnya.
-                  </p>
-                  <div className="box" style={{ padding: 'var(--space-6)' }}>
-                    <BarChart
-                      caption="Pagu indikatif 2026 per bidang urusan"
-                      bars={top.map((b) => ({
-                        key: b.kode,
-                        label: namaBidangRingkas(b.nama),
-                        value: b.paguIndikatif2026,
-                        href: `/program?bidang=${encodeURIComponent(b.kode)}`,
-                        display: (
-                          <>
-                            <Money jumlah={b.paguIndikatif2026} satuan="rp" />
-                            <span className="muted">{formatPersen(b.proporsi)}</span>
-                          </>
-                        ),
-                      }))}
-                    />
-                    <hr className="rule" style={{ marginTop: 'var(--space-5)' }} />
-                    {docIds.map((id) => (
-                      <SourceBox
-                        key={id}
-                        doc={docs.find((d) => d.id === id)}
-                        pages={top.filter((b) => b.sourceDocumentId === id).map((b) => b.pageRef)}
-                      />
-                    ))}
-                    {!sumber.ok && (
-                      <ErrorState pesan={sumber.pesan} judul="Detail sumber belum bisa dimuat" />
-                    )}
-                  </div>
-                </>
-              );
-            })()
-          )}
+          <h1>
+            Telusuri program daerahmu,
+            <br className="desktop-only" /> dari rencana sampai bukti.
+          </h1>
+          <p className="lead">
+            Dari dokumen resmi ke informasi yang bisa diperiksa: program, pagu indikatif, dan bukti
+            pelaksanaan. Pilih daerah yang ingin Anda telusuri.
+          </p>
+          <RegionPicker regions={regions} error={result.ok ? undefined : result.pesan} landing />
+          <p className="small muted">
+            Lokasi bersifat opsional. Saran daerah tetap Anda konfirmasi.
+          </p>
         </div>
       </section>
-
-      <section className="section-lg section-alt" aria-labelledby="cara-title">
-        <div className="container">
-          <h2 id="cara-title" className="section-title">
-            Dari rencana sampai bukti
-          </h2>
-          <p className="muted" style={{ maxWidth: '47.5rem', marginBottom: 'var(--space-6)' }}>
-            Setiap program punya jejak tiga langkah. Titik penuh berarti buktinya ada; titik
-            putus-putus berarti belum diketahui, bukan berarti program gagal.
+      <section className="section-lg section-alt">
+        <div className="container stack">
+          <h2>Data yang tersedia saat ini</h2>
+          {!result.ok ? (
+            <ErrorState pesan={result.pesan} />
+          ) : active.length ? (
+            active.map((region) => (
+              <div className="coverage-entry" key={region.kode}>
+                <h3>{region.nama}</h3>
+                <p>
+                  Program prioritas RPJMD dan konteks pagu RKPD dikurasi dengan sumber, halaman PDF,
+                  dan tanggal pemeriksaan.
+                </p>
+                <Link className="btn btn-primary" href={`/${region.slug}`}>
+                  Jelajahi {region.nama}
+                </Link>
+              </div>
+            ))
+          ) : (
+            <p>Belum ada daerah dengan data aktif.</p>
+          )}
+          <p className="small muted">
+            Daerah lain ditambahkan setelah sumber dan datanya diperiksa. Belum dikurasi bukan
+            penilaian kinerja pemerintah.
           </p>
-          <ol className="grid-3 list-plain">
-            <li className="box">
-              <span aria-hidden="true">
-                <JejakLangkah label="Ada di rencana" status="ada" />
-              </span>
-              <h3 className="card-title">Rencana</h3>
-              <p className="muted">
-                Program prioritas dari RPJMD 2025 sampai 2029, lengkap dengan indikator dan target.
+        </div>
+      </section>
+      <section className="section-lg" id="cara-kerja">
+        <div className="container">
+          <h2 className="section-title">Dari rencana sampai bukti</h2>
+          <ol className="grid-3 list-plain landing-steps">
+            <li>
+              <h3>Baca rencananya</h3>
+              <p>Temukan program resmi beserta indikator, target, dan halaman dokumennya.</p>
+            </li>
+            <li>
+              <h3>Pahami pagunya</h3>
+              <p>
+                Lihat konteks pagu indikatif dengan unit dan sumber yang jelas. Pagu bukan APBD atau
+                realisasi.
               </p>
             </li>
-            <li className="box">
-              <span aria-hidden="true">
-                <JejakLangkah label="Dianggarkan?" status="belum_diketahui" />
-              </span>
-              <h3 className="card-title">Anggaran</h3>
-              <p className="muted">
-                Pagu indikatif per tahun dengan halaman rujukan di dokumen sumber.
-              </p>
-            </li>
-            <li className="box">
-              <span aria-hidden="true">
-                <JejakLangkah label="Ada laporan?" status="belum_diketahui" />
-              </span>
-              <h3 className="card-title">Bukti</h3>
-              <p className="muted">
-                Belum diketahui bila bukti kosong. Anda bisa meminta informasi lewat PPID.
+            <li>
+              <h3>Periksa buktinya</h3>
+              <p>
+                Bukti belum ditemukan bukan berarti gagal. Susun draf PPID, lalu kirim sendiri bila
+                perlu.
               </p>
             </li>
           </ol>
+          <Link href="/metodologi" className="btn">
+            Baca Metodologi
+          </Link>
+        </div>
+      </section>
+      <section className="section section-alt">
+        <div className="container">
+          <h2>Satu daerah, sumber yang bisa ditelusuri.</h2>
+          <p>
+            Setiap angka memiliki dokumen sumber, halaman PDF, dan tanggal pemeriksaan. Tanpa skor
+            kepala daerah, leaderboard, atau perbandingan pagu antar daerah.
+          </p>
+          <p className="legend-chip">Pagu indikatif, bukan APBD dan bukan realisasi</p>
         </div>
       </section>
     </>

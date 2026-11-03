@@ -5,14 +5,22 @@ import { PageHeader } from '@/components/PageHeader';
 import { ProgramCard } from '@/components/ProgramCard';
 import { EmptyState, ErrorState } from '@/components/States';
 import { TOTAL_PROGRAM_RPJMD } from '@/content/site';
-import { getBidangList, getProgramList, getSumberList } from '@/lib/data';
+import { getBidangList, getProgramList, getSumberList, getRegion } from '@/lib/data';
 import { namaBidangRingkas } from '@/lib/format';
 
 export const metadata: Metadata = { title: 'Daftar program' };
 
 const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
-export default async function ProgramListPage({ searchParams }: PageProps<'/program'>) {
+export default async function ProgramListPage({
+  searchParams,
+  params,
+}: PageProps<'/[daerah]/program'>) {
+  const { daerah } = await params;
+  const regionResult = await getRegion(daerah);
+  if (!regionResult.ok || !regionResult.data || regionResult.data.statusKurasi !== 'AKTIF')
+    return null;
+  const region = regionResult.data;
   const sp = await searchParams;
   const parsed = programQuerySchema.safeParse({
     bidang: first(sp.bidang) || undefined,
@@ -22,10 +30,10 @@ export default async function ProgramListPage({ searchParams }: PageProps<'/prog
   const filter = parsed.success ? parsed.data : {};
 
   const [filtered, all, bidang, sumber] = await Promise.all([
-    getProgramList(filter),
-    getProgramList(),
-    getBidangList(),
-    getSumberList(),
+    getProgramList({ ...filter, daerah }),
+    getProgramList({ daerah }),
+    getBidangList(daerah),
+    getSumberList(daerah),
   ]);
   const bidangNama = new Map(bidang.ok ? bidang.data.data.map((b) => [b.kode, b.nama]) : []);
   const bidangDenganProgram = all.ok ? [...new Set(all.data.data.map((p) => p.bidangKode))] : [];
@@ -34,11 +42,12 @@ export default async function ProgramListPage({ searchParams }: PageProps<'/prog
   return (
     <>
       <PageHeader
-        title="Program prioritas RPJMD DKI Jakarta"
+        title={`Program prioritas RPJMD ${region.nama}`}
+        breadcrumb={<p className="breadcrumb">{region.nama} › Program</p>}
         lead={
           <>
             {all.ok
-              ? `${all.data.data.length} program sudah dikurasi dari ${TOTAL_PROGRAM_RPJMD} program prioritas daerah dalam RPJMD 2025 sampai 2029. `
+              ? `${all.data.data.length} program sudah dikurasi${region.kode === '31' ? ` dari ${TOTAL_PROGRAM_RPJMD} program prioritas daerah` : ''} dalam RPJMD 2025 sampai 2029. `
               : ''}
             Pagu adalah pagu indikatif RPJMD, bukan APBD.
           </>
@@ -49,7 +58,7 @@ export default async function ProgramListPage({ searchParams }: PageProps<'/prog
         {/* Plain GET form: works without JavaScript and keeps filters in the shareable URL. */}
         <form
           method="get"
-          action="/program"
+          action={`/${daerah}/program`}
           className="box form-row"
           style={{ padding: 'var(--space-5)' }}
           role="search"
@@ -130,6 +139,7 @@ export default async function ProgramListPage({ searchParams }: PageProps<'/prog
                       <ProgramCard
                         key={p.kode}
                         program={p}
+                        regionSlug={daerah}
                         bidangNama={bidangNama.get(p.bidangKode)}
                         doc={docs.find((d) => d.id === p.paguPerTahun[0]?.sourceDocumentId)}
                       />

@@ -1,0 +1,17 @@
+name = "jejakjanji-web-preview"
+account_id = "4f77a350cc69eb1611b74f9c54259d7c"
+main = ".open-next/worker.js"
+compatibility_date = "2026-10-29"
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
+workers_dev = true
+
+[vars]
+API_BASE_URL = "https://jejakjanji-api-preview.hapishanipudin.workers.dev"
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+[[services]]
+binding = "WORKER_SELF_REFERENCE"
+service = "jejakjanji-web-preview"

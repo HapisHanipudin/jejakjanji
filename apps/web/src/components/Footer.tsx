@@ -8,7 +8,8 @@ export function Footer() {
         <p className="footer-brand">JejakJanji</p>
         <p>{FOOTER_TEXT}</p>
         <p>
-          Menemukan kekeliruan? Hubungi {KONTAK_KOREKSI}. {LABEL_PAGU}.
+          Menemukan kekeliruan? Hubungi <a href={`mailto:${KONTAK_KOREKSI}`}>{KONTAK_KOREKSI}</a>.{' '}
+          {LABEL_PAGU}.
         </p>
       </div>
     </footer>

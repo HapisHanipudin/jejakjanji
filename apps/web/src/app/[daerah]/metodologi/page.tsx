@@ -25,8 +25,9 @@ const ATURAN = [
   },
 ];
 
-export default async function MetodologiPage() {
-  const sumber = await getSumberList();
+export default async function MetodologiPage({ params }: PageProps<'/[daerah]/metodologi'>) {
+  const { daerah } = await params;
+  const sumber = await getSumberList(daerah);
 
   return (
     <>
@@ -153,7 +154,9 @@ export default async function MetodologiPage() {
               </h3>
               <p>Hubungi kami dengan menyebut kode program dan halaman PDF sumbernya.</p>
             </div>
-            <span className="highlight">{KONTAK_KOREKSI}</span>
+            <a className="highlight" href={`mailto:${KONTAK_KOREKSI}`}>
+              {KONTAK_KOREKSI}
+            </a>
           </section>
         </section>
       </div>

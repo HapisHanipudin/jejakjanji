@@ -1,5 +1,22 @@
 # Keputusan
 
+## Multi-daerah / Jakarta-first — 3 November 2026
+
+Struktur daerah diterapkan lokal; isi seed tetap Jakarta saja. Kode wilayah
+bertipe string. Program dan bidang memakai kunci gabungan daerah/kode; seluruh
+relasi sumber, pagu, dan bukti dibatasi daerah. Endpoint lama tetap Jakarta.
+Landing `/` bersifat umum; enam halaman berada di bawah slug daerah. URL selalu
+mengalahkan preferensi tersimpan. `BELUM_DIKURASI` menyatakan cakupan daerah;
+`belum_diketahui` menyatakan bukti program, bukan kegagalan. Tidak ada peringkat
+atau perbandingan pagu/status antar daerah.
+
+Pengguna menyetujui layanan lokasi eksternal dengan persetujuan pengunjung.
+Dipilih BigDataCloud client reverse geocoding; disclosure, izin, dan konfirmasi
+saran wajib dilalui. Pemetaan baru hanya ID-JK ke 31; tidak ada fallback IP atau
+redirect otomatis. Pelacak menjadi versi 2, dengan migrasi v1 dan cadangan
+sebelum penggantian. Detail migrasi, rollback, keterbatasan, serta hasil uji:
+[multi-daerah-verification.md](multi-daerah-verification.md).
+
 ## Deployment Cloudflare dan Neon — 29 Oktober 2026
 
 Jalur deployment pilihan pengguna adalah integrasi GitHub di dashboard Cloudflare

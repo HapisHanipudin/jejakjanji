@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { INFORMASI, PLACEHOLDER, buatSurat, pilihanBawaan, type Pilihan } from '@/lib/surat';
 import { namaProgram } from '@/lib/format';
 import { unduh } from '@/lib/unduh';
+import type { Daerah } from '@jejakjanji/shared';
 
 type Program = {
   kode: string;
@@ -15,7 +16,7 @@ type Program = {
   sumber: string;
 };
 
-export function PpidDraft({ program }: { program: Program }) {
+export function PpidDraft({ program, region }: { program: Program; region: Daerah }) {
   const [pilihan, setPilihan] = useState<Pilihan>(pilihanBawaan);
   const [pesan, setPesan] = useState('');
   const teks = buatSurat(program, pilihan);
@@ -51,6 +52,8 @@ export function PpidDraft({ program }: { program: Program }) {
             Data program
           </h2>
           <dl className="facts-stack">
+            <dt>Daerah</dt>
+            <dd>{region.nama}</dd>
             <dt>Program</dt>
             <dd>
               {namaProgram(program.nama)} (<span className="kode">{program.kode}</span>)
@@ -90,7 +93,9 @@ export function PpidDraft({ program }: { program: Program }) {
             type="button"
             className="btn"
             disabled={!adaPilihan}
-            onClick={() => unduh(`draf-ppid-${program.kode}.txt`, teks, 'text/plain')}
+            onClick={() =>
+              unduh(`draf-ppid-${region.slug}-${program.kode}.txt`, teks, 'text/plain')
+            }
           >
             Unduh sebagai dokumen (.txt)
           </button>
@@ -98,7 +103,20 @@ export function PpidDraft({ program }: { program: Program }) {
         <p role="status" className="small" style={{ marginTop: 'var(--space-3)' }}>
           {pesan}
         </p>
-        <Link className="link-strong" href={`/pelacak?program=${encodeURIComponent(program.kode)}`}>
+        {region.ppidUrl ? (
+          <a href={region.ppidUrl} rel="noreferrer" target="_blank">
+            Buka kanal PPID {region.nama}
+          </a>
+        ) : (
+          <p className="small muted">
+            Tautan kanal PPID {region.nama} belum diverifikasi. Cari kanal resmi sebelum mengirim;
+            situs ini tidak mengirim permohonan.
+          </p>
+        )}
+        <Link
+          className="link-strong"
+          href={`/${region.slug}/pelacak?program=${encodeURIComponent(program.kode)}`}
+        >
           Lanjut ke Pelacak Permohonan →
         </Link>
       </section>

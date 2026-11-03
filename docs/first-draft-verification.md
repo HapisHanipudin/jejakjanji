@@ -81,3 +81,11 @@ Pemeriksaan akhir setelah perubahan URL: typecheck, lint, dan 29/29 tes lulus. P
 Verifikasi ulang 375px setelah perbaikan: Daftar memiliki scrollWidth 360 dengan innerWidth 375 (ruang scrollbar), tanpa luapan horizontal; select muat dalam form. Beranda dan Detail sebelumnya scrollWidth 375. Semua lima PNG terverifikasi memiliki piksel identik dengan tangkapan yang diperiksa; gambar desktop memiliki area konten 1265px karena scrollbar pada viewport 1280px. Metodologi tetap BELUM-FINAL; PPID mempertahankan isian template.
 
 Pemeriksaan akhir lanjutan: typecheck, lint, dan 29/29 tes lulus; build produksi terakhir berhasil. Server web/API pengujian dihentikan setelah selesai. Tidak commit, push, atau deploy.
+
+# Tambahan 3 November 2026 — multi-daerah lokal
+
+Implementasi dan pemeriksaan baru dicatat terpisah di
+[multi-daerah-verification.md](multi-daerah-verification.md). Landing umum,
+rute daerah, consent lokasi, serta migrasi Pelacak tersedia lokal. Perubahan
+belum diterbitkan; catatan deployment/screenshot lama di bawah bukan bukti
+bahwa versi multi-daerah sudah live. Kontak koreksi tetap belum final.

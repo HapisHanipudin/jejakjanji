@@ -16,7 +16,7 @@ export const pilihanBawaan = (): Pilihan =>
 export const PLACEHOLDER = /(\[[^\]]+\])/;
 
 export function buatSurat(
-  program: { nama: string; kode: string; halaman: number },
+  program: { nama: string; kode: string; halaman: number; sumber: string },
   pilihan: Pilihan,
 ): string {
   const daftar = INFORMASI.filter((i) => pilihan[i.key]).map((i, n) => `${n + 1}. ${i.teks}`);
@@ -28,7 +28,7 @@ export function buatSurat(
     '',
     'Perihal: Permohonan informasi publik',
     '',
-    `Saya [nama pemohon], [alamat dan kontak], berdasarkan ${UU_KIP}, memohon informasi mengenai program ${program.nama} (kode ${program.kode}) sebagaimana tercantum dalam RPJMD DKI Jakarta 2025 sampai 2029, halaman PDF ${program.halaman}, berupa:`,
+    `Saya [nama pemohon], [alamat dan kontak], berdasarkan ${UU_KIP}, memohon informasi mengenai program ${program.nama} (kode ${program.kode}) sebagaimana tercantum dalam ${program.sumber}, halaman PDF ${program.halaman}, berupa:`,
     ...daftar,
     '',
     'Tujuan penggunaan informasi: [tujuan]. Cara memperoleh: [salinan digital / lihat langsung].',

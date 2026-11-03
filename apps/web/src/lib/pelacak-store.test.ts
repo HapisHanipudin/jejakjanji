@@ -13,11 +13,19 @@ const valid = { versi: 1, permohonan: [item] };
 const dengan = (patch: object) => JSON.stringify({ versi: 1, permohonan: [{ ...item, ...patch }] });
 
 test('kosong bila belum ada simpanan', () => {
-  expect(bacaSimpanan(null)).toEqual({ ok: true, data: { versi: 1, permohonan: [] } });
+  expect(bacaSimpanan(null)).toEqual({ ok: true, data: { versi: 2, permohonan: [] } });
 });
 
 test('data valid diterima', () => {
-  expect(bacaSimpanan(JSON.stringify(valid))).toEqual({ ok: true, data: valid });
+  expect(bacaSimpanan(JSON.stringify(valid))).toEqual({
+    ok: true,
+    data: {
+      versi: 2,
+      permohonan: [
+        { ...item, daerahKode: '31', daerahSlug: 'dki-jakarta', daerahNama: 'DKI Jakarta' },
+      ],
+    },
+  });
 });
 
 test.each([
