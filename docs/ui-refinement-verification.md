@@ -108,7 +108,8 @@ dan dry run Wrangler.
   sekali; berlabel untuk pembaca layar.
 - Daftar: baris hasil masuk berurutan setelah filter.
 - PPID: baris surat yang baru dicentang disorot sesaat; tombol salin berubah
-  menjadi "Tersalin ✓" selama dua detik. Isi surat dan clipboard tidak berubah.
+  menjadi "Tersalin" dengan ikon centang SVG selama dua detik. Isi surat dan
+  clipboard tidak berubah.
 - Pelacak: baris yang baru disimpan disorot sesaat; chip filter muncul halus.
 - Scroll: bagan bidang, pagu per tahun, kartu "Dari rencana sampai bukti",
   langkah landing, dan "Daerah lain" diputar sekali saat pertama kali masuk
@@ -127,11 +128,69 @@ reduced motion), dan 48 cek regresi lulus. Typecheck, lint, 38 tes unit lulus;
 3 tes integrasi PostgreSQL lulus pada cluster lokal sebelum commit `93de522`
 (API tidak berubah setelahnya).
 
+## Lanjutan: kontrol bertema, jejak bukti interaktif, dan Firefox
+
+Enam putaran setelah motion. Setiap commit web dibangun di GitHub Actions
+(Linux), artifact divalidasi dengan `wrangler deploy --dry-run`, lalu
+diterbitkan ke Worker preview.
+
+| Commit               | Isi                                                      | Run build                                                                            | Versi Worker preview                   |
+| -------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------- |
+| `2def7b2`, `7c25d30` | Kontrol bertema, PRODUCT.md                              | [41630861131](https://github.com/HapisHanipudin/jejakjanji/actions/runs/41630861131) | `ca050db3-88bc-49d8-9a77-51df754ec162` |
+| `64280c5`            | Kolom tanggal iOS Safari                                 | [41633667079](https://github.com/HapisHanipudin/jejakjanji/actions/runs/41633667079) | `b274d319-7991-4929-aefc-a54324599200` |
+| `757cdff`, `39e76a2` | Jejak bukti interaktif, DESIGN.md                        | [41653812210](https://github.com/HapisHanipudin/jejakjanji/actions/runs/41653812210) | `bc393c9a-580e-4fef-9b07-9c2d142c826c` |
+| `d580880`            | Kartu tahap, kalender Firefox, hover bagan               | [41659600156](https://github.com/HapisHanipudin/jejakjanji/actions/runs/41659600156) | `55eb158a-9776-4139-88a8-e11cd535bbe5` |
+| `dfad63a`            | Bagian jejak bukti rata tengah                           | [41661532716](https://github.com/HapisHanipudin/jejakjanji/actions/runs/41661532716) | `1b52bd46-f5be-4dcb-a86f-25d69292ecf2` |
+| `d357f8a`            | Pilihan bertema, kalender Firefox, kartu langkah landing | [41667547311](https://github.com/HapisHanipudin/jejakjanji/actions/runs/41667547311) | `0d84f039-0497-4172-b8dd-7bdabba9cfea` |
+
+Perubahan:
+
+- Kontrol form bertema: kalender sendiri pada pointer halus (Senin di depan,
+  akhir pekan Tinta Pudar, hari ini bergaris, keyboard lengkap); sentuh dan tanpa
+  JavaScript memakai pemilih bawaan. Checkbox 20 px, ikon cari dan tombol hapus,
+  ikon SVG menggantikan glyph unicode, serta seleksi, caret, dan scrollbar
+  mengikuti palet.
+- iOS Safari: kolom tanggal tidak lagi melebar keluar kolom (reset `appearance`
+  dan `min-width`). Belum diuji di perangkat iOS nyata.
+- Beranda daerah: tiga kartu tahap Rencana, Anggaran, Bukti menjadi tab keyboard.
+  Panel di bawahnya memuat satu titik per program dikurasi: terisi bila tahap itu
+  punya dokumen sumber, garis putus-putus bila belum diketahui. Titik membuka
+  program, dan nama program tampil saat hover atau fokus. Tanpa JavaScript kartu
+  statis dan panel tiap tahap ditumpuk. Hitungan adalah cakupan bukti, bukan skor.
+- Bagan bidang: latar hover diberi ruang dari teks, petunjuk jumlah program
+  dikurasi punya barisnya sendiri. Bagian jejak bukti rata tengah.
+- Pilihan (Bidang, Status bukti, program dan status di Pelacak): daftar bertema di
+  semua browser desktop, termasuk Firefox. Select bawaan tetap menyimpan nilai
+  form; sentuh dan tanpa JavaScript memakai daftar bawaan. Sebelumnya hanya
+  Chrome yang bertema lewat `appearance: base-select`.
+- Firefox: tombol kalender bawaan tidak bisa disembunyikan dengan CSS, jadi
+  tombol kalender situs menutupinya. Kalender bertema kembali tampil di Firefox.
+- Landing: tiga langkah "Dari rencana sampai bukti" menjadi kartu, teks tetap.
+  Margin daftar yang tertimpa `.list-plain` dibetulkan.
+- Bug: setelah filter dikirim, pilihan Bidang kembali ke "Semua bidang" walau URL
+  memuat `bidang=`. React hanya memakai `defaultValue` select saat mount;
+  komponen pilihan kini meneruskan nilai baru ke opsi sebelum form di-reset.
+
+Pengujian pada `d357f8a`:
+
+- Typecheck dan lint lulus. Vitest 42 lulus, 3 tes integrasi PostgreSQL
+  dilewati karena `TEST_DATABASE_URL` tidak diset (API tidak berubah sejak tes
+  integrasi terakhir lulus).
+- Chrome, `next start` lokal: jejak bukti 61/61, regresi 48/48, motion 44/44,
+  scroll 22/22, kontrol 47/48. Kontrol diulang di preview HTTPS: 47/48. Satu
+  yang gagal adalah cek skrip yang membaca `display` pseudo-element indikator
+  kalender WebKit; nilainya tidak terbaca walau indikator tersembunyi di layar.
+- Firefox desktop (headless, WebDriver BiDi) lokal dan preview: mode kalender
+  menutup tombol bawaan, kalender terbuka, daftar pilihan terbuka, dan pilihan
+  dengan keyboard tersimpan ke select.
+- Screenshot landing 1280 dan 390 px diperiksa visual.
+
 ## Batas
 
 Uji di atas adalah uji teknis browser, bukan wawancara atau uji tugas lima
-pengguna. Safari/iOS tidak diuji. Firefox desktop hanya diuji untuk kalender dan pilihan bertema (headless lewat WebDriver BiDi); ponsel diuji dengan
-emulasi viewport Chrome. Audit aksesibilitas penuh dan pembaca layar belum
+pengguna. Safari/iOS tidak diuji. Firefox desktop hanya diuji untuk kalender dan
+pilihan bertema (headless lewat WebDriver BiDi); ponsel diuji dengan emulasi
+viewport Chrome. Audit aksesibilitas penuh dan pembaca layar belum
 dilakukan. Lokasi tidak diuji ulang dan tidak ada koordinat yang dibaca; pemetaan
 wilayah tetap hanya ID-JK. Teks hukum masih menunggu tinjauan tim dan hari libur
 belum masuk perhitungan tenggat. Figma tidak diubah.
