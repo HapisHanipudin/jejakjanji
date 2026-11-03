@@ -281,9 +281,9 @@ Precise and calm.
 - **Style:** 1px Garis Tegas outline, Kertas Krem fill, 6px radius, 48px tall, label always visible above.
 - **Focus:** border turns Tinta Arsip with a 1px inner ring and a 3px Kabut Biru outline.
 - **Search:** a magnifier icon on the left and a themed clear button.
-- **Select:** custom chevron; where the browser supports base-select (fine pointers), the dropdown list is themed with Kabut Biru for the selected option. Touch devices keep the native list.
+- **Select:** custom chevron; on fine pointers in every browser a themed listbox (popover shadow, Kabut Biru with a check for the selected option, arrow keys, typeahead) sits over the native select, which stays the form value. Touch devices and no-JS keep the native list.
 - **Checkbox:** 20px, 6px radius, 1.5px Garis Tegas outline; checked fills Tinta Arsip with a white check that scales in.
-- **Date:** a themed calendar on fine pointers (Monday first, weekends in Tinta Pudar, today outlined, selection filled); touch devices and no-JS keep the native picker.
+- **Date:** a themed calendar on fine pointers (Monday first, weekends in Tinta Pudar, today outlined, selection filled). Where the browser's own calendar button cannot be hidden (Firefox), the trigger covers it. Touch devices and no-JS keep the native picker.
 
 ### Navigation
 

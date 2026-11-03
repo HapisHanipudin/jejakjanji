@@ -6,6 +6,7 @@ import { JejakLangkah } from '@/components/JejakBukti';
 import { PageHeader } from '@/components/PageHeader';
 import { ProgramCard } from '@/components/ProgramCard';
 import { ProgramFilter } from '@/components/ProgramFilter';
+import { ThemedSelect } from '@/components/ThemedSelect';
 import { EmptyState, ErrorState } from '@/components/States';
 import { TOTAL_PROGRAM_RPJMD } from '@/content/site';
 import { getBidangList, getProgramList, getSumberList, getRegion } from '@/lib/data';
@@ -96,22 +97,31 @@ export default async function ProgramListPage({
           </div>
           <div className="field">
             <label htmlFor="bidang">Bidang</label>
-            <select id="bidang" name="bidang" defaultValue={filter.bidang ?? ''}>
-              <option value="">Semua bidang</option>
-              {bidangDenganProgram.map((k) => (
-                <option key={k} value={k}>
-                  {k} {namaBidangRingkas(bidangNama.get(k) ?? '')}
-                </option>
-              ))}
-            </select>
+            <ThemedSelect
+              id="bidang"
+              name="bidang"
+              defaultValue={filter.bidang ?? ''}
+              options={[
+                { value: '', label: 'Semua bidang' },
+                ...bidangDenganProgram.map((k) => ({
+                  value: k,
+                  label: `${k} ${namaBidangRingkas(bidangNama.get(k) ?? '')}`,
+                })),
+              ]}
+            />
           </div>
           <div className="field">
             <label htmlFor="status">Status bukti</label>
-            <select id="status" name="status" defaultValue={filter.status ?? ''}>
-              <option value="">Semua status</option>
-              <option value="ada">Ada laporan pelaksanaan</option>
-              <option value="belum_diketahui">Belum diketahui</option>
-            </select>
+            <ThemedSelect
+              id="status"
+              name="status"
+              defaultValue={filter.status ?? ''}
+              options={[
+                { value: '', label: 'Semua status' },
+                { value: 'ada', label: 'Ada laporan pelaksanaan' },
+                { value: 'belum_diketahui', label: 'Belum diketahui' },
+              ]}
+            />
           </div>
         </ProgramFilter>
 

@@ -179,7 +179,7 @@ td {
 .landing-hero .lead {
   max-width: 56rem;
 }
-.landing-steps {
+.list-plain.landing-steps {
   margin-block: var(--space-6);
 }
 .landing-grid {
@@ -1605,7 +1605,8 @@ legend {
   font-size: var(--text-sm);
 }
 input,
-select {
+select,
+.select-button {
   min-width: 0;
   max-width: 100%;
   font: inherit;
@@ -1616,29 +1617,35 @@ select {
   background: var(--color-bg);
   color: var(--color-heading);
 }
-select {
+select,
+.select-button {
   appearance: none;
   padding-right: 40px;
   background: var(--color-bg) url('/ikon/chevron-down.svg') no-repeat right 14px center / 16px 16px;
 }
-select.select-sm {
+select.select-sm,
+.select-button-sm {
   padding: 8px 34px 8px 12px;
   background-color: var(--color-surface-strong);
   background-position: right 10px center;
   font-size: var(--text-sm);
 }
 input,
-select {
+select,
+.select-button {
   transition:
     border-color 140ms ease,
     box-shadow 140ms ease;
 }
 input:hover,
-select:hover {
+select:hover,
+.select-button:hover:not(:disabled) {
   border-color: var(--color-heading);
 }
 input:focus-visible,
-select:focus-visible {
+select:focus-visible,
+.select-button:focus-visible,
+.select-button[aria-expanded='true'] {
   border-color: var(--color-accent);
   outline: var(--focus-width) solid var(--color-accent-soft);
   outline-offset: 0;
@@ -1699,11 +1706,18 @@ input[type='date']::-webkit-calendar-picker-indicator {
 .date-field input {
   width: 100%;
 }
-.date-field[data-enhanced] input {
+.date-field[data-enhanced='hide'] input {
   padding-right: 48px;
 }
-.date-field[data-enhanced] input::-webkit-calendar-picker-indicator {
+.date-field[data-enhanced='hide'] input::-webkit-calendar-picker-indicator {
   display: none;
+}
+/* Firefox: the trigger sits opaque over its built-in calendar button. */
+.date-field[data-enhanced='cover'] .date-trigger {
+  right: 2px;
+  width: 44px;
+  height: calc(100% - 4px);
+  background: var(--color-bg);
 }
 .date-trigger {
   position: absolute;
@@ -1856,52 +1870,97 @@ input[type='date']::-webkit-calendar-picker-indicator {
   }
 }
 
-/* Customizable select where supported (fine pointers); everywhere else the native list. */
-@supports (appearance: base-select) {
-  @media (pointer: fine) {
-    select,
-    ::picker(select) {
-      appearance: base-select;
-    }
-    select::picker-icon {
-      display: none;
-    }
-    select:open {
-      border-color: var(--color-accent);
-    }
-    ::picker(select) {
-      margin-block: 6px;
-      padding: var(--space-1);
-      max-height: min(22rem, 60vh);
-      border: var(--border-width) solid var(--color-border);
-      border-radius: var(--radius-md);
-      background: var(--color-bg);
-      box-shadow:
-        0 18px 40px -14px rgb(19 38 59 / 30%),
-        0 2px 6px rgb(19 38 59 / 8%);
-    }
-    select option {
-      padding: 9px 12px;
-      border-radius: var(--radius);
-      color: var(--color-heading);
-      font-size: var(--text-sm);
-    }
-    select option:hover,
-    select option:focus-visible {
-      background: var(--color-surface);
-      outline: none;
-    }
-    select option:checked {
-      background: var(--color-accent-soft);
-      color: var(--color-accent);
-      font-weight: var(--font-weight-bold);
-    }
-    select option::checkmark {
-      color: var(--color-accent);
-    }
-    select option:disabled {
-      color: var(--color-text-muted);
-    }
+/* Themed select (ThemedSelect). The native select stays for touch and without JS. */
+.select-field {
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  max-width: 100%;
+}
+.field > .select-field {
+  display: grid;
+}
+.select-field > * {
+  grid-area: 1 / 1;
+}
+/* Kept in the grid cell so it still sizes the field and anchors validation messages. */
+.select-field[data-enhanced] > select {
+  opacity: 0;
+  pointer-events: none;
+}
+.select-button {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  cursor: pointer;
+}
+.select-button:disabled {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+.select-button-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.select-list {
+  position: fixed;
+  z-index: 40;
+  margin: 0;
+  padding: var(--space-1);
+  overflow-y: auto;
+  list-style: none;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  box-shadow:
+    0 18px 40px -14px rgb(19 38 59 / 30%),
+    0 2px 6px rgb(19 38 59 / 8%);
+  outline: none;
+}
+.select-option {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  padding: 9px 12px 9px 8px;
+  border-radius: var(--radius);
+  color: var(--color-heading);
+  font-size: var(--text-sm);
+  line-height: 20px;
+  cursor: pointer;
+}
+.select-option[data-active] {
+  background: var(--color-surface);
+}
+.select-option[aria-selected='true'] {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--font-weight-bold);
+}
+.select-list:focus-visible .select-option[data-active] {
+  box-shadow: inset 0 0 0 1.5px var(--color-accent);
+}
+.select-option[aria-disabled='true'] {
+  color: var(--color-text-muted);
+  cursor: default;
+}
+.select-check {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 16px;
+  height: 20px;
+  color: var(--color-accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .select-list {
+    animation: list-in 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+@keyframes list-in {
+  from {
+    opacity: 0.6;
+    transform: translateY(-4px);
   }
 }
 fieldset {
@@ -2276,7 +2335,8 @@ fieldset legend + .notice {
     content: attr(data-label) ': ';
     color: var(--color-text-muted);
   }
-  .table-cards select {
+  .table-cards select,
+  .table-cards .select-field {
     width: 100%;
     margin-top: var(--space-2);
   }

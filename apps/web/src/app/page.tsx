@@ -76,18 +76,18 @@ export default async function LandingPage() {
         <div className="container">
           <h2 className="section-title">Dari rencana sampai bukti</h2>
           <ol className="grid-3 list-plain landing-steps" data-reveal="">
-            <li>
+            <li className="box">
               <h3>Baca rencananya</h3>
               <p>Temukan program resmi beserta indikator, target, dan halaman dokumennya.</p>
             </li>
-            <li>
+            <li className="box">
               <h3>Pahami pagunya</h3>
               <p>
                 Lihat konteks pagu indikatif dengan unit dan sumber yang jelas. Pagu bukan APBD atau
                 realisasi.
               </p>
             </li>
-            <li>
+            <li className="box">
               <h3>Periksa buktinya</h3>
               <p>
                 Bukti belum ditemukan bukan berarti gagal. Susun draf PPID, lalu kirim sendiri bila

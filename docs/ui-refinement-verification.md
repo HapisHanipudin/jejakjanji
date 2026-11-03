@@ -130,7 +130,7 @@ reduced motion), dan 48 cek regresi lulus. Typecheck, lint, 38 tes unit lulus;
 ## Batas
 
 Uji di atas adalah uji teknis browser, bukan wawancara atau uji tugas lima
-pengguna. Safari/iOS dan Firefox tidak diuji dalam sesi ini; ponsel diuji dengan
+pengguna. Safari/iOS tidak diuji. Firefox desktop hanya diuji untuk kalender dan pilihan bertema (headless lewat WebDriver BiDi); ponsel diuji dengan
 emulasi viewport Chrome. Audit aksesibilitas penuh dan pembaca layar belum
 dilakukan. Lokasi tidak diuji ulang dan tidak ada koordinat yang dibaca; pemetaan
 wilayah tetap hanya ID-JK. Teks hukum masih menunggu tinjauan tim dan hari libur

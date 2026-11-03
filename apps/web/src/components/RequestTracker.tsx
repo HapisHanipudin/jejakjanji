@@ -17,6 +17,7 @@ import {
 } from '@/lib/pelacak-store';
 import { unduh } from '@/lib/unduh';
 import { DateField } from './DateField';
+import { ThemedSelect } from './ThemedSelect';
 
 type ProgramOpt = { kode: string; nama: string };
 
@@ -169,22 +170,21 @@ export function RequestTracker({
         <div className="form-row">
           <div className="field">
             <label htmlFor="program">Program</label>
-            <select
+            <ThemedSelect
               id="program"
               name="program"
               required
               defaultValue={pilihAwal ?? ''}
               disabled={!adaProgram}
-            >
-              <option value="" disabled>
-                {adaProgram ? 'Pilih program' : 'Daftar program kosong'}
-              </option>
-              {programs.map((p) => (
-                <option key={p.kode} value={p.kode}>
-                  {p.nama} ({p.kode})
-                </option>
-              ))}
-            </select>
+              options={[
+                {
+                  value: '',
+                  label: adaProgram ? 'Pilih program' : 'Daftar program kosong',
+                  disabled: true,
+                },
+                ...programs.map((p) => ({ value: p.kode, label: `${p.nama} (${p.kode})` })),
+              ]}
+            />
           </div>
           <div className="field">
             <label htmlFor="perangkat">Perangkat daerah tujuan</label>
@@ -310,7 +310,7 @@ export function RequestTracker({
                         <label className="sr-only" htmlFor={`status-${p.id}`}>
                           Ubah status permohonan {p.programKode}
                         </label>
-                        <select
+                        <ThemedSelect
                           id={`status-${p.id}`}
                           className="select-sm"
                           value={p.status}
@@ -325,13 +325,11 @@ export function RequestTracker({
                               'Status diperbarui.',
                             )
                           }
-                        >
-                          {STATUS_PERMOHONAN.map((s) => (
-                            <option key={s} value={s}>
-                              {STATUS_LABEL[s]}
-                            </option>
-                          ))}
-                        </select>
+                          options={STATUS_PERMOHONAN.map((s) => ({
+                            value: s,
+                            label: STATUS_LABEL[s],
+                          }))}
+                        />
                       </td>
                       <td className="num">
                         <button

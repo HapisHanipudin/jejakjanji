@@ -42,13 +42,18 @@ export function DateField({
   const wrap = useRef<HTMLDivElement>(null);
   const grid = useRef<HTMLTableElement>(null);
   const titleId = useId();
-  const [enhanced, setEnhanced] = useState(false);
+  const [enhanced, setEnhanced] = useState<'' | 'hide' | 'cover'>('');
   const [fokus, setFokus] = useState<string>();
   const [dipilih, setDipilih] = useState<string>();
   const [today, setToday] = useState('');
 
   // Firefox draws its own calendar button that CSS cannot hide; keep the native one there.
-  useEffect(() => setEnhanced(CSS.supports('selector(::-webkit-calendar-picker-indicator)')), []);
+  // Firefox draws its own calendar button that CSS cannot hide, so the trigger covers it there.
+  useEffect(
+    () =>
+      setEnhanced(CSS.supports('selector(::-webkit-calendar-picker-indicator)') ? 'hide' : 'cover'),
+    [],
+  );
 
   // Focus follows the roving day; close when focus or a click leaves the field.
   useEffect(() => {
