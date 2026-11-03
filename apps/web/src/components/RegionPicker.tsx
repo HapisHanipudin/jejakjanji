@@ -5,7 +5,12 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { Daerah } from '@jejakjanji/shared';
 import { REGION_STORAGE_KEY, rememberedRegion, regionForPath, regionPath } from '@/lib/regions';
-import { geocodeUrl, suggestedRegion } from '@/lib/location';
+import {
+  geocodeUrl,
+  suggestedRegion,
+  locationFailureMessage,
+  type LocationStage,
+} from '@/lib/location';
 
 export function RegionPicker({
   regions,
@@ -62,6 +67,7 @@ export function RegionPicker({
     request.current = controller;
     setLocationStep('loading');
     setMessage('Meminta izin lokasi…');
+    let stage: LocationStage = 'device';
     try {
       const position = await new Promise<GeolocationPosition>((resolve, reject) =>
         navigator.geolocation.getCurrentPosition(resolve, reject, {
@@ -72,6 +78,7 @@ export function RegionPicker({
       );
       if (controller.signal.aborted) return;
       setMessage('Mencari saran daerah…');
+      stage = 'service';
       const response = await fetch(
         geocodeUrl(position.coords.latitude, position.coords.longitude),
         {
@@ -81,6 +88,7 @@ export function RegionPicker({
         },
       );
       if (!response.ok) throw new Error('Layanan lokasi tidak tersedia.');
+      stage = 'response';
       const region = suggestedRegion(await response.json(), regions);
       if (controller.signal.aborted) return;
       setSuggestion(region);
@@ -93,11 +101,7 @@ export function RegionPicker({
     } catch (error) {
       if (controller.signal.aborted) return;
       setLocationStep('consent');
-      setMessage(
-        typeof error === 'object' && error !== null && 'code' in error && error.code === 1
-          ? 'Izin lokasi ditolak. Anda tetap bisa memilih daerah secara manual.'
-          : 'Lokasi belum ditemukan atau layanan gagal. Coba lagi atau pilih daerah secara manual.',
-      );
+      setMessage(locationFailureMessage(error, stage));
     }
   }
 

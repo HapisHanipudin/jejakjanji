@@ -1,5 +1,10 @@
 # Lanjutan preview — 3 November 2026
 
+Laporan gagal lokasi dari pengguna dan koreksi kontrak respons penyedia dicatat
+di [location-verification.md](location-verification.md). Tes mock lokasi awal
+memakai enum yang salah; catatan sukses alur mock di bawah bukan bukti bahwa
+lokasi perangkat nyata sudah berhasil.
+
 Pembaruan motion berikutnya beserta versi Worker terbaru dicatat di
 [motion-verification.md](motion-verification.md). Bagian deployment di bawah
 mencatat versi saat verifikasi multi-daerah awal.

@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
 import type { Daerah } from '@jejakjanji/shared';
 import { rememberedRegion, regionForPath } from './regions';
-import { geocodeUrl, suggestedRegion } from './location';
+import { geocodeUrl, suggestedRegion, locationFailureMessage } from './location';
 
 const jakarta: Daerah = {
   kode: '31',
@@ -32,7 +32,8 @@ test('location only suggests an explicitly mapped region and rejects IP fallback
   const result = {
     countryCode: 'ID',
     principalSubdivisionCode: 'ID-JK',
-    lookupSource: 'reverseGeocoding',
+    // Provider's published response contract, not an invented mock enum.
+    lookupSource: 'coordinates',
   };
   expect(suggestedRegion(result, [jakarta])).toEqual(jakarta);
   expect(
@@ -40,7 +41,32 @@ test('location only suggests an explicitly mapped region and rejects IP fallback
   ).toBeUndefined();
   expect(suggestedRegion({ ...result, countryCode: 'US' }, [jakarta])).toBeUndefined();
   expect(() => suggestedRegion({ ...result, lookupSource: 'ipGeolocation' }, [jakarta])).toThrow();
+  expect(() =>
+    suggestedRegion({ ...result, lookupSource: 'reverseGeocoding' }, [jakarta]),
+  ).toThrow();
+  expect(() => suggestedRegion({ ...result, lookupSource: 'ip address' }, [jakarta])).toThrow();
+  expect(() =>
+    suggestedRegion({ countryCode: 'ID', principalSubdivisionCode: 'ID-JK' }, [jakarta]),
+  ).toThrow();
   expect(() => geocodeUrl(Number.NaN, 0)).toThrow();
   expect(() => geocodeUrl(91, 0)).toThrow();
   expect(geocodeUrl(-6.2, 106.8).searchParams.get('latitude')).toBe('-6.2');
+});
+
+test('location errors identify the failed stage without exposing coordinates or provider payload', () => {
+  expect(locationFailureMessage({ code: 1 }, 'device')).toContain('Izin lokasi ditolak');
+  expect(locationFailureMessage({ code: 2 }, 'device')).toContain(
+    'Perangkat belum dapat menentukan koordinat',
+  );
+  expect(locationFailureMessage({ code: 3 }, 'device')).toContain('Waktu tunggu koordinat');
+  expect(locationFailureMessage(null, 'device')).toContain('Lokasi perangkat belum bisa dibaca');
+  expect(locationFailureMessage(new TypeError('private payload'), 'service')).toContain(
+    'Layanan lokasi tidak dapat dihubungi',
+  );
+  expect(locationFailureMessage(new Error('private payload'), 'response')).toContain(
+    'Hasil layanan lokasi tidak dapat dibaca',
+  );
+  expect(locationFailureMessage(new Error('private payload'), 'response')).not.toContain(
+    'private payload',
+  );
 });

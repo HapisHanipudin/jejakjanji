@@ -6,8 +6,27 @@ import type { Daerah } from '@jejakjanji/shared';
 export const geocodeSchema = z.object({
   countryCode: z.string().length(2),
   principalSubdivisionCode: z.string().max(32),
-  lookupSource: z.literal('reverseGeocoding'),
+  // Published SDK contract: coordinates is GPS/WiFi; ipGeolocation must stay rejected.
+  // https://github.com/bigdatacloudapi/react-reverse-geocode-client#response-data
+  lookupSource: z.literal('coordinates'),
 });
+
+export type LocationStage = 'device' | 'service' | 'response';
+
+export function locationFailureMessage(error: unknown, stage: LocationStage) {
+  if (stage === 'service')
+    return 'Layanan lokasi tidak dapat dihubungi atau menolak permintaan. Coba lagi atau pilih daerah secara manual.';
+  if (stage === 'response')
+    return 'Hasil layanan lokasi tidak dapat dibaca sebagai lokasi perangkat. Pilih daerah secara manual atau coba lagi nanti.';
+  const code =
+    typeof error === 'object' && error !== null && 'code' in error ? error.code : undefined;
+  if (code === 1) return 'Izin lokasi ditolak. Anda tetap bisa memilih daerah secara manual.';
+  if (code === 2)
+    return 'Perangkat belum dapat menentukan koordinat. Periksa layanan lokasi perangkat, coba lagi, atau pilih daerah secara manual.';
+  if (code === 3)
+    return 'Waktu tunggu koordinat perangkat habis. Coba lagi atau pilih daerah secara manual.';
+  return 'Lokasi perangkat belum bisa dibaca. Coba lagi atau pilih daerah secara manual.';
+}
 
 export function suggestedRegion(payload: unknown, regions: Daerah[]) {
   const location = geocodeSchema.parse(payload);
