@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Icon } from '@/components/Icon';
 import { BarChart } from '@/components/BarChart';
-import { JejakLangkah } from '@/components/JejakBukti';
+import { JejakExplorer } from '@/components/JejakExplorer';
 import { Money } from '@/components/Money';
 import { SourceBox } from '@/components/SourceBox';
 import { EmptyState, ErrorState, PaguLabel } from '@/components/States';
@@ -159,6 +159,12 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
                       bars={top.map((b) => ({
                         key: b.kode,
                         label: namaBidangRingkas(b.nama),
+                        hint: (() => {
+                          const n = programs.ok
+                            ? programs.data.data.filter((p) => p.bidangKode === b.kode).length
+                            : 0;
+                          return n ? `${n} program dikurasi` : 'Belum ada program dikurasi';
+                        })(),
                         value: b.paguIndikatif2026,
                         href: `/${daerah}/program?bidang=${encodeURIComponent(b.kode)}`,
                         display: (
@@ -197,40 +203,23 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
             Setiap program punya jejak tiga langkah. Titik penuh berarti buktinya ada; titik
             putus-putus berarti belum diketahui, bukan berarti program gagal.
           </p>
-          <ol className="grid-3 list-plain" data-reveal="">
-            <li className="box">
-              <span aria-hidden="true">
-                <JejakLangkah label="Ada di rencana" status="ada" />
-              </span>
-              <h3 className="card-title">Rencana</h3>
-              <p className="muted">
-                Program prioritas dari RPJMD 2025 sampai 2029, lengkap dengan indikator dan target.
-              </p>
-            </li>
-            <li className="box">
-              <span aria-hidden="true">
-                <JejakLangkah label="Dianggarkan?" status="belum_diketahui" />
-              </span>
-              <h3 className="card-title">Anggaran</h3>
-              <p className="muted">
-                Pagu indikatif per tahun dengan halaman rujukan di dokumen sumber.
-              </p>
-            </li>
-            <li className="box">
-              <span aria-hidden="true">
-                <JejakLangkah label="Ada laporan?" status="belum_diketahui" />
-              </span>
-              <h3 className="card-title">Bukti</h3>
-              <p className="muted">
-                Belum diketahui bila bukti kosong. Anda bisa meminta informasi lewat PPID.
-              </p>
-            </li>
-          </ol>
+          {programs.ok && programs.data.data.length > 0 ? (
+            <JejakExplorer
+              regionSlug={daerah}
+              programs={programs.data.data.map((p) => ({
+                kode: p.kode,
+                nama: namaProgram(p.nama),
+                status: p.statusBukti,
+              }))}
+            />
+          ) : (
+            <EmptyState>Belum ada program dikurasi untuk ditampilkan jejaknya.</EmptyState>
+          )}
         </div>
       </section>
 
       <section className="section-lg" aria-labelledby="daerah-lain-title">
-        <div className="container other-regions" data-reveal="">
+        <div className="container other-regions">
           <div>
             <h2 id="daerah-lain-title" className="section-title">
               Daerah lain

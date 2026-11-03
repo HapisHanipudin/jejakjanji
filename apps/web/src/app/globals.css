@@ -480,14 +480,9 @@ td {
  * no-JS, and reduced motion always show final lengths and full text.
  */
 @media (prefers-reduced-motion: no-preference) {
-  [data-reveal='play']:not(.bars) > * {
-    animation: scroll-rise 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-  [data-reveal='play']:not(.bars) > :nth-child(2) {
-    animation-delay: 90ms;
-  }
-  [data-reveal='play']:not(.bars) > :nth-child(3) {
-    animation-delay: 180ms;
+  .jejak-explorer[data-reveal='play'] .trail-stop {
+    animation: stop-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--s, 0) * 140ms);
   }
   .bars[data-reveal='play'] .bar-fill {
     /* Own keyframes name: reusing bar-enter would not restart a finished animation. */
@@ -503,6 +498,263 @@ td {
     transform: scaleX(1);
   }
 }
+/*
+ * Jejak explorer: the focal interaction. Picking a stage moves the ink along one trail and
+ * re-draws every program's dot for that stage. State lives in markup; motion only explains it.
+ */
+.jejak-explorer {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+.trail {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 47.5rem;
+  margin-bottom: var(--space-6);
+}
+.trail-line {
+  position: absolute;
+  top: 20px;
+  left: calc(100% / 6);
+  right: calc(100% / 6);
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+  overflow: hidden;
+}
+.trail-ink {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+  transform-origin: left;
+  transform: scaleX(calc(var(--pos, 0) / 2));
+  transition: transform 460ms var(--ease);
+}
+.trail-stop {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+.trail-stop:nth-child(3) {
+  --s: 1;
+}
+.trail-stop:nth-child(4) {
+  --s: 2;
+}
+.trail-mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    color 220ms ease,
+    box-shadow 220ms ease,
+    transform 260ms var(--ease);
+}
+.trail-stop[data-passed] .trail-mark {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+.trail-stop[aria-selected='true'] .trail-mark {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  box-shadow: 0 0 0 6px var(--color-accent-soft);
+  transform: scale(1.06);
+}
+.trail-stop:hover .trail-mark {
+  border-color: var(--color-accent);
+}
+.trail-label {
+  font-weight: var(--font-weight-bold);
+  transition: color 220ms ease;
+}
+.trail-stop[aria-selected='true'] .trail-label {
+  color: var(--color-heading);
+}
+.trail-stop:focus-visible {
+  outline: none;
+}
+.trail-stop:focus-visible .trail-mark {
+  outline: var(--focus-width) solid var(--color-focus);
+  outline-offset: 3px;
+}
+.trail-panel {
+  max-width: 47.5rem;
+}
+.trail-panel + .trail-panel {
+  margin-top: var(--space-6);
+}
+.jejak-explorer[data-enhanced] .trail-panel + .trail-panel {
+  margin-top: 0;
+}
+.trail-teks {
+  color: var(--color-heading);
+  font-size: var(--text-lg);
+}
+.trail-count {
+  color: var(--color-text-muted);
+}
+.trail-count strong {
+  color: var(--color-heading);
+  font-size: var(--text-xl);
+  font-variant-numeric: tabular-nums;
+}
+.dot-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+.dot {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+}
+.dot[data-status='ada'] {
+  background: var(--color-accent);
+}
+.dot[data-status='belum_diketahui'] {
+  border: 1.5px dashed var(--color-border-strong);
+  background: transparent;
+}
+.dot-grid .dot {
+  transition:
+    transform 180ms var(--ease),
+    box-shadow 180ms ease;
+}
+.dot-grid .dot:hover,
+.dot-grid .dot:focus-visible {
+  outline: none;
+  transform: scale(1.15);
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+}
+.dot-caption {
+  min-height: 1.5em;
+  margin: 0 0 var(--space-4);
+  color: var(--color-heading);
+  font-size: var(--text-sm);
+}
+.trail-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+.trail-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.dot-legend {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .jejak-explorer[data-enhanced] .trail-panel:not([hidden]) .dot-grid .dot {
+    animation: dot-in 360ms var(--ease) both;
+    animation-delay: calc(var(--n, 0) * 30ms);
+  }
+  .jejak-explorer[data-enhanced] .trail-panel:not([hidden]) .trail-teks,
+  .jejak-explorer[data-enhanced] .trail-panel:not([hidden]) .trail-count {
+    animation: panel-in 260ms var(--ease) both;
+  }
+}
+@keyframes dot-in {
+  from {
+    opacity: 0.35;
+    transform: scale(0.55);
+  }
+}
+@keyframes panel-in {
+  from {
+    opacity: 0.4;
+    transform: translateY(6px);
+  }
+}
+@keyframes stop-in {
+  from {
+    opacity: 0.4;
+    transform: translateY(10px);
+  }
+}
+
+/* Chart rows reveal how many programs sit behind each field before the click. */
+.bar-hint {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-normal);
+}
+@media (hover: hover) and (pointer: fine) {
+  .bar-hint {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    line-height: 16px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-3px);
+    transition:
+      opacity 160ms ease,
+      transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bar-row:hover .bar-hint,
+  .bar-row:focus-within .bar-hint {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Program rows: an arrow slides in to say the whole row opens the program. */
+.row-go {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  display: grid;
+  color: var(--color-link);
+  opacity: 0;
+  translate: -6px -50%;
+  transition:
+    opacity 160ms ease,
+    translate 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.program-row:hover .row-go,
+.program-row:focus-within .row-go {
+  opacity: 1;
+  translate: 0 -50%;
+}
+@media (hover: none) {
+  .row-go {
+    top: 28px;
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
 @keyframes scroll-rise {
   from {
     opacity: 0.55;
@@ -1706,7 +1958,7 @@ fieldset legend + .notice {
   margin: 2px 0 0;
   padding: 0;
   border: 1.5px solid var(--color-border-strong);
-  border-radius: 5px;
+  border-radius: var(--radius);
   background: var(--color-bg);
   cursor: pointer;
 }
@@ -1912,6 +2164,10 @@ fieldset legend + .notice {
   .filter-chip,
   .stage-action {
     min-height: 44px;
+  }
+  .dot-grid .dot {
+    width: 44px;
+    height: 44px;
   }
   .ppid-steps {
     grid-template-columns: 1fr;

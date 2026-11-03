@@ -75,7 +75,7 @@ export default async function LandingPage() {
       <section className="section-lg" id="cara-kerja">
         <div className="container">
           <h2 className="section-title">Dari rencana sampai bukti</h2>
-          <ol className="grid-3 list-plain landing-steps" data-reveal="">
+          <ol className="grid-3 list-plain landing-steps">
             <li>
               <h3>Baca rencananya</h3>
               <p>Temukan program resmi beserta indikator, target, dan halaman dokumennya.</p>
