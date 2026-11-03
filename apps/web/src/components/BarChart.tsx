@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 export type Bar = {
   key: string;
@@ -23,9 +23,9 @@ export function BarChart({
   return (
     <figure style={{ margin: 0 }}>
       <figcaption className="sr-only">{caption}</figcaption>
-      <ul className={compact ? 'bars bars-compact' : 'bars'}>
-        {bars.map((b) => (
-          <li key={b.key} className="bar-row">
+      <ul className={compact ? 'bars bars-compact' : 'bars'} data-reveal="">
+        {bars.map((b, i) => (
+          <li key={b.key} className="bar-row" style={{ '--i': i } as CSSProperties}>
             <span className="bar-label">
               {b.href ? <Link href={b.href}>{b.label}</Link> : b.label}
             </span>

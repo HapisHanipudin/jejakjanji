@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from 'next/font/google';
 import { getDaerahList } from '@/lib/data';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { ScrollMotion } from '@/components/ScrollMotion';
 import './globals.css';
 
 // Self-hosted at build time by next/font; exposed as --font-jakarta for tokens.css.
@@ -36,6 +37,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
           {children}
         </main>
         <Footer />
+        <ScrollMotion />
       </body>
     </html>
   );

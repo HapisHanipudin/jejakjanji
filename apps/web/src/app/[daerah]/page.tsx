@@ -196,7 +196,7 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
             Setiap program punya jejak tiga langkah. Titik penuh berarti buktinya ada; titik
             putus-putus berarti belum diketahui, bukan berarti program gagal.
           </p>
-          <ol className="grid-3 list-plain">
+          <ol className="grid-3 list-plain" data-reveal="">
             <li className="box">
               <span aria-hidden="true">
                 <JejakLangkah label="Ada di rencana" status="ada" />
@@ -229,7 +229,7 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
       </section>
 
       <section className="section-lg" aria-labelledby="daerah-lain-title">
-        <div className="container other-regions">
+        <div className="container other-regions" data-reveal="">
           <div>
             <h2 id="daerah-lain-title" className="section-title">
               Daerah lain
