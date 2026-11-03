@@ -5,8 +5,9 @@ di [location-verification.md](location-verification.md). Tes mock lokasi awal
 memakai enum yang salah; catatan sukses alur mock di bawah bukan bukti bahwa
 lokasi perangkat nyata sudah berhasil.
 
-Pembaruan motion berikutnya beserta versi Worker terbaru dicatat di
-[motion-verification.md](motion-verification.md). Bagian deployment di bawah
+Pembaruan motion dicatat di [motion-verification.md](motion-verification.md).
+Refinement UI/UX berikutnya beserta versi Worker terbaru dicatat di
+[ui-refinement-verification.md](ui-refinement-verification.md). Bagian deployment di bawah
 mencatat versi saat verifikasi multi-daerah awal.
 
 Pengguna mengizinkan commit, push, dan deploy preview, lalu secara eksplisit
