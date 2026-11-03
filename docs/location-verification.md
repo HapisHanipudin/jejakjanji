@@ -35,5 +35,24 @@ perangkat pengguna pasti berfungsi.
 
 Typecheck, lint, dan 40 tes termasuk integrasi PostgreSQL lulus. Regresi
 mencakup kontrak `coordinates`, penolakan sumber IP/nilai lama/field hilang,
-dan pesan kegagalan tiap tahap. Verifikasi Firefox setelah deployment dicatat
-setelah selesai; GPS perangkat fisik tetap memerlukan uji ulang pengguna.
+dan pesan kegagalan tiap tahap.
+
+## Setelah deployment
+
+Commit aplikasi `f75a363` dipush pada `feat/multi-daerah-local`.
+[Build Linux](https://github.com/HapisHanipudin/jejakjanji/actions/runs/41602803610)
+lulus, kemudian preview diperbarui ke versi Worker
+`4dac075e-7b33-4e8c-8fa9-936eb63ae53c`:
+https://jejakjanji-web-preview.hapishanipudin.workers.dev/.
+
+Firefox 159.0 diuji ulang pada domain HTTPS tersebut dengan GPS dan layanan
+tiruan di profil browser terpisah. Hasil lulus: tidak memanggil GPS/penyedia
+sebelum persetujuan; menerima `coordinates`; menunggu konfirmasi sebelum
+berpindah; menangani kode perangkat 1/2/3, kegagalan jaringan dan HTTP, payload
+rusak, serta hasil daerah yang belum tersedia; menolak IP fallback; dan tidak
+mengirim request penyedia setelah dialog dibatalkan saat menunggu koordinat.
+
+Ini uji browser Firefox nyata dengan respons layanan yang disimulasikan,
+bukan pembacaan GPS perangkat pengguna atau request BigDataCloud nyata.
+Pengguna sudah diminta memuat ulang preview dan mencoba GPS kembali. Hasil
+GPS perangkat fisik belum dikonfirmasi pada saat laporan ini ditulis.
