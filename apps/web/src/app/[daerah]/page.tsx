@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Icon } from '@/components/Icon';
 import { BarChart } from '@/components/BarChart';
 import { JejakLangkah } from '@/components/JejakBukti';
 import { Money } from '@/components/Money';
@@ -79,7 +80,7 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
             )}
             <p className="hero-links">
               <Link className="link-strong" href={`/${daerah}/program`}>
-                Lihat semua program →
+                Lihat semua program <Icon name="arrow" />
               </Link>
               <Link className="link-strong" href={`/${daerah}/metodologi`}>
                 Cara kami bekerja

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Icon } from '@/components/Icon';
 import Link from 'next/link';
 import { programQuerySchema } from '@jejakjanji/shared';
 import { JejakLangkah } from '@/components/JejakBukti';
@@ -120,7 +121,7 @@ export default async function ProgramListPage({
             {aktif.map((f) => (
               <Link key={f.key} className="filter-chip" href={tanpa(f.key)} scroll={false}>
                 {f.label}
-                <span aria-hidden="true">×</span>
+                <Icon name="close" size={14} />
                 <span className="sr-only"> (hapus filter)</span>
               </Link>
             ))}

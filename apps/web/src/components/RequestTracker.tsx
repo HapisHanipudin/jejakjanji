@@ -16,6 +16,7 @@ import {
   type StatusPermohonan,
 } from '@/lib/pelacak-store';
 import { unduh } from '@/lib/unduh';
+import { DateField } from './DateField';
 
 type ProgramOpt = { kode: string; nama: string };
 
@@ -191,14 +192,7 @@ export function RequestTracker({
           </div>
           <div className="field">
             <label htmlFor="tanggal">Tanggal kirim</label>
-            <input
-              id="tanggal"
-              name="tanggal"
-              type="date"
-              required
-              defaultValue={today}
-              key={today}
-            />
+            <DateField id="tanggal" name="tanggal" required defaultValue={today} key={today} />
           </div>
         </div>
         <button
