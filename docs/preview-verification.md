@@ -62,7 +62,38 @@ link dependensi, termasuk setelah pemeriksaan izin. WSL menyiapkan runtime
 Linux tetapi kemudian mengalami HCS connection timeout saat memulai build.
 Build bundle dipindahkan ke GitHub Actions Linux melalui workflow
 `preview-build.yml`. Workflow hanya menghasilkan artifact tanpa secret
-deployment. Deployment web menunggu artifact dan dicatat setelah berhasil.
+deployment. Build Linux untuk commit `52a46c6` lulus:
+https://github.com/HapisHanipudin/jejakjanji/actions/runs/41594607386.
+
+Web preview:
+https://jejakjanji-web-preview.hapishanipudin.workers.dev/
+
+Versi web terbaru: `6a22ee5f-c8e1-4d03-83ae-dbe9e2120246`. Bundle Linux
+divalidasi dengan Wrangler lalu diterbitkan ke Worker preview terpisah.
+Commit awal implementasi `9e29736`, pembetulan mobile `52a46c6`, keduanya
+dipush ke branch tersebut. Main dan Worker development lama tidak diganti.
+
+## Verifikasi publik
+
+- Landing umum dan enam halaman Jakarta diperiksa di browser pada desktop
+  1280, mobile 390 dan 375 px. Data asli tampil, tanpa badge dev atau error
+  browser tak tertangani. Kontak koreksi bukan placeholder lagi.
+- Bagan tetap enam bidang yang benar; tautan PPID resmi tampil. Pemilih
+  daerah dan halaman persetujuan lokasi diperiksa tanpa meminta GPS pribadi.
+- Pemeriksaan visual menemukan tabel sumber Metodologi sempit dan tanggal
+  terpotong di mobile. Tabel diubah menjadi kartu per sumber pada ponsel.
+  Tautan PPID diberi paragraf terpisah agar tidak menyatu dengan tautan Pelacak.
+- Clipboard nyata, unduhan TXT, ekspor JSON, impor v1 dengan unduhan cadangan,
+  dan penolakan impor rusak lulus pada domain HTTPS preview. Berkas benar-benar
+  tersimpan di disk, bukan hanya Blob yang ditiru.
+- HTTP 200/404/308, query pencarian/filter pada redirect, dan CORS origin
+  preview diperiksa. Web development lama tetap 200 tanpa pesan error API.
+- Seed remote dibandingkan lagi dengan cadangan: semua sel lama tetap sama.
+  Daerah hanya Jakarta; role reader memiliki SELECT dan tidak punya
+  INSERT/UPDATE/DELETE pada seluruh tabel aplikasi.
+- Typecheck dan lint lulus. 39 tes lulus, termasuk 3 integrasi PostgreSQL lokal.
+  Build OpenNext Linux lulus sebelum deployment; tes integrasi tidak diklaim
+  berjalan di GitHub Actions karena workflow hanya membangun bundle web.
 
 ## Batas
 

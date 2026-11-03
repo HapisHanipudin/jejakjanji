@@ -66,7 +66,7 @@ persetujuan, lalu pengguna mengonfirmasi saran. Pemetaan lokasi baru Jakarta.
 - `API_BASE_URL` (server saja) dibaca dari `.env` root; lihat `.env.example`.
 - Token desain (warna, jarak, tipografi): `apps/web/src/app/tokens.css`.
 - Teks hukum dan konstanta tenggat: `apps/web/src/content/legal.ts` (bertanda `TODO-REVIEW`).
-- Konstanta lain yang perlu diganti: `apps/web/src/content/site.ts` (jumlah program prioritas dan kontak koreksi; kontak masih placeholder).
+- Metadata editorial dan kontak koreksi: `apps/web/src/content/site.ts`; kontak tim `support@jejakjanji.id`.
 - Build produksi: `bun run --cwd apps/web build`, lalu `bun run --cwd apps/web start`.
 
 ## Endpoint
@@ -107,7 +107,12 @@ Next.js dan React untuk web; Hono di Cloudflare Workers untuk API; PostgreSQL, D
 
 Enam layar dan empat endpoint baca sudah tersedia, berikut CSV 10 program dan 44 bidang urusan, migrasi, seed, draf PPID, serta pelacak lokal. Cakupan data awal adalah 10 dari 82 program prioritas daerah (RPJMD Tabel III.28, mulai PDF 337, diperiksa 22 Oktober 2026).
 
-API sudah di-deploy ke Cloudflare Workers dan terhubung ke PostgreSQL Neon melalui Hyperdrive; lihat docs/DEPLOYMENT.md untuk URL dan hasil verifikasi. Web sedang disiapkan untuk Workers melalui OpenNext. Teks hukum PPID belum ditinjau; hitungan hari kerja belum memasukkan hari libur. Uji pengguna belum dilakukan. Kontak koreksi di halaman Metodologi masih placeholder. Screenshot di docs/screenshots/contoh-data-fiktif tidak boleh dipakai untuk PDF lomba.
+API dan web preview multi-daerah tersedia pada Worker terpisah; lihat
+[docs/preview-verification.md](docs/preview-verification.md) untuk URL, migrasi
+development yang disetujui, dan hasil uji. Teks hukum PPID menunggu persetujuan
+akhir tim; hitungan hari kerja belum memasukkan hari libur. Uji pengguna formal
+belum dilakukan. Kontak koreksi sudah diisi. Screenshot di
+docs/screenshots/contoh-data-fiktif tidak boleh dipakai untuk PDF lomba.
 
 Hasil verifikasi sesi ini dicatat di docs/first-draft-verification.md; keberadaan kode tidak berarti seluruh alur telah diuji.
 

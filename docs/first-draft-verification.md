@@ -1,5 +1,15 @@
 # Verifikasi first draft — 28 Oktober 2026
 
+## Status terbaru — 3 November 2026
+
+Preview multi-daerah sudah diterbitkan setelah izin pengguna. Migrasi database
+development, cadangan yang diuji pemulihannya, commit/push, build Linux, serta
+hasil uji publik dicatat di [preview-verification.md](preview-verification.md).
+Kontak koreksi kini `support@jejakjanji.id`. Unduhan ke disk dan ekspor/impor
+berhasil diuji pada domain preview. Catatan di bawah adalah riwayat sesi lama;
+pernyataan “belum live” dan kontak placeholder bukan status versi terbaru.
+Persetujuan hukum akhir tim dan uji GPS perangkat nyata masih tertunda.
+
 ## Deployment — 29 Oktober 2026
 
 Pembaruan arahan: pengguna memilih koneksi GitHub di dashboard Cloudflare. Build

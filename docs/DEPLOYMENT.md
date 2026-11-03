@@ -1,5 +1,34 @@
 # Deployment Cloudflare Workers dan Neon
 
+## Preview multi-daerah — 3 November 2026
+
+Preview terpisah tersedia di
+https://jejakjanji-web-preview.hapishanipudin.workers.dev dan
+https://jejakjanji-api-preview.hapishanipudin.workers.dev.
+Konfigurasi: `apps/web/wrangler.preview.toml` dan
+`apps/api/wrangler.preview.toml`. Konfigurasi Worker lama tidak diubah.
+Kedua API mengakses development Neon yang sama; pengguna telah menyetujui
+migrasi 0001, dan role runtime tetap baca-saja.
+
+Branch `feat/multi-daerah-local` membangun OpenNext di runner GitHub Linux,
+karena bundling Windows gagal pada symbolic link dan WSL mengalami timeout.
+Workflow `.github/workflows/preview-build.yml` menghasilkan artifact
+`preview-open-next`, berisi tar bundle `.open-next` dari commit yang diuji.
+Workflow tidak memegang secret Cloudflare atau database dan tidak melakukan
+deployment otomatis.
+
+Setelah mengunduh dan mengekstrak artifact dengan aman, jalankan Wrangler
+dari app web dengan entry `worker.js` dan directory assets artifact tersebut,
+serta `--config wrangler.preview.toml`. API preview memakai
+`wrangler deploy --config wrangler.preview.toml` dari app API.
+Periksa commit artifact dan lakukan dry run sebelum deployment berikutnya.
+Untuk build Linux langsung, `.open-next` berada di app web dan perintah
+`wrangler deploy --config wrangler.preview.toml` memakai path bawaan.
+
+Jangan mengganti Worker lama atau menggabungkan main hanya karena preview
+lulus. Migrasi database bukan bagian build CI. Cadangan dan hasil pemeriksaan
+dicatat di [preview-verification.md](preview-verification.md).
+
 Web: Next.js melalui OpenNext di Worker `jejakjanji-web`. API: Hono di Worker
 `jejakjanji-api`. API mengakses PostgreSQL Neon melalui Hyperdrive. Tidak ada
 kredensial database di web atau repository.
