@@ -2342,6 +2342,150 @@ fieldset legend + .notice {
   }
 }
 
+.flow-demo {
+  margin: var(--space-6) 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.flow-demo-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-5);
+}
+.flow-demo-heading h3,
+.flow-demo-heading p {
+  margin: 0;
+}
+.flow-demo-heading p {
+  margin-top: var(--space-2);
+}
+.flow-play {
+  flex-shrink: 0;
+  min-height: 44px;
+}
+.flow-demo-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 0;
+  padding: 0 var(--space-5);
+  gap: var(--space-2);
+}
+.flow-demo-steps button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 64px;
+  padding: var(--space-3) var(--space-2);
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 0;
+  border-bottom: 2px solid var(--color-border);
+  border-radius: 0;
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+}
+.flow-demo-steps button[aria-current] {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+  font-weight: 600;
+}
+.flow-demo-steps button:hover {
+  background: var(--color-accent-soft);
+}
+.flow-step-number {
+  font-variant-numeric: tabular-nums;
+}
+.flow-demo-panel {
+  padding: var(--space-6);
+  background: var(--color-surface);
+}
+.flow-demo-scene {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-7);
+  min-height: 245px;
+}
+.flow-demo-sheet {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  padding: var(--space-5);
+}
+.flow-sheet-title {
+  font-weight: 600;
+  margin: 0 0 var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+.flow-demo-sheet li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  animation: flow-trace 450ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.flow-sheet-marker {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--color-accent);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.flow-demo-explanation h4 {
+  font-size: 1.625rem;
+  line-height: 1.3;
+  margin: 0 0 var(--space-3);
+}
+.flow-demo-explanation p {
+  max-width: 55ch;
+}
+@keyframes flow-trace {
+  from {
+    clip-path: inset(0 85% 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+@media (max-width: 760px) {
+  .flow-demo-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .flow-demo-steps {
+    grid-template-columns: 1fr;
+    padding: 0 var(--space-5) var(--space-5);
+    gap: 0;
+  }
+  .flow-demo-steps button {
+    min-height: 44px;
+  }
+  .flow-demo-scene {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+  .flow-demo-panel {
+    padding: var(--space-5);
+  }
+  .flow-demo-explanation h4 {
+    font-size: 1.25rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flow-play {
+    display: none;
+  }
+  .flow-demo-sheet li {
+    animation: none;
+  }
+}
+
 @media (max-width: 600px) {
   .tooltip {
     position: fixed;
