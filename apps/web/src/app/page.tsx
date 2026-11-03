@@ -2,18 +2,30 @@ import Link from 'next/link';
 import { FlowDemo } from '@/components/FlowDemo';
 import { RegionPicker } from '@/components/RegionPicker';
 import { ErrorState } from '@/components/States';
-import { getDaerahList, getProgramList } from '@/lib/data';
+import { getDaerahList, getProgram, getProgramList } from '@/lib/data';
 
 export default async function LandingPage() {
   const result = await getDaerahList();
   const regions = result.ok ? result.data.data : [];
   const active = regions.filter((region) => region.statusKurasi === 'AKTIF');
   // Each active region's own curated count; never summed or ranked across regions.
-  const counts = await Promise.all(
+  const lists = await Promise.all(
     active.map(async (region) => {
       const list = await getProgramList({ daerah: region.slug });
-      return list.ok ? list.data.data.length : null;
+      return list.ok ? list.data.data : null;
     }),
+  );
+  const counts = lists.map((list) => list?.length ?? null);
+  const jakartaIndex = active.findIndex((region) => region.kode === '31');
+  const candidates = lists[jakartaIndex] ?? [];
+  const examples = await Promise.all(
+    [...candidates]
+      .sort((a, b) => Number(b.kode === '2.11.11') - Number(a.kode === '2.11.11'))
+      .slice(0, 2)
+      .map((program) => getProgram(program.kode, 'dki-jakarta')),
+  );
+  const demoPrograms = examples.flatMap((result) =>
+    result.ok && result.data.data ? [result.data.data] : [],
   );
   return (
     <>
@@ -76,7 +88,7 @@ export default async function LandingPage() {
       <section className="section-lg" id="cara-kerja">
         <div className="container">
           <h2 className="section-title">Dari rencana sampai bukti</h2>
-          <FlowDemo />
+          <FlowDemo programs={demoPrograms} />
           <Link href="/metodologi" className="btn">
             Baca Metodologi
           </Link>
