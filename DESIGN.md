@@ -148,7 +148,7 @@ JejakJanji looks like a fact-checker's working sheet: archive ink on cream paper
 
 Density is that of a working document: generous section spacing between tasks, but tight, scannable rows inside them (program lists, budget bars, source tables). Navy ink carries action and evidence; cream paper and pale bands carry structure. Colour never carries judgement: there is no red, no green, no score. Status is written in words, and "Belum diketahui" is drawn with a dashed outline that is as visible as a solid one.
 
-Components are precise and calm: hairline borders, slightly rounded corners, no ornament. Motion explains rather than entertains. The one authored moment is the Jejak explorer on a region home: picking a stage moves the ink along a single trail and redraws every curated program's dot for that stage. Around it, motion is feedback: the evidence trail draws in order, a chart grows once when it first comes into view, a chart row reveals how many programs sit behind it, a just-added line flashes, a copy confirms. Everything starts already readable and everything stops under reduced motion.
+Components are precise and calm: hairline borders, slightly rounded corners, no ornament. Motion explains rather than entertains. The one authored moment is the Jejak explorer on a region home: picking one of the three stage cards redraws every curated program's dot for that stage. Around it, motion is feedback: the evidence trail draws in order, a chart grows once when it first comes into view, a chart row reveals how many programs sit behind it, a just-added line flashes, a copy confirms. Everything starts already readable and everything stops under reduced motion.
 
 **Key Characteristics:**
 
@@ -291,11 +291,11 @@ Logo mark plus wordmark at the left, region picker, then four links. Links are T
 
 ### Jejak Explorer
 
-Signature component and the one authored motion moment. A single trail with three numbered stops (Rencana, Anggaran, Bukti) as keyboard tabs; the selected stop fills with Tinta Arsip behind a Kabut Biru ring, and the ink line extends to it (460ms). The panel states how many curated programs have a sourced document for that stage and shows one dot per program: filled for a sourced document, dashed ring for not yet known. Dots re-enter with a short stagger when the stage changes, scale on hover or focus, name their program in a caption, and open the program on click. Without JavaScript the three stages render stacked. Counts are factual coverage of evidence, never a score.
+Signature component and the one authored motion moment. The three stage cards (Rencana, Anggaran, Bukti; marker, title, description, and "N dari M program punya dokumen sumber") are keyboard tabs. The selected card takes a Tinta Arsip inner ring with a Kabut Biru halo; the panel below shows one dot per curated program for that stage: filled for a sourced document, dashed ring for not yet known. Dots re-enter with a short stagger when the stage changes, scale on hover or focus, name their program in a caption, and open the program on click. Without JavaScript the cards are static and each stage's dots render stacked. Counts are factual coverage of evidence, never a score.
 
 ### Budget Bar Chart
 
-Signature component. Label, track (Kertas Lipat), Biru Batang fill, then the short rupiah value with its one-decimal share. The whole row links to its field. Hover or focus tints the row Kabut Biru, deepens the bar to Tinta Arsip, and thickens the track without changing its length. The full value is in a keyboard-reachable tooltip; a caption under the label (shown on hover or focus, always shown on touch) says how many curated programs belong to that field. Bars are drawn at full length by default and grow once when the chart first scrolls into view.
+Signature component. Label, track (Kertas Lipat), Biru Batang fill, then the short rupiah value with its one-decimal share. The whole row links to its field. Hover or focus lays a padded Kabut Biru surface behind the row, deepens the bar to Tinta Arsip, and thickens the track without changing its length. The full value is in a keyboard-reachable tooltip; a caption under the label (shown on hover or focus, always shown on touch) says how many curated programs belong to that field. Bars are drawn at full length by default and grow once when the chart first scrolls into view.
 
 ## Do's and Don'ts
 

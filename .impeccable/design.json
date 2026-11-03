@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-03T14:24:38+00:00",
+  "generatedAt": "2026-11-03T15:01:02+00:00",
   "title": "Design System: JejakJanji",
   "extensions": {
     "colorMeta": {
@@ -338,7 +338,7 @@
       },
       {
         "name": "focal",
-        "value": "460ms ink, 360ms dots with 30ms stagger",
+        "value": "220ms card selection, 360ms dots with 30ms stagger",
         "purpose": "Jejak explorer stage change: the one authored moment."
       },
       {
@@ -454,7 +454,7 @@
   ],
   "narrative": {
     "northStar": "Lembar Kerja Jurnalis",
-    "overview": "JejakJanji looks like a fact-checker's working sheet: archive ink on cream paper, every figure sitting next to its source page and check date. The mood is careful, neutral, and verifiable. Nothing is dramatised; nothing is decorated to persuade. The interface earns trust by showing its working, not by styling confidence.\n\nDensity is that of a working document: generous section spacing between tasks, but tight, scannable rows inside them (program lists, budget bars, source tables). Navy ink carries action and evidence; cream paper and pale bands carry structure. Colour never carries judgement: there is no red, no green, no score. Status is written in words, and \"Belum diketahui\" is drawn with a dashed outline that is as visible as a solid one.\n\nComponents are precise and calm: hairline borders, slightly rounded corners, no ornament. Motion explains rather than entertains. The one authored moment is the Jejak explorer on a region home: picking a stage moves the ink along a single trail and redraws every curated program's dot for that stage. Around it, motion is feedback: the evidence trail draws in order, a chart grows once when it first comes into view, a chart row reveals how many programs sit behind it, a just-added line flashes, a copy confirms. Everything starts already readable and everything stops under reduced motion.",
+    "overview": "JejakJanji looks like a fact-checker's working sheet: archive ink on cream paper, every figure sitting next to its source page and check date. The mood is careful, neutral, and verifiable. Nothing is dramatised; nothing is decorated to persuade. The interface earns trust by showing its working, not by styling confidence.\n\nDensity is that of a working document: generous section spacing between tasks, but tight, scannable rows inside them (program lists, budget bars, source tables). Navy ink carries action and evidence; cream paper and pale bands carry structure. Colour never carries judgement: there is no red, no green, no score. Status is written in words, and \"Belum diketahui\" is drawn with a dashed outline that is as visible as a solid one.\n\nComponents are precise and calm: hairline borders, slightly rounded corners, no ornament. Motion explains rather than entertains. The one authored moment is the Jejak explorer on a region home: picking one of the three stage cards redraws every curated program's dot for that stage. Around it, motion is feedback: the evidence trail draws in order, a chart grows once when it first comes into view, a chart row reveals how many programs sit behind it, a just-added line flashes, a copy confirms. Everything starts already readable and everything stops under reduced motion.",
     "keyCharacteristics": [
       "Cream paper (`bg`) with archive-ink navy (`accent`) as the single accent; dark navy footer as the closing band.",
       "Plus Jakarta Sans throughout, three weights only (400, 600, 800).",

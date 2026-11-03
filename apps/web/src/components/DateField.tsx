@@ -47,7 +47,8 @@ export function DateField({
   const [dipilih, setDipilih] = useState<string>();
   const [today, setToday] = useState('');
 
-  useEffect(() => setEnhanced(true), []);
+  // Firefox draws its own calendar button that CSS cannot hide; keep the native one there.
+  useEffect(() => setEnhanced(CSS.supports('selector(::-webkit-calendar-picker-indicator)')), []);
 
   // Focus follows the roving day; close when focus or a click leaves the field.
   useEffect(() => {
