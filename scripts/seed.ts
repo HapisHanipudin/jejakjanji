@@ -8,11 +8,19 @@ import { and, eq, sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import { z } from 'zod';
-import { bidangUrusan, evidence, funding, program, sourceDocument } from '@jejakjanji/shared';
+import {
+  daerah,
+  bidangUrusan,
+  evidence,
+  funding,
+  program,
+  sourceDocument,
+} from '@jejakjanji/shared';
 
 const CHECKED_AT = '2026-10-22';
 const SOURCES = {
   RPJMD: {
+    daerahKode: '31',
     title: 'RPJMD Provinsi DKI Jakarta 2025-2029',
     type: 'RPJMD',
     url: 'https://bappeda.jakarta.go.id/show_file/doc_list/EyJrGwJ8u84AkWxoQW7VWuTgpTz1TMr45Q3dbRAF.pdf',
@@ -20,6 +28,7 @@ const SOURCES = {
     checkedAt: CHECKED_AT,
   },
   RKPD: {
+    daerahKode: '31',
     title: 'RKPD Provinsi DKI Jakarta 2026',
     type: 'RKPD',
     url: 'https://bappeda.jakarta.go.id/show_file/doc_list/kO5eh8zrQTzJVKQFtpoYr0wXrAvXKvMdOlUcxwCt.pdf',
@@ -67,6 +76,7 @@ const jenisSumber = z.string().transform((s, ctx) => {
 const pagu = z.union([z.literal(''), bulat]);
 
 const bidangRow = z.object({
+  daerah_kode: z.literal('31'),
   Kode: kode,
   'Bidang urusan / unsur': teks,
   'Pagu indikatif 2026 (Rp)': bulat,
@@ -76,6 +86,7 @@ const bidangRow = z.object({
 });
 
 const programRow = z.object({
+  daerah_kode: z.literal('31'),
   Kode: kode,
   'Program prioritas': teks,
   Indikator: teks,
@@ -146,14 +157,15 @@ async function main() {
   const programs = validate('program.csv', readCsv('program.csv'), programRow);
   const errors = [...bidang.errors, ...programs.errors];
 
-  const bidangKodes = new Set(bidang.ok.map((b) => b.Kode));
+  const bidangKodes = new Set(bidang.ok.map((b) => `${b.daerah_kode}:${b.Kode}`));
   const seen = new Set<string>();
   programs.ok.forEach((p) => {
     const bk = p.Kode.split('.').slice(0, 2).join('.');
-    if (!bidangKodes.has(bk))
+    if (!bidangKodes.has(`${p.daerah_kode}:${bk}`))
       errors.push(`program.csv baris ${p.baris}: bidang "${bk}" tidak ada di bidang_urusan.csv`);
-    if (seen.has(p.Kode)) errors.push(`program.csv baris ${p.baris}: kode "${p.Kode}" duplikat`);
-    seen.add(p.Kode);
+    if (seen.has(`${p.daerah_kode}:${p.Kode}`))
+      errors.push(`program.csv baris ${p.baris}: kode "${p.Kode}" duplikat`);
+    seen.add(`${p.daerah_kode}:${p.Kode}`);
   });
   if (errors.length)
     throw new Error(`Validasi CSV gagal (${errors.length} masalah):\n${errors.join('\n')}`);
@@ -162,11 +174,26 @@ async function main() {
   const db = drizzle(pool);
   try {
     await db.transaction(async (tx) => {
+      await tx
+        .insert(daerah)
+        .values({
+          kode: '31',
+          slug: 'dki-jakarta',
+          nama: 'DKI Jakarta',
+          tingkat: 'PROVINSI',
+          statusKurasi: 'AKTIF',
+          // Official Jakarta PPID FAQ and request form, checked 3 November 2026.
+          ppidUrl: 'https://ppid.jakarta.go.id/permohonan-informasi',
+        })
+        .onConflictDoUpdate({
+          target: daerah.kode,
+          set: { ppidUrl: sql`coalesce(${daerah.ppidUrl}, excluded.ppid_url)` },
+        });
       const docs = await tx
         .insert(sourceDocument)
         .values(Object.values(SOURCES))
         .onConflictDoUpdate({
-          target: [sourceDocument.type, sourceDocument.version],
+          target: [sourceDocument.daerahKode, sourceDocument.type, sourceDocument.version],
           set: {
             title: sql`excluded.title`,
             url: sql`excluded.url`,
@@ -180,6 +207,7 @@ async function main() {
         .insert(bidangUrusan)
         .values(
           bidang.ok.map((b) => ({
+            daerahKode: b.daerah_kode,
             kode: b.Kode,
             nama: b['Bidang urusan / unsur'],
             paguIndikatif2026: b['Pagu indikatif 2026 (Rp)'],
@@ -189,7 +217,7 @@ async function main() {
           })),
         )
         .onConflictDoUpdate({
-          target: bidangUrusan.kode,
+          target: [bidangUrusan.daerahKode, bidangUrusan.kode],
           set: {
             nama: sql`excluded.nama`,
             paguIndikatif2026: sql`excluded.pagu_indikatif_2026`,
@@ -206,6 +234,7 @@ async function main() {
         .insert(program)
         .values(
           programs.ok.map((p) => ({
+            daerahKode: p.daerah_kode,
             kode: p.Kode,
             nama: p['Program prioritas'],
             bidangKode: p.Kode.split('.').slice(0, 2).join('.'),
@@ -218,7 +247,7 @@ async function main() {
           })),
         )
         .onConflictDoUpdate({
-          target: program.kode,
+          target: [program.daerahKode, program.kode],
           set: {
             nama: sql`excluded.nama`,
             bidangKode: sql`excluded.bidang_kode`,
@@ -238,6 +267,7 @@ async function main() {
             ? []
             : [
                 {
+                  daerahKode: p.daerah_kode,
                   programKode: p.Kode,
                   tahun,
                   jenis: 'INDIKATIF_RPJMD' as const,
@@ -253,7 +283,7 @@ async function main() {
           .insert(funding)
           .values(fundingRows)
           .onConflictDoUpdate({
-            target: [funding.programKode, funding.tahun, funding.jenis],
+            target: [funding.daerahKode, funding.programKode, funding.tahun, funding.jenis],
             set: {
               jumlahJutaRp: sql`excluded.jumlah_juta_rp`,
               sourceDocumentId: sql`excluded.source_document_id`,
@@ -268,7 +298,13 @@ async function main() {
       const existing = await tx
         .select({ id: evidence.id, programKode: evidence.programKode })
         .from(evidence)
-        .where(and(eq(evidence.jenis, 'RENCANA'), eq(evidence.sourceDocumentId, rpjmd)));
+        .where(
+          and(
+            eq(evidence.daerahKode, '31'),
+            eq(evidence.jenis, 'RENCANA'),
+            eq(evidence.sourceDocumentId, rpjmd),
+          ),
+        );
       const byProgram = new Map(existing.map((e) => [e.programKode, e.id]));
       const missing = [];
       for (const p of programs.ok) {
@@ -283,6 +319,7 @@ async function main() {
       if (missing.length) {
         await tx.insert(evidence).values(
           missing.map((p) => ({
+            daerahKode: p.daerah_kode,
             programKode: p.Kode,
             jenis: 'RENCANA' as const,
             sourceDocumentId: rpjmd,

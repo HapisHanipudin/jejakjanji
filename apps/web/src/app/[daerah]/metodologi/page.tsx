@@ -25,8 +25,9 @@ const ATURAN = [
   },
 ];
 
-export default async function MetodologiPage() {
-  const sumber = await getSumberList();
+export default async function MetodologiPage({ params }: PageProps<'/[daerah]/metodologi'>) {
+  const { daerah } = await params;
+  const sumber = await getSumberList(daerah);
 
   return (
     <>
@@ -43,7 +44,7 @@ export default async function MetodologiPage() {
             <EmptyState>Belum ada dokumen sumber di data.</EmptyState>
           ) : (
             <div className="table-wrap">
-              <table className="table-plain">
+              <table className="table-plain table-cards">
                 <thead>
                   <tr>
                     <th scope="col">Dokumen</th>
@@ -66,8 +67,12 @@ export default async function MetodologiPage() {
                           ({d.version})
                         </span>
                       </th>
-                      <td className="muted">{DIPAKAI_UNTUK[d.type]}</td>
-                      <td style={{ whiteSpace: 'nowrap' }}>{formatTanggal(d.checkedAt)}</td>
+                      <td className="muted" data-label="Dipakai untuk">
+                        {DIPAKAI_UNTUK[d.type]}
+                      </td>
+                      <td data-label="Diperiksa" style={{ whiteSpace: 'nowrap' }}>
+                        {formatTanggal(d.checkedAt)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -153,7 +158,9 @@ export default async function MetodologiPage() {
               </h3>
               <p>Hubungi kami dengan menyebut kode program dan halaman PDF sumbernya.</p>
             </div>
-            <span className="highlight">{KONTAK_KOREKSI}</span>
+            <a className="highlight" href={`mailto:${KONTAK_KOREKSI}`}>
+              {KONTAK_KOREKSI}
+            </a>
           </section>
         </section>
       </div>

@@ -2,15 +2,22 @@ import type { Metadata } from 'next';
 import { PageHeader } from '@/components/PageHeader';
 import { RequestTracker } from '@/components/RequestTracker';
 import { ErrorState } from '@/components/States';
-import { getProgramList } from '@/lib/data';
+import { getProgramList, getRegion } from '@/lib/data';
 import { namaProgram } from '@/lib/format';
 
 export const metadata: Metadata = { title: 'Pelacak permohonan' };
 
-export default async function PelacakPage({ searchParams }: PageProps<'/pelacak'>) {
+export default async function PelacakPage({
+  searchParams,
+  params,
+}: PageProps<'/[daerah]/pelacak'>) {
+  const { daerah } = await params;
+  const regionResult = await getRegion(daerah);
+  if (!regionResult.ok || !regionResult.data || regionResult.data.statusKurasi !== 'AKTIF')
+    return null;
   const sp = await searchParams;
   const pilih = typeof sp.program === 'string' ? sp.program : undefined;
-  const programs = await getProgramList();
+  const programs = await getProgramList({ daerah });
 
   return (
     <>
@@ -26,6 +33,7 @@ export default async function PelacakPage({ searchParams }: PageProps<'/pelacak'
           <p className="notice">Pelacak membutuhkan JavaScript karena data disimpan di browser.</p>
         </noscript>
         <RequestTracker
+          region={regionResult.data}
           programs={
             programs.ok
               ? programs.data.data.map((p) => ({ kode: p.kode, nama: namaProgram(p.nama) }))

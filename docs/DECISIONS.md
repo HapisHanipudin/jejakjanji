@@ -1,5 +1,36 @@
 # Keputusan
 
+## Preview multi-daerah — lanjutan 3 November 2026
+
+Pengguna mengizinkan commit/push dan deployment preview, lalu menyetujui target
+Neon development `neondb` yang dipakai Hyperdrive `jejakjanji-db`. Migrasi 0001
+diterapkan setelah cadangan schema/data aplikasi berhasil dipulihkan lokal.
+Worker preview memakai nama terpisah `jejakjanji-api-preview` dan
+`jejakjanji-web-preview`; Worker development lama tidak diganti. Main tidak
+digabung. Konfigurasi preview disimpan terpisah dari konfigurasi lama.
+
+Kontak koreksi yang diberikan pengguna: `support@jejakjanji.id`. Kanal PPID
+Jakarta diisi dari FAQ dan formulir resmi, bukan kontak yang diasumsikan untuk
+daerah lain. Rujukan hukum diperiksa, tetapi persetujuan hukum akhir tim tetap
+tertunda. Hasil uji dan versi deployment: [preview-verification.md](preview-verification.md).
+
+## Multi-daerah / Jakarta-first — 3 November 2026
+
+Struktur daerah diterapkan lokal; isi seed tetap Jakarta saja. Kode wilayah
+bertipe string. Program dan bidang memakai kunci gabungan daerah/kode; seluruh
+relasi sumber, pagu, dan bukti dibatasi daerah. Endpoint lama tetap Jakarta.
+Landing `/` bersifat umum; enam halaman berada di bawah slug daerah. URL selalu
+mengalahkan preferensi tersimpan. `BELUM_DIKURASI` menyatakan cakupan daerah;
+`belum_diketahui` menyatakan bukti program, bukan kegagalan. Tidak ada peringkat
+atau perbandingan pagu/status antar daerah.
+
+Pengguna menyetujui layanan lokasi eksternal dengan persetujuan pengunjung.
+Dipilih BigDataCloud client reverse geocoding; disclosure, izin, dan konfirmasi
+saran wajib dilalui. Pemetaan baru hanya ID-JK ke 31; tidak ada fallback IP atau
+redirect otomatis. Pelacak menjadi versi 2, dengan migrasi v1 dan cadangan
+sebelum penggantian. Detail migrasi, rollback, keterbatasan, serta hasil uji:
+[multi-daerah-verification.md](multi-daerah-verification.md).
+
 ## Deployment Cloudflare dan Neon — 29 Oktober 2026
 
 Jalur deployment pilihan pengguna adalah integrasi GitHub di dashboard Cloudflare

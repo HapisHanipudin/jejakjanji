@@ -1,7 +1,12 @@
 import { expect, test } from 'vitest';
-import { buatSurat, pilihanBawaan } from './surat.ts';
+import { buatSurat, isTahapDiminta, pilihanBawaan, pilihanUntukTahap } from './surat.ts';
 
-const program = { nama: 'Program Uji', kode: '2.11.11', halaman: 345 };
+const program = {
+  nama: 'Program Uji',
+  kode: '2.11.11',
+  halaman: 345,
+  sumber: 'RPJMD Daerah Uji 2025–2029',
+};
 
 test('pilihan bawaan: dua butir bernomor', () => {
   const s = buatSurat(program, pilihanBawaan());
@@ -11,6 +16,8 @@ test('pilihan bawaan: dua butir bernomor', () => {
   expect(s).not.toContain('Dokumen laporan pelaksanaan');
   expect(s).toContain('program Program Uji (kode 2.11.11)');
   expect(s).toContain('halaman PDF 345, berupa:');
+  expect(s).toContain(program.sumber);
+  expect(s).not.toContain('DKI Jakarta');
 });
 
 test('centang mengubah daftar dan penomoran', () => {
@@ -33,4 +40,17 @@ test('bagian dalam kurung siku tidak diisi sistem', () => {
   ]) {
     expect(s).toContain(p);
   }
+});
+
+test('tahap dari Detail memilih butir yang sesuai; nilai lain kembali ke bawaan', () => {
+  expect(pilihanUntukTahap('anggaran')).toEqual({ capaian: false, anggaran: true, dokumen: false });
+  expect(pilihanUntukTahap('pelaksanaan')).toEqual({
+    capaian: true,
+    anggaran: false,
+    dokumen: true,
+  });
+  expect(pilihanUntukTahap(undefined)).toEqual(pilihanBawaan());
+  expect(isTahapDiminta('anggaran')).toBe(true);
+  expect(isTahapDiminta('rencana')).toBe(false);
+  expect(isTahapDiminta(['anggaran'])).toBe(false);
 });

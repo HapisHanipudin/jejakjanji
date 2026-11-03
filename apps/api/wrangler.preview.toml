@@ -1,0 +1,14 @@
+name = "jejakjanji-api-preview"
+account_id = "4f77a350cc69eb1611b74f9c54259d7c"
+main = "src/index.ts"
+compatibility_date = "2026-10-22"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[vars]
+CORS_ORIGINS = "http://localhost:3000,https://jejakjanji-web-preview.hapishanipudin.workers.dev"
+
+# Same approved development database, through the existing read-only role.
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "b9016926dedf4fe495eb78edd35b8531"

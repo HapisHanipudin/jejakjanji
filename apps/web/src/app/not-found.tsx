@@ -9,8 +9,8 @@ export default function NotFound() {
         lead="Alamat yang Anda buka tidak ada, atau kode program tidak terdaftar di data kami."
       />
       <div className="section container">
-        <Link href="/program" className="btn btn-primary">
-          Kembali ke daftar program
+        <Link href="/" className="btn btn-primary">
+          Pilih daerah dari Beranda
         </Link>
       </div>
     </>

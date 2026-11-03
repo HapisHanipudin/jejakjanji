@@ -1,18 +1,28 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { programQuerySchema } from '@jejakjanji/shared';
 import { JejakLangkah } from '@/components/JejakBukti';
 import { PageHeader } from '@/components/PageHeader';
 import { ProgramCard } from '@/components/ProgramCard';
+import { ProgramFilter } from '@/components/ProgramFilter';
 import { EmptyState, ErrorState } from '@/components/States';
 import { TOTAL_PROGRAM_RPJMD } from '@/content/site';
-import { getBidangList, getProgramList, getSumberList } from '@/lib/data';
+import { getBidangList, getProgramList, getSumberList, getRegion } from '@/lib/data';
 import { namaBidangRingkas } from '@/lib/format';
 
 export const metadata: Metadata = { title: 'Daftar program' };
 
 const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
-export default async function ProgramListPage({ searchParams }: PageProps<'/program'>) {
+export default async function ProgramListPage({
+  searchParams,
+  params,
+}: PageProps<'/[daerah]/program'>) {
+  const { daerah } = await params;
+  const regionResult = await getRegion(daerah);
+  if (!regionResult.ok || !regionResult.data || regionResult.data.statusKurasi !== 'AKTIF')
+    return null;
+  const region = regionResult.data;
   const sp = await searchParams;
   const parsed = programQuerySchema.safeParse({
     bidang: first(sp.bidang) || undefined,
@@ -20,25 +30,49 @@ export default async function ProgramListPage({ searchParams }: PageProps<'/prog
     q: first(sp.q) || undefined,
   });
   const filter = parsed.success ? parsed.data : {};
+  const filterKey = JSON.stringify(filter);
 
   const [filtered, all, bidang, sumber] = await Promise.all([
-    getProgramList(filter),
-    getProgramList(),
-    getBidangList(),
-    getSumberList(),
+    getProgramList({ ...filter, daerah }),
+    getProgramList({ daerah }),
+    getBidangList(daerah),
+    getSumberList(daerah),
   ]);
   const bidangNama = new Map(bidang.ok ? bidang.data.data.map((b) => [b.kode, b.nama]) : []);
   const bidangDenganProgram = all.ok ? [...new Set(all.data.data.map((p) => p.bidangKode))] : [];
   const docs = sumber.ok ? sumber.data.data : [];
+  const base = `/${daerah}/program`;
+  const tanpa = (key: keyof typeof filter) => {
+    const u = new URLSearchParams();
+    for (const [k, v] of Object.entries(filter)) if (k !== key && v) u.set(k, v);
+    const q = u.toString();
+    return q ? `${base}?${q}` : base;
+  };
+  const aktif = [
+    filter.q ? { key: 'q' as const, label: `Kata kunci “${filter.q}”` } : null,
+    filter.bidang
+      ? {
+          key: 'bidang' as const,
+          label: `Bidang ${namaBidangRingkas(bidangNama.get(filter.bidang) ?? filter.bidang)}`,
+        }
+      : null,
+    filter.status
+      ? {
+          key: 'status' as const,
+          label: filter.status === 'ada' ? 'Ada laporan pelaksanaan' : 'Belum diketahui',
+        }
+      : null,
+  ].filter((f) => f !== null);
 
   return (
     <>
       <PageHeader
-        title="Program prioritas RPJMD DKI Jakarta"
+        title={`Program prioritas RPJMD ${region.nama}`}
+        breadcrumb={<p className="breadcrumb">{region.nama} › Program</p>}
         lead={
           <>
             {all.ok
-              ? `${all.data.data.length} program sudah dikurasi dari ${TOTAL_PROGRAM_RPJMD} program prioritas daerah dalam RPJMD 2025 sampai 2029. `
+              ? `${all.data.data.length} program sudah dikurasi${region.kode === '31' ? ` dari ${TOTAL_PROGRAM_RPJMD} program prioritas daerah` : ''} dalam RPJMD 2025 sampai 2029. `
               : ''}
             Pagu adalah pagu indikatif RPJMD, bukan APBD.
           </>
@@ -47,14 +81,7 @@ export default async function ProgramListPage({ searchParams }: PageProps<'/prog
 
       <div className="section container">
         {/* Plain GET form: works without JavaScript and keeps filters in the shareable URL. */}
-        <form
-          method="get"
-          action="/program"
-          className="box form-row"
-          style={{ padding: 'var(--space-5)' }}
-          role="search"
-          aria-label="Saring program"
-        >
+        <ProgramFilter action={`/${daerah}/program`} filterKey={filterKey}>
           <div className="field">
             <label htmlFor="q">Cari</label>
             <input
@@ -85,10 +112,25 @@ export default async function ProgramListPage({ searchParams }: PageProps<'/prog
               <option value="belum_diketahui">Belum diketahui</option>
             </select>
           </div>
-          <button type="submit" className="btn btn-primary">
-            Terapkan
-          </button>
-        </form>
+        </ProgramFilter>
+
+        {aktif.length > 0 && (
+          <div className="filter-summary" aria-label="Filter aktif">
+            <span className="muted">Filter aktif:</span>
+            {aktif.map((f) => (
+              <Link key={f.key} className="filter-chip" href={tanpa(f.key)} scroll={false}>
+                {f.label}
+                <span aria-hidden="true">×</span>
+                <span className="sr-only"> (hapus filter)</span>
+              </Link>
+            ))}
+            {aktif.length > 1 && (
+              <Link className="filter-clear" href={base} scroll={false}>
+                Hapus semua
+              </Link>
+            )}
+          </div>
+        )}
 
         {!parsed.success && (
           <ErrorState judul="Filter tidak valid" pesan="Sebagian filter di alamat diabaikan." />
@@ -117,7 +159,15 @@ export default async function ProgramListPage({ searchParams }: PageProps<'/prog
                 </p>
               </div>
               {filtered.data.data.length === 0 ? (
-                <EmptyState>Tidak ada program yang cocok dengan filter ini.</EmptyState>
+                <div className="program-results" key={filterKey}>
+                  <EmptyState>
+                    Tidak ada program yang cocok dengan filter ini.{' '}
+                    <Link href={base} scroll={false}>
+                      Tampilkan semua program
+                    </Link>{' '}
+                    atau ubah kata kunci.
+                  </EmptyState>
+                </div>
               ) : (
                 <>
                   <div className="program-head" aria-hidden="true">
@@ -125,11 +175,13 @@ export default async function ProgramListPage({ searchParams }: PageProps<'/prog
                     <span className="num">Pagu indikatif 2026</span>
                     <span>Jejak bukti</span>
                   </div>
-                  <ul className="program-list">
-                    {filtered.data.data.map((p) => (
+                  <ul className="program-list program-results" key={filterKey}>
+                    {filtered.data.data.map((p, i) => (
                       <ProgramCard
                         key={p.kode}
+                        index={i}
                         program={p}
+                        regionSlug={daerah}
                         bidangNama={bidangNama.get(p.bidangKode)}
                         doc={docs.find((d) => d.id === p.paguPerTahun[0]?.sourceDocumentId)}
                       />

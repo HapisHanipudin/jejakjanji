@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { NavLinks } from './NavLinks';
+import { RegionPicker } from './RegionPicker';
+import type { Daerah } from '@jejakjanji/shared';
 
-export function Header() {
+export function Header({ regions, error }: { regions: Daerah[]; error?: string }) {
   return (
     <header className="site-header">
       <div className="container">
@@ -11,7 +13,8 @@ export function Header() {
           </span>
           JejakJanji
         </Link>
-        <NavLinks />
+        <RegionPicker regions={regions} error={error} />
+        <NavLinks regions={regions} />
       </div>
     </header>
   );

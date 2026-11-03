@@ -18,7 +18,7 @@ koma, karena koma bisa berarti desimal atau ribuan dan seed tidak menebak.
 
 Header (urutan bebas, nama persis):
 
-`Kode, Program prioritas, Bidang (PD penanggung jawab), Indikator, Satuan indikator, Kondisi awal, Target 2026, Pagu 2026, Pagu 2027, Pagu 2028, Pagu 2029, Pagu 2030, Total 2026-2030, Halaman PDF, Sumber, Satuan pagu, Cek jumlah 2026-2030`
+`daerah_kode, Kode, Program prioritas, Bidang (PD penanggung jawab), Indikator, Satuan indikator, Kondisi awal, Target 2026, Pagu 2026, Pagu 2027, Pagu 2028, Pagu 2029, Pagu 2030, Total 2026-2030, Halaman PDF, Sumber, Satuan pagu, Cek jumlah 2026-2030`
 
 - Pagu dalam juta rupiah (`Satuan pagu` harus memuat kata "juta"). Disimpan per tahun ke tabel `funding`.
 - Sel pagu kosong dilewati (tidak ada baris `funding` untuk tahun itu).
@@ -31,7 +31,13 @@ Header (urutan bebas, nama persis):
 
 Header:
 
-`Kode, Bidang urusan / unsur, Pagu indikatif 2026 (Rp), Proporsi belanja (%) menurut dokumen, Halaman PDF, Sumber`
+`daerah_kode, Kode, Bidang urusan / unsur, Pagu indikatif 2026 (Rp), Proporsi belanja (%) menurut dokumen, Halaman PDF, Sumber`
 
 - Pagu dalam rupiah penuh.
 - Baris tanpa `Kode` (baris jumlah) dilewati.
+
+Kedua CSV wajib memuat `daerah_kode` sebagai string `31`. Seed saat ini sengaja
+menolak daerah lain: perlu audit sumber dan perubahan seed sebelum daerah pilot.
+Kunci bidang/program memakai pasangan daerah dan kode; kode yang sama dapat
+digunakan daerah berbeda dalam skema. Data fixture hanya berada di DB tes,
+tidak dimasukkan ke CSV atau seed.

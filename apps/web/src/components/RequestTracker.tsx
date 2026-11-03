@@ -1,5 +1,6 @@
 'use client';
 
+import type { Daerah } from '@jejakjanji/shared';
 import { useEffect, useState } from 'react';
 import { CATATAN_TINJAU_HUKUM, PERPANJANGAN_HARI_KERJA, TENGGAT_HARI_KERJA } from '@/content/legal';
 import { formatTanggal } from '@/lib/format';
@@ -10,20 +11,13 @@ import {
   STATUS_PERMOHONAN,
   STORAGE_KEY,
   bacaSimpanan,
+  simpanSimpanan,
   type Permohonan,
   type StatusPermohonan,
 } from '@/lib/pelacak-store';
 import { unduh } from '@/lib/unduh';
 
 type ProgramOpt = { kode: string; nama: string };
-
-function readStorage(): string | null {
-  try {
-    return localStorage.getItem(STORAGE_KEY);
-  } catch {
-    return null;
-  }
-}
 
 function tenggat(p: Permohonan) {
   const dasar = tambahHariKerja(p.tanggalKirim, TENGGAT_HARI_KERJA);
@@ -33,32 +27,57 @@ function tenggat(p: Permohonan) {
 export function RequestTracker({
   programs,
   pilihAwal,
+  region,
 }: {
   programs: ProgramOpt[];
+  region: Daerah;
   pilihAwal?: string;
 }) {
   const [items, setItems] = useState<Permohonan[] | null>(null);
   const [pesan, setPesan] = useState('');
   const [today, setToday] = useState('');
+  const [blocked, setBlocked] = useState(false);
+  const [rawBackup, setRawBackup] = useState<string>();
+  const [baruId, setBaruId] = useState<string>();
 
   useEffect(() => {
-    const r = bacaSimpanan(readStorage());
-    setItems(r.ok ? r.data.permohonan : []);
-    if (!r.ok) {
-      setPesan(
-        'Data pelacak tersimpan di browser ini rusak atau tidak dikenali, jadi diabaikan. Data itu akan tertimpa saat Anda menyimpan.',
-      );
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const r = bacaSimpanan(raw);
+      setItems(r.ok ? r.data.permohonan : []);
+      if (!r.ok) {
+        setBlocked(true);
+        setRawBackup(raw ?? undefined);
+        setPesan(
+          'Data tersimpan rusak atau tidak dikenali. Data asli tidak diubah; unduh cadangan mentah untuk pemulihan.',
+        );
+      } else if (raw && JSON.parse(raw).versi === 1 && !simpanSimpanan(localStorage, r.data)) {
+        setBlocked(true);
+        setPesan(
+          'Migrasi penyimpanan gagal. Data versi lama tetap tersedia; browser menolak penulisan.',
+        );
+      }
+    } catch {
+      setItems([]);
+      setBlocked(true);
+      setPesan('Penyimpanan browser tidak dapat diakses. Tidak ada data yang ditimpa.');
     }
     setToday(hariIni());
   }, []);
 
   function simpan(next: Permohonan[], info: string) {
-    setItems(next);
+    if (blocked) return false;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ versi: 1, permohonan: next }));
+      if (!simpanSimpanan(localStorage, { versi: 2, permohonan: next })) {
+        setPesan('Gagal menyimpan atau membuat cadangan. Data sebelumnya tidak diganti.');
+        return false;
+      }
+      setItems(next);
       setPesan(info);
+      return true;
     } catch {
-      setPesan('Browser menolak menyimpan data (penyimpanan penuh atau diblokir).');
+      setPesan('Browser menolak menyimpan data. Data sebelumnya tidak diganti.');
+      return false;
     }
   }
 
@@ -75,38 +94,71 @@ export function RequestTracker({
     }
     const baru: Permohonan = {
       id: crypto.randomUUID(),
+      daerahKode: region.kode,
+      daerahSlug: region.slug,
+      daerahNama: region.nama,
       programKode: prog.kode,
       programNama: prog.nama,
       perangkatDaerah: pd.slice(0, PERANGKAT_DAERAH_MAX),
       tanggalKirim: tgl,
       status: 'belum_dijawab',
     };
-    simpan(
+    const saved = simpan(
       [...(items ?? []), baru],
       `Tersimpan. Tenggat perkiraan ${formatTanggal(tenggat(baru))}.`,
     );
-    e.currentTarget.reset();
+    if (saved) {
+      setBaruId(baru.id);
+      e.currentTarget.reset();
+    }
   }
 
   async function impor(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
-    const r = bacaSimpanan(await file.text());
+    if (blocked) return;
+    if (file.size > 2_000_000) {
+      setPesan('Berkas terlalu besar; maksimal 2 MB.');
+      return;
+    }
+    let raw: string;
+    try {
+      raw = await file.text();
+    } catch {
+      setPesan('Berkas gagal dibaca. Data lama tidak diganti.');
+      return;
+    }
+    const r = bacaSimpanan(raw);
     if (!r.ok) {
       setPesan('Berkas tidak bisa diimpor: format tidak dikenali atau datanya rusak.');
       return;
     }
     if (
       items?.length &&
-      !confirm('Impor akan mengganti semua data pelacak di browser ini. Lanjutkan?')
+      !confirm(
+        'Impor mengganti data seluruh daerah. Cadangan data lama akan diunduh sebelum penggantian. Lanjutkan?',
+      )
     ) {
       return;
+    }
+    if (items?.length) {
+      try {
+        unduh(
+          `cadangan-pelacak-${hariIni()}.json`,
+          JSON.stringify({ versi: 2, permohonan: items }, null, 2),
+          'application/json',
+        );
+      } catch {
+        setPesan('Cadangan gagal diunduh; impor dibatalkan.');
+        return;
+      }
     }
     simpan(r.data.permohonan, `${r.data.permohonan.length} permohonan diimpor.`);
   }
 
-  const daftar = items ?? [];
+  const all = items ?? [];
+  const daftar = all.filter((item) => item.daerahKode === region.kode);
   const adaProgram = programs.length > 0;
 
   return (
@@ -153,7 +205,7 @@ export function RequestTracker({
           type="submit"
           className="btn btn-primary"
           style={{ marginBlock: 'var(--space-4)' }}
-          disabled={!adaProgram || items == null}
+          disabled={!adaProgram || items == null || blocked}
         >
           Simpan dan hitung tenggat
         </button>
@@ -163,29 +215,47 @@ export function RequestTracker({
             {PERPANJANGAN_HARI_KERJA} hari kerja bila diperpanjang. Hanya Sabtu dan Minggu yang
             dilewati; hari libur nasional belum diperhitungkan, jadi anggap tanggal ini perkiraan.
           </p>
+          <p>
+            Tenggat menurut ketentuan layanan dimulai sejak permohonan diterima PPID. Perkiraan ini
+            memakai tanggal kirim yang Anda catat; tanggal penerimaan dapat berbeda. Pilih status
+            diperpanjang hanya jika ada pemberitahuan tertulis dari PPID.
+          </p>
           <p>{CATATAN_TINJAU_HUKUM}</p>
         </div>
       </form>
 
       <p role="status">{pesan}</p>
+      {rawBackup && (
+        <button
+          className="btn"
+          type="button"
+          onClick={() =>
+            unduh(`cadangan-mentah-pelacak-${hariIni()}.json`, rawBackup, 'application/json')
+          }
+        >
+          Unduh cadangan mentah
+        </button>
+      )}
 
       <section className="box" aria-labelledby="daftar-title">
         <div className="box-head">
-          <h2 id="daftar-title">Permohonan saya ({daftar.length})</h2>
+          <h2 id="daftar-title">
+            Permohonan saya di {region.nama} ({daftar.length})
+          </h2>
           <div className="btn-row">
             <button
               type="button"
               className="btn"
-              disabled={!daftar.length}
+              disabled={!all.length}
               onClick={() =>
                 unduh(
                   `pelacak-jejakjanji-${hariIni()}.json`,
-                  JSON.stringify({ versi: 1, permohonan: daftar }, null, 2),
+                  JSON.stringify({ versi: 2, permohonan: all }, null, 2),
                   'application/json',
                 )
               }
             >
-              Ekspor<span className="sr-only"> (unduh JSON)</span>
+              Ekspor semua daerah<span className="sr-only"> (unduh JSON)</span>
             </button>
             <label className="btn">
               Impor<span className="sr-only"> (unggah JSON)</span>
@@ -193,6 +263,7 @@ export function RequestTracker({
                 type="file"
                 accept="application/json,.json"
                 className="sr-only"
+                disabled={blocked}
                 onChange={impor}
               />
             </label>
@@ -222,12 +293,13 @@ export function RequestTracker({
                   const sisa = today ? selisihHariKerja(today, t) : null;
                   const selesai = p.status === 'dijawab' || p.status === 'ditolak';
                   return (
-                    <tr key={p.id}>
+                    <tr key={p.id} className={p.id === baruId ? 'row-new' : undefined}>
                       <td>
                         <strong style={{ color: 'var(--color-heading)' }}>{p.programNama}</strong>
                         <br />
                         <span className="xsmall muted">
-                          <span className="kode">{p.programKode}</span> | {p.perangkatDaerah}
+                          {p.daerahNama} › <span className="kode">{p.programKode}</span> |{' '}
+                          {p.perangkatDaerah}
                         </span>
                       </td>
                       <td data-label="Dikirim">{formatTanggal(p.tanggalKirim)}</td>
@@ -248,9 +320,10 @@ export function RequestTracker({
                           id={`status-${p.id}`}
                           className="select-sm"
                           value={p.status}
+                          disabled={blocked}
                           onChange={(e) =>
                             simpan(
-                              daftar.map((x) =>
+                              all.map((x) =>
                                 x.id === p.id
                                   ? { ...x, status: e.target.value as StatusPermohonan }
                                   : x,
@@ -271,10 +344,11 @@ export function RequestTracker({
                           type="button"
                           className="btn"
                           style={{ padding: '8px 14px' }}
+                          disabled={blocked}
                           onClick={() =>
                             confirm(`Hapus permohonan ${p.programKode}?`) &&
                             simpan(
-                              daftar.filter((x) => x.id !== p.id),
+                              all.filter((x) => x.id !== p.id),
                               'Permohonan dihapus.',
                             )
                           }

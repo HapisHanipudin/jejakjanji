@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import type { Daerah } from '@jejakjanji/shared';
+import { regionForPath, regionPath } from '@/lib/regions';
 
 const ITEMS = [
   { href: '/', label: 'Beranda' },
@@ -10,15 +12,30 @@ const ITEMS = [
   { href: '/metodologi', label: 'Metodologi' },
 ];
 
-export function NavLinks() {
+export function NavLinks({ regions }: { regions: Daerah[] }) {
   const pathname = usePathname();
+  const region = regionForPath(pathname, regions);
+  const items = region
+    ? ITEMS.map((item) => ({
+        ...item,
+        href: regionPath(region.slug, item.href === '/' ? '' : item.href),
+      }))
+    : [
+        { href: '/', label: 'Beranda' },
+        { href: '/metodologi', label: 'Metodologi' },
+      ];
   const active = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
   return (
     <nav className="nav" aria-label="Menu utama">
       <ul>
-        {ITEMS.map((i) => (
+        {items.map((i) => (
           <li key={i.href}>
-            <Link href={i.href} aria-current={active(i.href) ? 'page' : undefined}>
+            <Link
+              href={i.href}
+              aria-current={
+                (i.label === 'Beranda' ? pathname === i.href : active(i.href)) ? 'page' : undefined
+              }
+            >
               {i.label}
             </Link>
           </li>

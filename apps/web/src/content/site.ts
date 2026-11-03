@@ -3,8 +3,8 @@ export const TOTAL_PROGRAM_RPJMD = 82;
 export const TOTAL_PROGRAM_SUMBER =
   'RPJMD Tabel III.28, mulai hal. PDF 337, diperiksa 22 Oktober 2026.';
 
-// TODO: replace with the real correction contact (email or form URL).
-export const KONTAK_KOREKSI = '[kontak koreksi]';
+// Correction contact supplied by the team on 3 November 2026.
+export const KONTAK_KOREKSI = 'support@jejakjanji.id';
 
 export const FOOTER_TEXT =
   'Tanpa skor atau peringkat kepala daerah. Semua angka berasal dari dokumen resmi dan diberi tanggal cek.';

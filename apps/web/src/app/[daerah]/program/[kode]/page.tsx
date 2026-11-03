@@ -14,21 +14,21 @@ import { getBidangList, getProgram, getSumberList } from '@/lib/data';
 import { formatRupiahPenuh, formatTanggal, namaBidangRingkas, namaProgram } from '@/lib/format';
 import { totalPagu } from '@/lib/pagu';
 
-type Detail = ProgramDetail['data'];
+type Detail = NonNullable<ProgramDetail['data']>;
 
 export async function generateMetadata({
   params,
-}: PageProps<'/program/[kode]'>): Promise<Metadata> {
+}: PageProps<'/[daerah]/program/[kode]'>): Promise<Metadata> {
   const { kode } = await params;
-  return { title: `Program ${decodeURIComponent(kode)}` };
+  return { title: `Program ${kode}` };
 }
 
-export default async function ProgramDetailPage({ params }: PageProps<'/program/[kode]'>) {
-  const kode = decodeURIComponent((await params).kode);
+export default async function ProgramDetailPage({ params }: PageProps<'/[daerah]/program/[kode]'>) {
+  const { kode, daerah } = await params;
   const [res, bidang, sumber] = await Promise.all([
-    getProgram(kode),
-    getBidangList(),
-    getSumberList(),
+    getProgram(kode, daerah),
+    getBidangList(daerah),
+    getSumberList(daerah),
   ]);
   if (!res.ok && res.status === 404) notFound();
   if (!res.ok) {
@@ -43,13 +43,14 @@ export default async function ProgramDetailPage({ params }: PageProps<'/program/
   }
 
   const p = res.data.data;
+  if (!p) return null;
   const label = res.data.label;
   const docs = sumber.ok ? sumber.data.data : [];
   const bidangNama = bidang.ok
     ? bidang.data.data.find((b) => b.kode === p.bidangKode)?.nama
     : undefined;
   const bidangRingkas = bidangNama ? namaBidangRingkas(bidangNama) : `Bidang ${p.bidangKode}`;
-  const bidangHref = `/program?bidang=${encodeURIComponent(p.bidangKode)}`;
+  const bidangHref = `/${daerah}/program?bidang=${encodeURIComponent(p.bidangKode)}`;
 
   return (
     <>
@@ -64,7 +65,7 @@ export default async function ProgramDetailPage({ params }: PageProps<'/program/
           <nav className="breadcrumb" aria-label="Remah roti">
             <ol>
               <li>
-                <Link href="/program">Program</Link>
+                <Link href={`/${daerah}/program`}>{res.data.daerah?.nama} › Program</Link>
               </li>
               <li>
                 <Link href={bidangHref}>{bidangRingkas}</Link>
@@ -95,7 +96,7 @@ export default async function ProgramDetailPage({ params }: PageProps<'/program/
             <SourceBox doc={p.sumber} pages={[p.pageRef]} />
           </section>
 
-          <StatusCard p={p} docs={docs} />
+          <StatusCard p={p} docs={docs} regionSlug={daerah} />
 
           <PaguSection p={p} label={label} docs={docs} />
 
@@ -175,7 +176,7 @@ function PaguSection({ p, label, docs }: { p: Detail; label: string; docs: Sourc
   );
 }
 
-function StatusCard({ p, docs }: { p: Detail; docs: SourceDoc[] }) {
+function StatusCard({ p, docs, regionSlug }: { p: Detail; docs: SourceDoc[]; regionSlug: string }) {
   const jenisMap = {
     rencana: 'RENCANA',
     anggaran: 'ANGGARAN',
@@ -185,7 +186,7 @@ function StatusCard({ p, docs }: { p: Detail; docs: SourceDoc[] }) {
     <section className="area-status box box-strong" aria-labelledby="status-title">
       <h2 id="status-title">Status bukti</h2>
       <div style={{ marginBottom: 'var(--space-5)' }}>
-        <JejakBukti status={p.statusBukti} />
+        <JejakBukti status={p.statusBukti} animate />
       </div>
       <ul className="list-plain status-items">
         {(Object.keys(jenisMap) as (keyof typeof jenisMap)[]).map((k) => {
@@ -217,6 +218,15 @@ function StatusCard({ p, docs }: { p: Detail; docs: SourceDoc[] }) {
                 ) : (
                   <p>Belum ada catatan pencarian bukti.</p>
                 ))}
+              {p.statusBukti[k] === 'belum_diketahui' && k !== 'rencana' && (
+                <Link
+                  className="stage-action"
+                  href={`/${regionSlug}/program/${encodeURIComponent(p.kode)}/ppid?minta=${k}`}
+                >
+                  Minta bukti tahap ini<span className="sr-only">: {STATUS_TEKS[k].judul}</span>
+                  <span aria-hidden="true"> →</span>
+                </Link>
+              )}
             </li>
           );
         })}
@@ -225,7 +235,7 @@ function StatusCard({ p, docs }: { p: Detail; docs: SourceDoc[] }) {
         {BELUM_BUKAN_GAGAL}
       </p>
       <Link
-        href={`/program/${encodeURIComponent(p.kode)}/ppid`}
+        href={`/${regionSlug}/program/${encodeURIComponent(p.kode)}/ppid`}
         className="btn btn-primary btn-block"
       >
         Minta informasi ke PPID
