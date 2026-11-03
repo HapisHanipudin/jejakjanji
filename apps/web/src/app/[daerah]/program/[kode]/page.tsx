@@ -186,7 +186,7 @@ function StatusCard({ p, docs, regionSlug }: { p: Detail; docs: SourceDoc[]; reg
     <section className="area-status box box-strong" aria-labelledby="status-title">
       <h2 id="status-title">Status bukti</h2>
       <div style={{ marginBottom: 'var(--space-5)' }}>
-        <JejakBukti status={p.statusBukti} />
+        <JejakBukti status={p.statusBukti} animate />
       </div>
       <ul className="list-plain status-items">
         {(Object.keys(jenisMap) as (keyof typeof jenisMap)[]).map((k) => {

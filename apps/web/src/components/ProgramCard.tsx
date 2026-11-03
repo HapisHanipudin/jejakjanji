@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { CSSProperties } from 'react';
 import type { ProgramList } from '@jejakjanji/shared';
 import { JejakBukti } from './JejakBukti';
 import { Money } from './Money';
@@ -13,15 +14,17 @@ export function ProgramCard({
   bidangNama,
   doc,
   regionSlug,
+  index = 0,
 }: {
   program: Item;
+  index?: number;
   regionSlug: string;
   bidangNama: string | undefined;
   doc: SourceDoc | undefined;
 }) {
   const pages = [...new Set(program.paguPerTahun.map((p) => p.pageRef))].sort((a, b) => a - b);
   return (
-    <li className="program-row">
+    <li className="program-row" style={{ '--i': Math.min(index, 9) } as CSSProperties}>
       <div>
         <h3>
           <Link

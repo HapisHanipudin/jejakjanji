@@ -176,9 +176,10 @@ export default async function ProgramListPage({
                     <span>Jejak bukti</span>
                   </div>
                   <ul className="program-list program-results" key={filterKey}>
-                    {filtered.data.data.map((p) => (
+                    {filtered.data.data.map((p, i) => (
                       <ProgramCard
                         key={p.kode}
+                        index={i}
                         program={p}
                         regionSlug={daerah}
                         bidangNama={bidangNama.get(p.bidangKode)}

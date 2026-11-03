@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import {
   INFORMASI,
   PLACEHOLDER,
@@ -39,13 +39,23 @@ export function PpidDraft({
 }) {
   const [pilihan, setPilihan] = useState<Pilihan>(() => pilihanUntukTahap(tahap));
   const [pesan, setPesan] = useState('');
+  // Feedback only: the item just added to the letter, and a short "copied" state.
+  const [sorot, setSorot] = useState<{ teks: string; n: number }>();
+  const [tersalin, setTersalin] = useState(false);
   const teks = buatSurat(program, pilihan);
   const adaPilihan = Object.values(pilihan).some(Boolean);
+
+  useEffect(() => {
+    if (!tersalin) return;
+    const t = setTimeout(() => setTersalin(false), 2000);
+    return () => clearTimeout(t);
+  }, [tersalin]);
 
   async function salin() {
     try {
       await navigator.clipboard.writeText(teks);
       setPesan('Teks surat disalin.');
+      setTersalin(true);
     } catch {
       setPesan('Gagal menyalin otomatis. Pilih teks pratinjau lalu salin manual.');
     }
@@ -99,7 +109,12 @@ export function PpidDraft({
                 <input
                   type="checkbox"
                   checked={pilihan[i.key]}
-                  onChange={(e) => setPilihan({ ...pilihan, [i.key]: e.target.checked })}
+                  onChange={(e) => {
+                    setPilihan({ ...pilihan, [i.key]: e.target.checked });
+                    setSorot(
+                      e.target.checked ? { teks: i.teks, n: (sorot?.n ?? 0) + 1 } : undefined,
+                    );
+                  }}
                 />
                 {i.teks}
               </label>
@@ -139,18 +154,34 @@ export function PpidDraft({
             </p>
           )}
           <pre className="letter">
-            {teks
-              .split(PLACEHOLDER)
-              .map((part, n) => (PLACEHOLDER.test(part) ? <mark key={n}>{part}</mark> : part))}
+            {teks.split('\n').map((line, li, all) => {
+              const isi = line
+                .split(PLACEHOLDER)
+                .map((part, n) => (PLACEHOLDER.test(part) ? <mark key={n}>{part}</mark> : part));
+              const baru = sorot && /^\d+\. /.test(line) && line.endsWith(sorot.teks);
+              return (
+                <Fragment key={li}>
+                  {baru ? (
+                    <span className="letter-new" key={`baru-${sorot.n}`}>
+                      {isi}
+                    </span>
+                  ) : (
+                    isi
+                  )}
+                  {li < all.length - 1 && '\n'}
+                </Fragment>
+              );
+            })}
           </pre>
           <div className="btn-row" style={{ marginTop: 'var(--space-5)' }}>
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-primary btn-copy"
+              data-done={tersalin}
               onClick={salin}
               disabled={!adaPilihan}
             >
-              Salin teks
+              {tersalin ? 'Tersalin ✓' : 'Salin teks'}
             </button>
             <button
               type="button"

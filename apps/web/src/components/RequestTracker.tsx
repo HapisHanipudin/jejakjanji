@@ -38,6 +38,7 @@ export function RequestTracker({
   const [today, setToday] = useState('');
   const [blocked, setBlocked] = useState(false);
   const [rawBackup, setRawBackup] = useState<string>();
+  const [baruId, setBaruId] = useState<string>();
 
   useEffect(() => {
     try {
@@ -106,7 +107,10 @@ export function RequestTracker({
       [...(items ?? []), baru],
       `Tersimpan. Tenggat perkiraan ${formatTanggal(tenggat(baru))}.`,
     );
-    if (saved) e.currentTarget.reset();
+    if (saved) {
+      setBaruId(baru.id);
+      e.currentTarget.reset();
+    }
   }
 
   async function impor(e: React.ChangeEvent<HTMLInputElement>) {
@@ -289,7 +293,7 @@ export function RequestTracker({
                   const sisa = today ? selisihHariKerja(today, t) : null;
                   const selesai = p.status === 'dijawab' || p.status === 'ditolak';
                   return (
-                    <tr key={p.id}>
+                    <tr key={p.id} className={p.id === baruId ? 'row-new' : undefined}>
                       <td>
                         <strong style={{ color: 'var(--color-heading)' }}>{p.programNama}</strong>
                         <br />

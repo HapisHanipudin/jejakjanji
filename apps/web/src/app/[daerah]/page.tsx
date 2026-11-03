@@ -93,6 +93,19 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
                   <strong>{programs.data.data.length}</strong>
                   {region.kode === '31' ? <> dari {TOTAL_PROGRAM_RPJMD}</> : null}
                 </p>
+                {region.kode === '31' && (
+                  <div
+                    className="coverage-meter"
+                    role="img"
+                    aria-label={`${programs.data.data.length} dari ${TOTAL_PROGRAM_RPJMD} program prioritas sudah dikurasi`}
+                  >
+                    <span
+                      style={{
+                        width: `${Math.min(100, (programs.data.data.length / TOTAL_PROGRAM_RPJMD) * 100)}%`,
+                      }}
+                    />
+                  </div>
+                )}
                 <p>program prioritas daerah sudah dikurasi dengan sumber dan halaman PDF.</p>
               </>
             ) : (

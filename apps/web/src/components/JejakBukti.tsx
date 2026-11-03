@@ -18,9 +18,15 @@ export function JejakLangkah({ label, status }: { label: string; status: NilaiSt
 }
 
 /** Rencana → Anggaran → Bukti, computed from the program's evidence status. */
-export function JejakBukti({ status }: { status: StatusBukti }) {
+export function JejakBukti({
+  status,
+  animate = false,
+}: {
+  status: StatusBukti;
+  animate?: boolean;
+}) {
   return (
-    <ul className="jejak" aria-label="Jejak bukti">
+    <ul className={animate ? 'jejak jejak-animate' : 'jejak'} aria-label="Jejak bukti">
       <li>
         <JejakLangkah label="Rencana" status={status.rencana} />
       </li>
