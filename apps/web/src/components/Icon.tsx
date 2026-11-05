@@ -1,6 +1,7 @@
 // One stroke icon set (16px grid, 1.6px stroke, currentColor), matching the Figma calendar and
 // chevron assets. Decorative only: the surrounding text always carries the meaning.
 const PATHS = {
+  menu: 'M2.5 4h11M2.5 8h11M2.5 12h11',
   close: 'M4.5 4.5l7 7M11.5 4.5l-7 7',
   arrow: 'M3 8h10M9 4l4 4-4 4',
   check: 'M3.5 8.5l3 3 6-7',

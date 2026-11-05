@@ -31,8 +31,9 @@ export function Header({ regions, error }: { regions: Daerah[]; error?: string }
               </span>
               JejakJanji
             </Link>
-            <RegionPicker regions={regions} error={error} />
-            <NavLinks regions={regions} />
+            <NavLinks regions={regions}>
+              <RegionPicker regions={regions} error={error} />
+            </NavLinks>
           </div>
         </div>
       </header>
