@@ -14,10 +14,8 @@ const ITEMS = [
   { href: '/metodologi', label: 'Metodologi' },
 ];
 
-export function NavLinks({ regions, children }: { regions: Daerah[]; children: ReactNode }) {
-  const [open, setOpen] = useState(false);
-  const menuId = useId();
-  const toggle = useRef<HTMLButtonElement>(null);
+/** Region-scoped links on a region page; landing links on the national page. */
+function useNavItems(regions: Daerah[]) {
   const pathname = usePathname();
   const region = regionForPath(pathname, regions);
   const items = region
@@ -30,6 +28,30 @@ export function NavLinks({ regions, children }: { regions: Daerah[]; children: R
         { href: '/metodologi', label: 'Metodologi' },
       ];
   const active = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+  return { items, pathname, active };
+}
+
+/** Footer quick links (Figma JJ/Footer 143:51680): same targets as the header navigation. */
+export function FooterNav({ regions }: { regions: Daerah[] }) {
+  const { items } = useNavItems(regions);
+  return (
+    <nav aria-label="Tautan singkat">
+      <ul className="footer-links list-plain">
+        {items.map((i) => (
+          <li key={i.href}>
+            <Link href={i.href}>{i.label}</Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
+export function NavLinks({ regions, children }: { regions: Daerah[]; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const menuId = useId();
+  const toggle = useRef<HTMLButtonElement>(null);
+  const { items, pathname, active } = useNavItems(regions);
   return (
     <>
       <button

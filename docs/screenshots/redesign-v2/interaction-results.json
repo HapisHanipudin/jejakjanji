@@ -1,0 +1,185 @@
+[
+  {
+    "name": "navbar desktop top/floating/reverse",
+    "ok": true,
+    "detail": {
+      "top": {
+        "w": 1184,
+        "h": 90,
+        "main": 90
+      },
+      "floating": {
+        "w": 1240,
+        "h": 62,
+        "main": 90
+      },
+      "back": {
+        "w": 1184,
+        "h": 90,
+        "main": 90
+      }
+    }
+  },
+  {
+    "name": "active link desktop",
+    "ok": true,
+    "detail": {
+      "active": "Beranda"
+    }
+  },
+  {
+    "name": "region dialog desktop",
+    "ok": true,
+    "detail": {
+      "current": "DKI Jakarta | Daerah saat ini · Data tersedia",
+      "closeH": 44
+    }
+  },
+  {
+    "name": "navbar mobile top/floating/reverse",
+    "ok": true,
+    "detail": {
+      "top": {
+        "w": 350,
+        "h": 82,
+        "main": 82
+      },
+      "floating": {
+        "w": 366,
+        "h": 62,
+        "main": 82
+      },
+      "back": {
+        "w": 350,
+        "h": 82,
+        "main": 82
+      }
+    }
+  },
+  {
+    "name": "active link mobile",
+    "ok": true,
+    "detail": {
+      "active": "Beranda"
+    }
+  },
+  {
+    "name": "hamburger open, Escape, link close",
+    "ok": true,
+    "detail": {
+      "focusAfterEsc": "btn nav-toggle",
+      "toggleH": 48
+    }
+  },
+  {
+    "name": "region dialog mobile",
+    "ok": true,
+    "detail": {
+      "current": "DKI Jakarta | Daerah saat ini · Data tersedia",
+      "closeH": 44
+    }
+  },
+  {
+    "name": "demo next/prev",
+    "ok": true,
+    "detail": {
+      "s0": "1Pilih program",
+      "s1": "2Baca sumber"
+    }
+  },
+  {
+    "name": "demo autoplay after Play, then pause",
+    "ok": true,
+    "detail": {
+      "s0": "1Pilih program",
+      "s1": "2Baca sumber",
+      "pausedAt": "2Baca sumber"
+    }
+  },
+  {
+    "name": "demo radio selection",
+    "ok": true,
+    "detail": {
+      "checked": "anggaran"
+    }
+  },
+  {
+    "name": "demo label says simulation",
+    "ok": true
+  },
+  {
+    "name": "reduced motion: header transition and no autoplay",
+    "ok": true,
+    "detail": {
+      "headerTransition": "0s",
+      "playPressed": "false"
+    }
+  },
+  {
+    "name": "PPID applicant fields fill preview; empty keeps bracket",
+    "ok": true,
+    "detail": {
+      "labels": 7
+    }
+  },
+  {
+    "name": "PPID copy",
+    "ok": true
+  },
+  {
+    "name": "PPID download",
+    "ok": true,
+    "detail": {
+      "file": "draf-ppid-dki-jakarta-2.11.11.txt"
+    }
+  },
+  {
+    "name": "PPID no network request carries applicant text",
+    "ok": true
+  },
+  {
+    "name": "tracker empty state",
+    "ok": true
+  },
+  {
+    "name": "tracker v1 migration and persistence",
+    "ok": true,
+    "detail": {
+      "versi": 2,
+      "daerahKode": "31"
+    }
+  },
+  {
+    "name": "tracker export v2",
+    "ok": true
+  },
+  {
+    "name": "tracker import (with backup of old data)",
+    "ok": true,
+    "detail": {
+      "rows": 2
+    }
+  },
+  {
+    "name": "empty search state",
+    "ok": true
+  },
+  {
+    "name": "program not found",
+    "ok": true,
+    "detail": {
+      "status": 404,
+      "title": "Halaman tidak ditemukan"
+    }
+  },
+  {
+    "name": "footer quick links region-scoped",
+    "ok": true,
+    "detail": [
+      "/dki-jakarta",
+      "/dki-jakarta/program",
+      "/dki-jakarta/pelacak",
+      "/dki-jakarta/metodologi"
+    ]
+  }
+]

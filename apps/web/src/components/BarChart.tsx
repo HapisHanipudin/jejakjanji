@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
+import { Icon } from './Icon';
 
 export type Bar = {
   key: string;
@@ -7,11 +8,17 @@ export type Bar = {
   value: number;
   display: ReactNode;
   href?: string;
-  /** Short context revealed on hover/focus (always shown on touch). */
+  /** Short context under the label, e.g. how many curated programs sit behind the field. */
   hint?: string;
+  /** Source line for this row (stacked layout only). */
+  source?: ReactNode;
 };
 
-/** Horizontal bars as plain elements; width is proportional to the largest value. */
+/**
+ * Horizontal bars as plain elements; width is proportional to the largest value.
+ * Default: stacked rows (Figma JJ/Budget bar row 143:51904) with label, value, 12px track, source.
+ * `compact`: one-line rows (year, track, value) for the per-year table on the detail page.
+ */
 export function BarChart({
   bars,
   caption,
@@ -25,30 +32,43 @@ export function BarChart({
   return (
     <figure style={{ margin: 0 }}>
       <figcaption className="sr-only">{caption}</figcaption>
-      <ul className={compact ? 'bars bars-compact' : 'bars'} data-reveal="">
-        {bars.map((b, i) => (
-          <li key={b.key} className="bar-row" style={{ '--i': i } as CSSProperties}>
-            <span className="bar-label">
-              {b.href ? (
-                <Link href={b.href}>
-                  {b.label}
-                  {b.hint && (
-                    <>
-                      <span className="sr-only">, </span>
-                      <span className="bar-hint">{b.hint}</span>
-                    </>
-                  )}
-                </Link>
-              ) : (
-                b.label
-              )}
-            </span>
+      <ul className={compact ? 'bars bars-compact' : 'bars bars-stacked'} data-reveal="">
+        {bars.map((b, i) => {
+          const track = (
             <span className="bar-track" aria-hidden="true">
               <span className="bar-fill" style={{ width: `${(b.value / max) * 100}%` }} />
             </span>
-            <span className="bar-value">{b.display}</span>
-          </li>
-        ))}
+          );
+          return (
+            <li key={b.key} className="bar-row" style={{ '--i': i } as CSSProperties}>
+              {compact ? (
+                <>
+                  <span className="bar-label">{b.label}</span>
+                  {track}
+                  <span className="bar-value">{b.display}</span>
+                </>
+              ) : (
+                <>
+                  <span className="bar-head">
+                    <span className="bar-label">
+                      {b.href ? <Link href={b.href}>{b.label}</Link> : b.label}
+                      {b.hint && (
+                        <>
+                          <span className="sr-only">, </span>
+                          <span className="bar-hint">{b.hint}</span>
+                        </>
+                      )}
+                    </span>
+                    {b.href && <Icon name="arrow-up-right" size={20} />}
+                  </span>
+                  <span className="bar-value">{b.display}</span>
+                  {track}
+                  {b.source}
+                </>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </figure>
   );

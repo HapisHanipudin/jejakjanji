@@ -119,7 +119,17 @@ export function RegionPicker({
         onClick={() => open()}
         aria-haspopup="dialog"
       >
-        <span>{current && !landing ? `${current.nama} · ubah` : 'Pilih daerah'}</span>
+        {!landing && <Icon name="map-pin" />}
+        <span>
+          {current && !landing ? (
+            <>
+              {current.nama}
+              <span className="sr-only">, ubah daerah</span>
+            </>
+          ) : (
+            'Pilih daerah'
+          )}
+        </span>
         {!landing && <Icon name="chevron-down" />}
       </button>
       <dialog
@@ -134,13 +144,13 @@ export function RegionPicker({
         <div className="region-dialog-body">
           <div className="box-head">
             <h2 id={landing ? 'region-title-main' : 'region-title-nav'}>Pilih daerah</h2>
-            <button type="button" className="btn" onClick={close}>
-              Tutup
+            <button type="button" className="icon-button" onClick={close} aria-label="Tutup">
+              <Icon name="close" size={20} />
             </button>
           </div>
-          <p>
-            Data aktif saat ini DKI Jakarta. Daerah lain ditambahkan setelah sumber dan datanya
-            diperiksa.
+          <p className="muted">
+            Ketersediaan data mengikuti cakupan kurasi, bukan penilaian daerah. Data aktif saat ini
+            DKI Jakarta; daerah lain ditambahkan setelah sumber dan datanya diperiksa.
           </p>
           {landing && last && (
             <p className="small">
@@ -168,16 +178,32 @@ export function RegionPicker({
               .filter((region) =>
                 region.nama.toLocaleLowerCase('id').includes(search.toLocaleLowerCase('id')),
               )
-              .map((region) => (
-                <li key={region.kode}>
-                  <Link className="region-option" href={regionPath(region.slug)} onClick={close}>
-                    <strong>{region.nama}</strong>
-                    <span className="badge">
-                      {region.statusKurasi === 'AKTIF' ? 'Data tersedia' : 'Belum dikurasi'}
-                    </span>
-                  </Link>
-                </li>
-              ))}
+              .map((region) => {
+                const dipilih = !landing && current?.kode === region.kode;
+                const aktif = region.statusKurasi === 'AKTIF';
+                return (
+                  <li key={region.kode}>
+                    <Link
+                      className="region-option"
+                      href={regionPath(region.slug)}
+                      onClick={close}
+                      aria-current={dipilih ? 'true' : undefined}
+                    >
+                      <Icon
+                        name={dipilih ? 'circle-check' : aktif ? 'map-pin' : 'circle-help'}
+                        size={20}
+                      />
+                      <span>
+                        <strong>{region.nama}</strong>
+                        <span className="region-option-status">
+                          {dipilih ? 'Daerah saat ini · ' : ''}
+                          {aktif ? 'Data tersedia' : 'Belum dikurasi'}
+                        </span>
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
           </ul>
           {!regions.some((region) =>
             region.nama.toLocaleLowerCase('id').includes(search.toLocaleLowerCase('id')),

@@ -30,7 +30,7 @@ typography:
     fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif'
     fontSize: '3.5rem'
     fontWeight: 800
-    lineHeight: 1.2
+    lineHeight: 1.15
   headline:
     fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif'
     fontSize: '2.25rem'
@@ -40,12 +40,17 @@ typography:
     fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif'
     fontSize: '1.75rem'
     fontWeight: 600
-    lineHeight: 1.3
-  title-sm:
+    lineHeight: 1.2
+  value:
     fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif'
-    fontSize: '1.125rem'
+    fontSize: '1.5rem'
     fontWeight: 600
-    lineHeight: 1.45
+    lineHeight: 1.4
+  wordmark:
+    fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif'
+    fontSize: '1.5rem'
+    fontWeight: 700
+    lineHeight: 1.2
   lead:
     fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif'
     fontSize: '1.125rem'
@@ -61,6 +66,11 @@ typography:
     fontSize: '0.875rem'
     fontWeight: 600
     lineHeight: 1.45
+  source:
+    fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif'
+    fontSize: '0.875rem'
+    fontWeight: 400
+    lineHeight: 1.6
   caption:
     fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif'
     fontSize: '0.8125rem'
@@ -85,39 +95,55 @@ components:
   button-primary:
     backgroundColor: '{colors.accent}'
     textColor: '{colors.accent-text}'
-    typography: '{typography.label}'
-    rounded: '{rounded.sm}'
-    padding: '13px 22px'
+    typography: '{typography.body}'
+    rounded: '{rounded.md}'
+    padding: '11px 24px'
+    height: '48px'
   button-secondary:
-    backgroundColor: 'transparent'
-    textColor: '{colors.link}'
-    typography: '{typography.label}'
-    rounded: '{rounded.sm}'
-    padding: '13px 22px'
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.accent}'
+    typography: '{typography.body}'
+    rounded: '{rounded.md}'
+    padding: '11px 24px'
+    height: '48px'
   card:
-    backgroundColor: '{colors.bg}'
+    backgroundColor: '{colors.surface}'
     textColor: '{colors.text}'
     rounded: '{rounded.lg}'
-    padding: '28px'
+    padding: '24px'
   input:
-    backgroundColor: '{colors.bg}'
+    backgroundColor: '{colors.surface}'
     textColor: '{colors.heading}'
     typography: '{typography.body}'
-    rounded: '{rounded.sm}'
-    padding: '11px 14px'
+    rounded: '{rounded.md}'
+    padding: '11px 12px'
     height: '48px'
   status-ada:
     backgroundColor: '{colors.accent-soft}'
-    textColor: '{colors.link}'
-    typography: '{typography.caption}'
+    textColor: '{colors.accent}'
+    typography: '{typography.source}'
     rounded: '{rounded.pill}'
-    padding: '4px 12px'
+    padding: '6px 12px'
+    height: '36px'
   status-belum-diketahui:
-    backgroundColor: 'transparent'
+    backgroundColor: '{colors.surface}'
     textColor: '{colors.text-muted}'
-    typography: '{typography.caption}'
+    typography: '{typography.source}'
     rounded: '{rounded.pill}'
-    padding: '4px 12px'
+    padding: '6px 12px'
+    height: '36px'
+  notice:
+    backgroundColor: '{colors.accent-soft}'
+    textColor: '{colors.text}'
+    typography: '{typography.source}'
+    rounded: '{rounded.lg}'
+    padding: '16px'
+  region-option:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.heading}'
+    rounded: '{rounded.lg}'
+    padding: '16px'
+    height: '80px'
   chip-filter:
     backgroundColor: '{colors.accent-soft}'
     textColor: '{colors.link}'
@@ -131,41 +157,60 @@ components:
     typography: '{typography.caption}'
     rounded: '{rounded.md}'
     padding: '6px 14px'
-  date-day-selected:
-    backgroundColor: '{colors.accent}'
-    textColor: '{colors.accent-text}'
-    rounded: '{rounded.sm}'
-    height: '36px'
 ---
 
 # Design System: JejakJanji — Redesign
 
 ## Authority
 
-Visual source: [Figma Redesign](https://www.figma.com/design/Lq7xYDmjODYgZpJ7jE6F3Z?node-id=135-1285). Use new 143 nodes, never the 135 V4 copies. Components: 143:49362. Desktop/mobile pairs: Beranda 143:46269/143:46441; Daftar 143:46607/143:47023; Detail 143:47434/143:47601; PPID 143:47768/143:47894; Pelacak 143:48020/143:48169; Metodologi 143:48318/143:48425; not found 143:48532/143:48586; uncurated 143:48640/143:48689; error 143:48738/143:48787; region dialog 143:48836/143:49034; empty tracker 143:49226/143:49294.
+Visual source: [Figma Redesign](https://www.figma.com/design/Lq7xYDmjODYgZpJ7jE6F3Z?node-id=135-1285), file `Lq7xYDmjODYgZpJ7jE6F3Z`. Use the 143 nodes, never the 135 V4 copies. Components: 143:49362 (JJ/Nav 143:51510/51553, JJ/Footer 143:51680/51791, JJ/Button 143:51059/51060/51067, JJ/Status 143:51092/51181, JJ/Source line 143:51490, JJ/Program card 143:51902, JJ/Evidence step 143:51903, JJ/Budget bar row 143:51904, JJ/Region picker 143:51905/51935, JJ/Notice banner 143:51499). Desktop/mobile pairs: Beranda 143:46269/143:46441; Daftar 143:46607/143:47023; Detail 143:47434/143:47601; PPID 143:47768/143:47894; Pelacak 143:48020/143:48169; Metodologi 143:48318/143:48425; not found 143:48532/143:48586; uncurated 143:48640/143:48689; error 143:48738/143:48787; region dialog 143:48836/143:49034; empty tracker 143:49226/143:49294. Tokens live only in `apps/web/src/app/tokens.css`.
 
 ## Direction
 
-A civic reading desk: cream page, white working surfaces, navy actions and a navy home hero. The pale blue band groups the three evidence stages. Footer continues the cream page with a hairline divider. ENERGY 2 / RHYTHM 3 / MOTION 2. Landing is Persuade; program, PPID and tracker are Operate; methodology is Read.
+A civic reading desk: cream page, white working surfaces, navy actions and a navy home hero. Pale blue groups evidence stages and carries notices. The footer continues the cream page with quick links and a hairline divider. ENERGY 2 / RHYTHM 3 / MOTION 2. Landing is Persuade; program, PPID and tracker are Operate; methodology is Read.
 
-## Color and typography
+## Color
 
-Background #f7f4ec, surfaces #ffffff, text #17202a, muted #4f5b66, navy #1f4e79, pale blue #dce8f3, borders #d5cfc0 and #6b7480, chart #5b84ab. Hero text #f4f1e8 and secondary #b9c8d8. Plus Jakarta Sans throughout; 400 body, 600 labels, 800 strong headings. Body 16px/1.6; secondary 14px; captions 13px; card titles 28px; sections 36px; desktop hero 56px. Existing responsive type scale reduces these on phones. Numbers remain tabular.
+Background #f7f4ec, surfaces #ffffff, text #17202a, muted #4f5b66, navy #1f4e79, pale blue #dce8f3, borders #d5cfc0 (hairline) and #6b7480 (inputs, unknown status outline), chart #5b84ab on a #dce8f3 track. Hero text #f4f1e8 and secondary #b9c8d8. Inputs, menus, dialogs and cards are white; notices are pale blue. Measured pairs: navy on pale blue 6.96:1, muted on white 6.95:1, muted on pale blue 5.59:1, white on navy 8.66:1, navy on cream 7.88:1; non-text: unknown outline 4.74:1, bar on track 3.16:1.
+
+## Typography
+
+Plus Jakarta Sans, weights 400/600/700/800 (700 only for the wordmark). Body 16px/1.6. Source lines 14px muted. Card titles and region-picker title 28px semibold, line height 1.2 (24px on phones). Section titles 36px extrabold. Page titles and state titles 56px extrabold, line height 1.15 (32px on phones). Figures in cards 24px semibold, tabular numbers.
 
 ## Spacing and layout
 
-4/8/12/16/24/32/48/64/80px scale. Maximum content width 1200px, fluid gutters. Two program cards per row on desktop and one on phones. Detail keeps content plus evidence sidebar; PPID keeps form plus letter. Collapse task columns at 1024px; phone treatment at 760px; region dialog becomes a bottom sheet at 640px. Real text determines height; no screenshot-height clipping.
+4/8/12/16/24/32/48/64/80px scale. Maximum content width 1200px, fluid gutters. Cards pad 24px with 24px internal rhythm. Two program cards per row on desktop, one on phones. Detail keeps content plus a 420px evidence column; PPID keeps a 400px form column plus the letter. Collapse task columns at 1024px; phone treatment at 760px; region dialog becomes a bottom sheet at 640px. Real text determines height.
 
-## Components and states
+## Components
 
-White cards use 16px radius, 1px warm border, 24–32px padding, no card shadows. Buttons and inputs retain 6px radius. Primary actions are navy with white text; on navy hero invert primary action to white/navy. Inputs have explicit labels, visible focus, native touch affordances. Controls keep 44px touch targets. Region picker is a white modal/bottom sheet with search, current selection and coverage labels.
+- Icons: one Lucide-style stroke set on a 24px grid (`Icon.tsx`): map pin, file text, file check, circle help/check, info, search, arrow right/up-right, chevrons, folder open, cloud off, hard drive. Decorative; text always carries meaning.
+- Header: navy 32px "J" mark plus 24px bold wordmark; region pill (map pin, name, chevron, warm hairline, pill radius) sits beside the brand; navigation on the right with a 2px navy underline and navy text for the active link.
+- Footer: wordmark, region-scoped quick links (44px targets, navy), correction contact, divider, neutrality note plus the indicative-budget label.
+- Buttons: 48px tall, 8px radius, 16px semibold. Primary navy/white; secondary white with 1px navy border; text action navy with arrow. On the navy hero the primary inverts to white/navy.
+- Inputs: white, 1px #6b7480 border, 8px radius, 48px tall, explicit label above.
+- Status pill: icon plus text, 36px tall. Ada: pale blue, solid navy border, file-check icon. Belum diketahui: white, dashed #6b7480 border, help icon.
+- Source line: file icon plus 14px muted text: document, version, PDF page, check date, link.
+- Program card: code, title, field, source line, three stage rows (label left, pill right), divider, 2026 RPJMD pagu with full value in tooltip and the mandatory label, "Lihat detail". The whole card is the link.
+- Budget chart: stacked rows (field link plus arrow-up-right, curated-program count, value plus share, 12px track, per-row RKPD source with PDF page), separated by hairlines inside one white card.
+- Evidence step: 2px left rule, stage icon (file check when evidence exists, search otherwise), pill, search notes, source line.
+- Notice: pale blue, 16px radius and padding, optional info icon.
+- State panel: white card, 36px navy icon, page-sized title, body, primary action plus text action, optional note. Used for not found, uncurated region, failed load, root error and empty tracker.
+- Region picker: white dialog/bottom sheet, 28px title, 44px icon close button, search, 80px option cards; current region pale blue with check icon, available regions map pin, uncurated regions help icon with "Belum dikurasi".
 
-Evidence status remains neutral: Ada uses pale blue and solid outline; Belum diketahui uses text and dashed outline. Belum dikurasi describes region coverage only. Empty/error states retain recovery controls and honest messages. PPID letter is a white reading surface; tracker records remain local. Source document, PDF page, check date, full money tooltip and mandatory indicative-budget label stay available.
+## States
+
+"Belum diketahui" describes evidence availability; "Belum dikurasi" describes regional data coverage. Neither implies failure, and neither uses warning colour. Empty and error states keep recovery actions and honest messages.
 
 ## Motion
 
-Preserve header shape transition: 420ms cubic-bezier(0.22,1,0.36,1), widening and thinning in both directions with fixed layout space. Desktop 90 to 62px; phone 82 to 62px. Mobile menu closes by button, Escape or navigation. Existing demo remains automatic with manual selection, radio choices, play/pause and previous/next. Reduced motion disables animation and autoplay. Focus outlines remain visible.
+Header shape transition: 420ms cubic-bezier(0.22,1,0.36,1), widening about 64px and thinning in both directions with fixed layout space. Desktop 90 to 62px; phone 82 to 62px. Mobile menu closes by button, Escape or navigation. The landing demo plays automatically after Play, pauses, and keeps manual steps, radio choices and icon previous/next. Reduced motion removes animation and transitions. Focus: 2px navy outline with a 3px gap.
 
 ## Adaptations
 
-Figma sample money, dates, documents, categories and tracker records are excluded. API and verified content own all facts. National landing retains multi-region entry and simulation label. Header hamburger and shape animation override the static Figma navigation. Existing evidence explorer, chart and tracker v2 import/export/migration remain functional. No scores, accounts, dark mode, splash screen or backend additions.
+- Figma sample money, dates, documents, categories, regions and tracker records are excluded. API and verified sources own all facts.
+- National landing keeps the multi-region entry and the simulation label; Figma has no national frame, so it reuses the hero, card and button language.
+- "Belum diketahui" keeps a dashed outline (product rule) where Figma draws a solid one.
+- Budget chart keeps the mandatory label once in the section header rather than repeating it on every row; each row instead carries its own RKPD page.
+- PPID applicant fields fill bracket placeholders in the preview only. They are not stored and not sent. Figma's "Tahun informasi" field is omitted because the reviewed letter template has no year placeholder.
+- Tracker storage notice holds export/import; the empty state links to the program list because a PPID draft needs a chosen program.
+- Hamburger menu, header shape animation, evidence explorer, chart, tracker v2 import/export/migration remain. No scores, accounts, dark mode, splash screen or backend additions.

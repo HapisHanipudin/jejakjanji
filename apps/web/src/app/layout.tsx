@@ -9,7 +9,7 @@ import './globals.css';
 // Self-hosted at build time by next/font; exposed as --font-jakarta for tokens.css.
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  weight: ['400', '600', '800'],
+  weight: ['400', '600', '700', '800'],
   variable: '--font-jakarta',
   display: 'swap',
 });
@@ -22,21 +22,19 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: LayoutProps<'/'>) {
   const regions = await getDaerahList();
+  const regionList = regions.ok ? regions.data.data : [];
   return (
     <html lang="id" className={jakarta.variable}>
       <body>
         <a href="#konten" className="skip-link">
           Langsung ke konten
         </a>
-        <Header
-          regions={regions.ok ? regions.data.data : []}
-          error={regions.ok ? undefined : regions.pesan}
-        />
+        <Header regions={regionList} error={regions.ok ? undefined : regions.pesan} />
         {/* Pages own their full-width bands; each band wraps its content in .container. */}
         <main id="konten" tabIndex={-1}>
           {children}
         </main>
-        <Footer />
+        <Footer regions={regionList} />
         <ScrollMotion />
       </body>
     </html>

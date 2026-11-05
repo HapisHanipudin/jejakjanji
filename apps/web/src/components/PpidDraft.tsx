@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { Fragment, useEffect, useState } from 'react';
 import {
   INFORMASI,
+  PEMOHON_FIELDS,
   PLACEHOLDER,
   buatSurat,
   pilihanUntukTahap,
+  type Pemohon,
   type Pilihan,
   type TahapDiminta,
 } from '@/lib/surat';
@@ -39,11 +41,13 @@ export function PpidDraft({
   tahap?: TahapDiminta;
 }) {
   const [pilihan, setPilihan] = useState<Pilihan>(() => pilihanUntukTahap(tahap));
+  // Applicant entries live in this component's memory only: no storage, no request.
+  const [pemohon, setPemohon] = useState<Pemohon>({});
   const [pesan, setPesan] = useState('');
   // Feedback only: the item just added to the letter, and a short "copied" state.
   const [sorot, setSorot] = useState<{ teks: string; n: number }>();
   const [tersalin, setTersalin] = useState(false);
-  const teks = buatSurat(program, pilihan);
+  const teks = buatSurat(program, pilihan, pemohon);
   const adaPilihan = Object.values(pilihan).some(Boolean);
 
   useEffect(() => {
@@ -97,8 +101,9 @@ export function PpidDraft({
       </ol>
       <div className="grid-aside">
         <div className="stack">
-          <fieldset>
-            <legend>Informasi yang diminta</legend>
+          <fieldset className="box">
+            <legend>Pilih informasi</legend>
+            <p className="muted small">Anda dapat memilih lebih dari satu.</p>
             {tahap && (
               <p className="notice small">
                 Dipilih dari tahap <strong>{TAHAP_LABEL[tahap]}</strong> yang belum diketahui. Ubah
@@ -121,9 +126,29 @@ export function PpidDraft({
               </label>
             ))}
           </fieldset>
+          <fieldset className="box applicant-form">
+            <legend>Isi data pemohon</legend>
+            <p className="muted small">
+              Opsional. Isian hanya mengganti kurung siku di pratinjau; tidak disimpan dan tidak
+              dikirim ke server. Kosongkan bila ingin mengisi setelah menyalin.
+            </p>
+            {PEMOHON_FIELDS.map((f) => (
+              <div className="field" key={f.key}>
+                <label htmlFor={`pemohon-${f.key}`}>{f.label}</label>
+                <input
+                  id={`pemohon-${f.key}`}
+                  type="text"
+                  maxLength={200}
+                  autoComplete={f.autoComplete}
+                  value={pemohon[f.key] ?? ''}
+                  onChange={(e) => setPemohon({ ...pemohon, [f.key]: e.target.value })}
+                />
+              </div>
+            ))}
+          </fieldset>
           <section className="box" aria-labelledby="ringkasan-title">
-            <h2 id="ringkasan-title" style={{ fontSize: 'var(--text-lg)' }}>
-              Data program
+            <h2 id="ringkasan-title" className="box-title">
+              Konteks permohonan
             </h2>
             <dl className="facts-stack">
               <dt>Daerah</dt>
@@ -146,7 +171,7 @@ export function PpidDraft({
 
         <section className="box box-lg" aria-labelledby="pratinjau-title">
           <div className="box-head">
-            <h2 id="pratinjau-title">Pratinjau draf</h2>
+            <h2 id="pratinjau-title">Pratinjau surat</h2>
             <span className="legend-chip">[ ] harus diisi pemohon</span>
           </div>
           {!adaPilihan && (
@@ -198,7 +223,7 @@ export function PpidDraft({
                 unduh(`draf-ppid-${region.slug}-${program.kode}.txt`, teks, 'text/plain')
               }
             >
-              Unduh sebagai dokumen (.txt)
+              Unduh .txt
             </button>
           </div>
           <p role="status" className="small" style={{ marginTop: 'var(--space-3)' }}>

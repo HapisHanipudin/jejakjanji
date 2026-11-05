@@ -185,7 +185,8 @@ function StatusCard({ p, docs, regionSlug }: { p: Detail; docs: SourceDoc[]; reg
   } as const;
   return (
     <section className="area-status box box-strong" aria-labelledby="status-title">
-      <h2 id="status-title">Status bukti</h2>
+      <h2 id="status-title">Jejak bukti</h2>
+      <p className="muted small">Setiap tahap punya rujukan dan batas pencariannya sendiri.</p>
       <div style={{ marginBottom: 'var(--space-5)' }}>
         <JejakBukti status={p.statusBukti} animate />
       </div>
@@ -196,8 +197,11 @@ function StatusCard({ p, docs, regionSlug }: { p: Detail; docs: SourceDoc[]; reg
           const pencarian = ev.filter((e) => e.sourceDocumentId == null);
           return (
             <li key={k}>
-              <h3>{STATUS_TEKS[k].judul}</h3>
-              <StatusBadge jenis={k} status={p.statusBukti[k]} />
+              <h3>
+                <Icon name={p.statusBukti[k] === 'ada' ? 'file-check' : 'search'} size={20} />
+                {STATUS_TEKS[k].judul}
+              </h3>
+              <StatusBadge jenis={k} status={p.statusBukti[k]} bare />
               {bersumber.map((e) => (
                 <div key={e.id}>
                   <SourceBox

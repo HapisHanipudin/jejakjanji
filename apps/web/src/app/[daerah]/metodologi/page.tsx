@@ -1,3 +1,4 @@
+import { Icon } from '@/components/Icon';
 import type { Metadata } from 'next';
 import { PageHeader } from '@/components/PageHeader';
 import { EmptyState, ErrorState } from '@/components/States';
@@ -99,7 +100,10 @@ export default async function MetodologiPage({ params }: PageProps<'/[daerah]/me
                 <li key={a.judul}>
                   <div>
                     <h3>{a.judul}</h3>
-                    <span className="badge">{a.pill}</span>
+                    <span className="badge">
+                      <Icon name="file-check" />
+                      {a.pill}
+                    </span>
                   </div>
                   <p>{a.teks}</p>
                 </li>
@@ -107,7 +111,10 @@ export default async function MetodologiPage({ params }: PageProps<'/[daerah]/me
               <li>
                 <div>
                   <h3>Belum diketahui (bawaan)</h3>
-                  <span className="badge badge-unknown">Belum diketahui</span>
+                  <span className="badge badge-unknown">
+                    <Icon name="circle-help" />
+                    Belum diketahui
+                  </span>
                 </div>
                 <p>
                   Bukti belum ditemukan dalam cakupan pencarian yang dicatat, lengkap dengan

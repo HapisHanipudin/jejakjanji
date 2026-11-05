@@ -181,11 +181,6 @@ export default async function ProgramListPage({
                 </div>
               ) : (
                 <>
-                  <div className="program-head" aria-hidden="true">
-                    <span>Program dan sumber</span>
-                    <span className="num">Pagu indikatif 2026</span>
-                    <span>Jejak bukti</span>
-                  </div>
                   <ul className="program-list program-results" key={filterKey}>
                     {filtered.data.data.map((p, i) => (
                       <ProgramCard
