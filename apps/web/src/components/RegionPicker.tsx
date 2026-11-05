@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { Daerah } from '@jejakjanji/shared';
+import { Icon } from './Icon';
 import { REGION_STORAGE_KEY, rememberedRegion, regionForPath, regionPath } from '@/lib/regions';
 import {
   geocodeUrl,
@@ -108,23 +109,19 @@ export function RegionPicker({
   return (
     <div className={landing ? 'region-entry region-entry-landing' : 'region-entry'}>
       <button
-        className={`btn ${landing ? 'btn-primary' : ''}`}
+        className={
+          landing &&
+          !regions.some((region) => region.kode === '31' && region.statusKurasi === 'AKTIF')
+            ? 'btn btn-primary region-trigger'
+            : 'btn region-trigger'
+        }
         type="button"
         onClick={() => open()}
         aria-haspopup="dialog"
       >
-        {current && !landing ? `${current.nama} · ubah` : 'Pilih daerah'}
+        <span>{current && !landing ? `${current.nama} · ubah` : 'Pilih daerah'}</span>
+        {!landing && <Icon name="chevron-down" />}
       </button>
-      {landing && (
-        <button className="btn" type="button" onClick={() => open(true)}>
-          Gunakan lokasi saya
-        </button>
-      )}
-      {landing && last && (
-        <Link className="btn" href={regionPath(last.slug)}>
-          Lanjut ke {last.nama}
-        </Link>
-      )}
       <dialog
         ref={dialog}
         className="region-dialog"
@@ -145,6 +142,14 @@ export function RegionPicker({
             Data aktif saat ini DKI Jakarta. Daerah lain ditambahkan setelah sumber dan datanya
             diperiksa.
           </p>
+          {landing && last && (
+            <p className="small">
+              <Link href={regionPath(last.slug)} onClick={close}>
+                Lanjut ke {last.nama}
+              </Link>{' '}
+              · terakhir dipilih
+            </p>
+          )}
           <label htmlFor={landing ? 'region-search-main' : 'region-search-nav'}>Cari daerah</label>
           <input
             id={landing ? 'region-search-main' : 'region-search-nav'}

@@ -17,6 +17,7 @@ export default async function LandingPage() {
   );
   const counts = lists.map((list) => list?.length ?? null);
   const jakartaIndex = active.findIndex((region) => region.kode === '31');
+  const jakarta = active[jakartaIndex];
   const candidates = lists[jakartaIndex] ?? [];
   const examples = await Promise.all(
     [...candidates]
@@ -28,19 +29,23 @@ export default async function LandingPage() {
     result.ok && result.data.data ? [result.data.data] : [],
   );
   return (
-    <>
+    <div className="landing-page">
       <section className="band band-hero landing-hero">
         <div className="container landing-grid">
           <div>
             <h1 className="landing-title">
               Telusuri program daerahmu,
-              <br className="desktop-only" /> dari rencana sampai bukti.
+              <br className="desktop-only" /> dari rencana sampai bukti
             </h1>
             <p className="lead">
-              Dari dokumen resmi ke informasi yang bisa diperiksa: program, pagu indikatif, dan
-              bukti pelaksanaan. Pilih daerah yang ingin Anda telusuri.
+              Periksa program prioritas, pagu indikatif, dan bukti pelaksanaan dari dokumen resmi.
             </p>
             <div className="landing-actions">
+              {jakarta && (
+                <Link className="btn btn-primary" href={`/${jakarta.slug}`}>
+                  Jelajahi {jakarta.nama}
+                </Link>
+              )}
               <RegionPicker
                 regions={regions}
                 error={result.ok ? undefined : result.pesan}
@@ -48,7 +53,7 @@ export default async function LandingPage() {
               />
             </div>
             <p className="small muted">
-              Lokasi bersifat opsional. Saran daerah tetap Anda konfirmasi.
+              Pilih daerah secara manual, atau gunakan lokasi dengan persetujuan Anda.
             </p>
           </div>
           <section className="coverage-card" id="cakupan" aria-labelledby="cakupan-title">
@@ -60,7 +65,7 @@ export default async function LandingPage() {
                 {active.map((region, i) => (
                   <li className="coverage-entry" key={region.kode}>
                     <p className="coverage-name">
-                      {region.nama}
+                      <Link href={`/${region.slug}`}>{region.nama}</Link>
                       <span className="badge">Aktif</span>
                     </p>
                     <p className="muted small">
@@ -69,9 +74,6 @@ export default async function LandingPage() {
                         : 'Program prioritas RPJMD dikurasi'}{' '}
                       beserta konteks pagu RKPD, halaman PDF, dan tanggal cek.
                     </p>
-                    <Link className="btn btn-primary btn-block" href={`/${region.slug}`}>
-                      Jelajahi {region.nama}
-                    </Link>
                   </li>
                 ))}
               </ul>
@@ -96,7 +98,7 @@ export default async function LandingPage() {
       </section>
       <section className="section section-alt">
         <div className="container">
-          <h2>Satu daerah, sumber yang bisa ditelusuri.</h2>
+          <h2>Satu daerah, sumber yang bisa ditelusuri</h2>
           <p>
             Setiap angka memiliki dokumen sumber, halaman PDF, dan tanggal pemeriksaan. Tanpa skor
             kepala daerah, leaderboard, atau perbandingan pagu antar daerah.
@@ -104,6 +106,6 @@ export default async function LandingPage() {
           <p className="legend-chip">Pagu indikatif, bukan APBD dan bukan realisasi</p>
         </div>
       </section>
-    </>
+    </div>
   );
 }

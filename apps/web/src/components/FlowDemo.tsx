@@ -6,6 +6,7 @@ import type { ProgramDetail } from '@jejakjanji/shared';
 import { SourceBox } from './SourceBox';
 import { StatusBadge } from './StatusBadge';
 import { ThemedSelect } from './ThemedSelect';
+import { Icon } from './Icon';
 import { namaProgram } from '@/lib/format';
 import { INFORMASI, pilihanUntukTahap, type TahapDiminta } from '@/lib/surat';
 import { scheduleFlowPlayback } from '@/lib/flow-playback';
@@ -186,13 +187,18 @@ export function FlowDemo({ programs = NO_PROGRAMS }: { programs?: DemoProgram[] 
         <div>
           <h3>Coba alurnya sebelum mulai</h3>
           <p className="small muted">
-            Simulasi alur. Tidak mengirim permohonan atau menyimpan data.
+            {programs.length ? 'Simulasi dengan data DKI Jakarta.' : 'Simulasi alur.'} Tidak
+            mengirim permohonan atau menyimpan data.
           </p>
         </div>
         {ready && (
           <button
             type="button"
-            className="btn flow-play"
+            className="btn flow-control flow-play"
+            aria-label={
+              playing ? 'Jeda demo' : step === steps.length - 1 ? 'Putar ulang' : 'Putar demo'
+            }
+            title={playing ? 'Jeda demo' : step === steps.length - 1 ? 'Putar ulang' : 'Putar demo'}
             aria-pressed={playing}
             onClick={() => {
               if (!playing && (step === 0 || step === steps.length - 1)) {
@@ -204,7 +210,7 @@ export function FlowDemo({ programs = NO_PROGRAMS }: { programs?: DemoProgram[] 
               setPlaying(!playing);
             }}
           >
-            {playing ? 'Jeda demo' : step === steps.length - 1 ? 'Putar ulang' : 'Putar demo'}
+            <Icon name={playing ? 'pause' : 'play'} size={18} />
           </button>
         )}
       </div>
@@ -413,44 +419,39 @@ export function FlowDemo({ programs = NO_PROGRAMS }: { programs?: DemoProgram[] 
           <div className="flow-demo-explanation">
             <h4>{current.action}</h4>
             <p>{current.detail}</p>
-            {program && (
-              <p className="small muted">
-                Contoh nyata DKI Jakarta. Interaksi di sini hanya untuk mencoba alur.
-              </p>
-            )}
-            <p className="small muted">
-              Langkah {step + 1} dari {steps.length}
-              {playing ? ' · Berlanjut otomatis' : ''}
-            </p>
           </div>
         </div>
       </div>
       {ready && (
         <nav className="flow-demo-controls" aria-label="Navigasi demo">
           <button
-            className="btn"
+            className="btn flow-control"
             type="button"
             disabled={step === 0}
+            aria-label="Sebelumnya"
+            title="Sebelumnya"
             onClick={() => {
               setPlaying(false);
               setStep(step - 1);
             }}
           >
-            Sebelumnya
+            <Icon name="chevron-left" size={18} />
           </button>
           <span className="small muted">
             {step + 1} / {steps.length}
           </span>
           <button
-            className="btn"
+            className="btn flow-control"
             type="button"
             disabled={step === steps.length - 1}
+            aria-label="Berikutnya"
+            title="Berikutnya"
             onClick={() => {
               setPlaying(false);
               setStep(step + 1);
             }}
           >
-            Berikutnya
+            <Icon name="chevron-right" size={18} />
           </button>
         </nav>
       )}

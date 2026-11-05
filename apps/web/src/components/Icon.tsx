@@ -6,6 +6,9 @@ const PATHS = {
   check: 'M3.5 8.5l3 3 6-7',
   'chevron-left': 'M10 4L6 8l4 4',
   'chevron-right': 'M6 4l4 4-4 4',
+  'chevron-down': 'M4 6l4 4 4-4',
+  play: 'M5 3l8 5-8 5z',
+  pause: 'M5 3v10M11 3v10',
   calendar:
     'M4 3.5h8a1.5 1.5 0 011.5 1.5v7a1.5 1.5 0 01-1.5 1.5H4A1.5 1.5 0 012.5 12V5A1.5 1.5 0 014 3.5zM2.5 6.5h11M5.5 2v3M10.5 2v3',
 } as const;

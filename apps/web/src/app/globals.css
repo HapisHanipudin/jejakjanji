@@ -2366,6 +2366,16 @@ fieldset legend + .notice {
   flex-shrink: 0;
   min-height: 44px;
 }
+.flow-demo .flow-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  min-height: 48px;
+  padding: 0;
+  flex-shrink: 0;
+}
 .flow-demo-steps {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -2632,11 +2642,215 @@ fieldset legend + .notice {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .flow-play {
+  .flow-demo .flow-play {
     display: none;
   }
   .flow-demo-sheet li {
     animation: none;
+  }
+}
+
+/* The marker stays in document coordinates; the sticky header keeps its layout space. */
+.header-scroll-marker {
+  position: absolute;
+  top: 64px;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  transition:
+    background-color 240ms ease-out,
+    border-color 240ms ease-out;
+}
+.header-surface {
+  width: calc(100% - 32px);
+  max-width: calc(var(--content-max) + 2 * var(--gutter));
+  margin-inline: auto;
+  background: var(--color-bg);
+  border: 1px solid transparent;
+  border-radius: 0;
+  transform: translateY(0);
+  transition:
+    transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 280ms ease-out,
+    border-color 200ms ease-out,
+    box-shadow 240ms ease-out;
+}
+.site-header[data-floating] {
+  background: transparent;
+  border-bottom-color: transparent;
+}
+.site-header[data-floating] .header-surface {
+  transform: translateY(12px);
+  border-color: var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgb(19 38 59 / 12%);
+}
+.site-header .container {
+  max-width: none;
+}
+.site-header .region-trigger {
+  min-height: 44px;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
+  border-color: transparent;
+  color: var(--color-accent);
+  transition:
+    background-color 160ms ease-out,
+    color 160ms ease-out,
+    border-color 160ms ease-out;
+}
+.site-header .region-trigger span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.site-header .region-trigger:hover {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+}
+.site-header .region-trigger:active {
+  background: var(--color-heading);
+  color: var(--color-accent-text);
+}
+.site-header .nav ul {
+  gap: var(--space-2);
+}
+.site-header .nav a {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  transition:
+    background-color 160ms ease-out,
+    color 160ms ease-out;
+}
+.site-header .nav a:hover {
+  background: var(--color-accent-soft);
+}
+html {
+  scroll-padding-top: 112px;
+}
+.skip-link {
+  z-index: 60;
+}
+@media (max-width: 760px) {
+  .header-surface {
+    width: calc(100% - 24px);
+  }
+  .site-header .container {
+    padding-inline: var(--space-3);
+    gap: var(--space-2);
+  }
+  .site-header .logo {
+    font-size: 1.125rem;
+    gap: var(--space-2);
+  }
+  .site-header .region-trigger {
+    max-width: 180px;
+    gap: var(--space-2);
+    padding-inline: var(--space-3);
+  }
+  .site-header .nav ul {
+    gap: 0;
+  }
+  .site-header .nav a {
+    padding-inline: var(--space-2);
+  }
+  .site-header[data-floating] .header-surface {
+    transform: translateY(8px);
+  }
+  html {
+    scroll-padding-top: 160px;
+  }
+}
+
+/* Landing polish: one opening action, a quieter document preview, existing brand tokens. */
+.landing-page .landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  margin-block: var(--space-5) var(--space-3);
+}
+.landing-page .landing-actions .region-entry {
+  margin: 0;
+}
+.landing-page .landing-hero .lead {
+  max-width: 48ch;
+}
+.landing-page .coverage-card {
+  padding: var(--space-5);
+}
+.landing-page .coverage-name a {
+  color: var(--color-heading);
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--color-border-strong);
+}
+.landing-page .coverage-card > .xsmall {
+  margin: var(--space-5) 0 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+.landing-page .flow-demo {
+  margin-block: var(--space-5);
+}
+.landing-page .flow-demo-sheet {
+  border: 0;
+  border-radius: var(--radius-sm);
+}
+.landing-page .flow-demo-explanation h4 {
+  font-size: 1.375rem;
+  font-weight: 600;
+}
+.landing-page .flow-demo-explanation p {
+  margin-bottom: 0;
+}
+.landing-page .flow-demo-controls {
+  padding-block: var(--space-3);
+}
+@media (max-width: 760px) {
+  .landing-page .band-hero.landing-hero {
+    padding-block: var(--space-7);
+  }
+  .landing-page .landing-grid {
+    gap: var(--space-6);
+  }
+  .landing-page #cara-kerja {
+    padding-block: var(--space-7);
+  }
+  .landing-page .landing-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .landing-page .landing-actions .region-entry {
+    display: block;
+  }
+  .landing-page .landing-actions .btn {
+    width: 100%;
+  }
+  .landing-page .flow-demo-heading {
+    gap: var(--space-4);
+  }
+  .landing-page .flow-demo-panel {
+    padding: var(--space-4);
+  }
+  .landing-page .flow-demo-scene {
+    gap: var(--space-4);
+  }
+  .landing-page .flow-demo-sheet {
+    padding: var(--space-4);
+  }
+  .landing-page .flow-demo-explanation h4 {
+    font-size: 1.25rem;
   }
 }
 
