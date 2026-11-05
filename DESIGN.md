@@ -194,6 +194,7 @@ Plus Jakarta Sans, weights 400/600/700/800 (700 only for the wordmark). Body 16p
 - Budget chart: stacked rows (field link plus arrow-up-right, curated-program count, value plus share, 12px track, PDF page with a link), separated by hairlines inside one white card. When all rows share one RKPD document, its full source line (document, version, pages, check date) sits once at the top of the card.
 - Evidence step: 2px left rule, stage title, pill (its icon is the only icon in the step), search notes, source line.
 - Notice: pale blue, 16px radius and padding, optional info icon.
+- Landing demo: one white frame (header, steps, stage, controls); inside it a small app window with a navy title bar, cream body like the real pages, white controls, 8px radius and the header's soft shadow, so the simulated screen stands apart from the explanation.
 - State panel: white card, 36px navy icon, page-sized title, body, primary action plus text action, optional note. Used for not found, uncurated region, failed load, root error and empty tracker.
 - Region picker: white dialog/bottom sheet, 28px title, 44px icon close button, search, 80px option cards; current region pale blue with check icon, available regions map pin, uncurated regions help icon with "Belum dikurasi".
 
