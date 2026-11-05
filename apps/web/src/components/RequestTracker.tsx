@@ -169,8 +169,10 @@ export function RequestTracker({
   return (
     <div className="stack">
       <section className="storage-panel" aria-labelledby="simpan-title">
-        <Icon name="hard-drive" size={20} />
-        <h2 id="simpan-title">Data hanya tersimpan di browser ini.</h2>
+        <h2 id="simpan-title">
+          <Icon name="hard-drive" size={20} />
+          Data hanya tersimpan di browser ini.
+        </h2>
         <p>
           Catatan memakai localStorage dan tidak dikirim ke server. Menghapus data browser dapat
           menghapus catatan Anda. Ekspor JSON secara berkala; impor kembali file itu untuk

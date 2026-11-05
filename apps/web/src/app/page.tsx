@@ -33,10 +33,7 @@ export default async function LandingPage() {
       <section className="band band-hero landing-hero">
         <div className="container landing-grid">
           <div>
-            <h1 className="landing-title">
-              Telusuri program daerahmu,
-              <br className="desktop-only" /> dari rencana sampai bukti
-            </h1>
+            <h1 className="landing-title">Telusuri program daerahmu, dari rencana sampai bukti</h1>
             <p className="lead">
               Periksa program prioritas, pagu indikatif, dan bukti pelaksanaan dari dokumen resmi.
             </p>

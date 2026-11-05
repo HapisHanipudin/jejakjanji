@@ -1656,6 +1656,10 @@ button.trail-card:focus-visible {
 .chart-box {
   padding: var(--space-2) var(--space-5);
 }
+/* Shared RKPD source named once; each row below keeps only its PDF page. */
+.chart-box > .source-line {
+  padding-top: var(--space-4);
+}
 .bars-stacked .bar-row {
   display: grid;
   gap: var(--space-3);
@@ -1782,6 +1786,15 @@ select,
   border-radius: var(--radius);
   background: var(--color-surface);
   color: var(--color-heading);
+}
+/* One pointer rule for native controls; component rules cover the custom ones. */
+select:not(:disabled),
+summary,
+label:has(> input[type='checkbox'], > input[type='radio']) {
+  cursor: pointer;
+}
+select:disabled {
+  cursor: not-allowed;
 }
 select,
 .select-button {
@@ -3126,19 +3139,40 @@ html {
   border-radius: var(--radius-lg);
   background: var(--color-accent-soft);
 }
-.storage-panel > .icon {
-  color: var(--color-accent);
-}
 .storage-panel h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   margin: 0;
   font-size: var(--text-base);
   font-weight: var(--font-weight-bold);
+}
+.storage-panel h2 .icon {
+  flex: none;
+  color: var(--color-accent);
 }
 .storage-panel p {
   margin: 0;
 }
 .request-list-title {
-  margin-bottom: var(--space-5);
+  margin: var(--space-7) 0 var(--space-4);
+}
+/* Detail lead: the separator trails its item, so a wrapped line never starts with it. */
+.meta-item:not(:last-child)::after {
+  content: '·';
+  margin-inline: 0.5em;
+}
+/* PPID: keep the letter in view while the long applicant form scrolls (two-column layout only). */
+@media (min-width: 1025px) and (min-height: 800px) {
+  .letter-panel {
+    position: sticky;
+    top: 88px;
+  }
+  /* A long letter scrolls inside the panel so Salin and Unduh stay on screen. */
+  .letter-panel .letter {
+    max-height: calc(100vh - 400px);
+    overflow-y: auto;
+  }
 }
 .request-table thead {
   position: absolute;

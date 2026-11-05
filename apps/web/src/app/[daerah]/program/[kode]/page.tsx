@@ -59,14 +59,21 @@ export default async function ProgramDetailPage({ params }: PageProps<'/[daerah]
         title={namaProgram(p.nama)}
         lead={
           <>
-            Kode <span className="kode">{p.kode}</span> | Bidang {bidangRingkas} | {p.sumber.title}
+            <span className="meta-item">
+              Kode <span className="kode">{p.kode}</span>
+            </span>
+            <span className="meta-item">Bidang {bidangRingkas}</span>
+            <span className="meta-item">{p.sumber.title}</span>
           </>
         }
         breadcrumb={
           <nav className="breadcrumb" aria-label="Remah roti">
             <ol>
               <li>
-                <Link href={`/${daerah}/program`}>{res.data.daerah?.nama} › Program</Link>
+                <Link href={`/${daerah}`}>{res.data.daerah?.nama}</Link>
+              </li>
+              <li>
+                <Link href={`/${daerah}/program`}>Program</Link>
               </li>
               <li>
                 <Link href={bidangHref}>{bidangRingkas}</Link>
@@ -197,10 +204,7 @@ function StatusCard({ p, docs, regionSlug }: { p: Detail; docs: SourceDoc[]; reg
           const pencarian = ev.filter((e) => e.sourceDocumentId == null);
           return (
             <li key={k}>
-              <h3>
-                <Icon name={p.statusBukti[k] === 'ada' ? 'file-check' : 'search'} size={20} />
-                {STATUS_TEKS[k].judul}
-              </h3>
+              <h3>{STATUS_TEKS[k].judul}</h3>
               <StatusBadge jenis={k} status={p.statusBukti[k]} bare />
               {bersumber.map((e) => (
                 <div key={e.id}>

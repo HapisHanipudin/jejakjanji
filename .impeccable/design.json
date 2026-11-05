@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-11-05T11:38:35.000Z",
-  "title": "JejakJanji — Redesign",
+  "title": "JejakJanji: Redesign",
   "extensions": {
     "colorMeta": {
       "accent": {
@@ -466,7 +466,7 @@
     }
   ],
   "narrative": {
-    "northStar": "Redesign — Civic reading desk",
+    "northStar": "Redesign: Civic reading desk",
     "overview": "Cream background, white task surfaces, navy home hero and actions, pale blue evidence band, cream footer. Preserve verified content and functional interactions.",
     "keyCharacteristics": [
       "Cream #f7f4ec page and footer; white cards, inputs and dialogs; navy hero and primary action; pale blue notices.",

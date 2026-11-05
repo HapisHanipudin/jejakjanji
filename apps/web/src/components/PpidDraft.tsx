@@ -169,7 +169,7 @@ export function PpidDraft({
           </section>
         </div>
 
-        <section className="box box-lg" aria-labelledby="pratinjau-title">
+        <section className="box box-lg letter-panel" aria-labelledby="pratinjau-title">
           <div className="box-head">
             <h2 id="pratinjau-title">Pratinjau surat</h2>
             <span className="legend-chip">[ ] harus diisi pemohon</span>

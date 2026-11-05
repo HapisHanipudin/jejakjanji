@@ -1,6 +1,6 @@
 ---
 name: JejakJanji
-description: Lembar kerja pemeriksa program daerah — tinta arsip di atas kertas krem, setiap angka dengan rujukannya.
+description: Lembar kerja pemeriksa program daerah: tinta arsip di atas kertas krem, setiap angka dengan rujukannya.
 colors:
   accent: '#1f4e79'
   accent-text: '#ffffff'
@@ -159,7 +159,7 @@ components:
     padding: '6px 14px'
 ---
 
-# Design System: JejakJanji — Redesign
+# Design System: JejakJanji Redesign
 
 ## Authority
 
@@ -191,8 +191,8 @@ Plus Jakarta Sans, weights 400/600/700/800 (700 only for the wordmark). Body 16p
 - Status pill: icon plus text, 36px tall. Ada: pale blue, solid navy border, file-check icon. Belum diketahui: white, dashed #6b7480 border, help icon.
 - Source line: file icon plus 14px muted text: document, version, PDF page, check date, link.
 - Program card: code, title, field, source line, three stage rows (label left, pill right), divider, 2026 RPJMD pagu with full value in tooltip and the mandatory label, "Lihat detail". The whole card is the link.
-- Budget chart: stacked rows (field link plus arrow-up-right, curated-program count, value plus share, 12px track, per-row RKPD source with PDF page), separated by hairlines inside one white card.
-- Evidence step: 2px left rule, stage icon (file check when evidence exists, search otherwise), pill, search notes, source line.
+- Budget chart: stacked rows (field link plus arrow-up-right, curated-program count, value plus share, 12px track, PDF page with a link), separated by hairlines inside one white card. When all rows share one RKPD document, its full source line (document, version, pages, check date) sits once at the top of the card.
+- Evidence step: 2px left rule, stage title, pill (its icon is the only icon in the step), search notes, source line.
 - Notice: pale blue, 16px radius and padding, optional info icon.
 - State panel: white card, 36px navy icon, page-sized title, body, primary action plus text action, optional note. Used for not found, uncurated region, failed load, root error and empty tracker.
 - Region picker: white dialog/bottom sheet, 28px title, 44px icon close button, search, 80px option cards; current region pale blue with check icon, available regions map pin, uncurated regions help icon with "Belum dikurasi".
@@ -210,7 +210,7 @@ Header shape transition: 420ms cubic-bezier(0.22,1,0.36,1), widening about 64px 
 - Figma sample money, dates, documents, categories, regions and tracker records are excluded. API and verified sources own all facts.
 - National landing keeps the multi-region entry and the simulation label; Figma has no national frame, so it reuses the hero, card and button language.
 - "Belum diketahui" keeps a dashed outline (product rule) where Figma draws a solid one.
-- Budget chart keeps the mandatory label once in the section header rather than repeating it on every row; each row instead carries its own RKPD page.
+- Budget chart keeps the mandatory label once in the section header rather than repeating it on every row; each row instead carries its own RKPD page. Figma's stage icon in the evidence step is dropped because the pill already carries the same icon.
 - PPID applicant fields fill bracket placeholders in the preview only. They are not stored and not sent. Figma's "Tahun informasi" field is omitted because the reviewed letter template has no year placeholder.
 - Tracker storage notice holds export/import; the empty state links to the program list because a PPID draft needs a chosen program.
 - Hamburger menu, header shape animation, evidence explorer, chart, tracker v2 import/export/migration remain. No scores, accounts, dark mode, splash screen or backend additions.
