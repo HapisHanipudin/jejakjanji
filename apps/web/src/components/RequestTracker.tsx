@@ -269,7 +269,7 @@ export function RequestTracker({
           <p className="notice">Belum ada permohonan yang dicatat di browser ini.</p>
         ) : (
           <div className="table-wrap">
-            <table className="table-plain table-cards">
+            <table className="table-plain table-cards request-table">
               <thead>
                 <tr>
                   <th scope="col">Program</th>

@@ -2,9 +2,9 @@ import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import type { ProgramList } from '@jejakjanji/shared';
 import { Icon } from './Icon';
-import { JejakBukti } from './JejakBukti';
+import { StatusBadge } from './StatusBadge';
 import { Money } from './Money';
-import type { SourceDoc } from './SourceBox';
+import { SourceBox, type SourceDoc } from './SourceBox';
 import { namaBidangRingkas, namaProgram } from '@/lib/format';
 
 type Item = ProgramList['data'][number];
@@ -53,7 +53,17 @@ export function ProgramCard({
         )}
         <span className="label-mobile"> · pagu 2026</span>
       </p>
-      <JejakBukti status={program.statusBukti} />
+      <ul className="program-stages list-plain" aria-label="Jejak bukti">
+        {(['rencana', 'anggaran', 'pelaksanaan'] as const).map((stage) => (
+          <li key={stage}>
+            <StatusBadge jenis={stage} status={program.statusBukti[stage]} />
+          </li>
+        ))}
+      </ul>
+      <SourceBox doc={doc} pages={pages} />
+      <span className="link-strong small" aria-hidden="true">
+        Lihat detail <Icon name="arrow" />
+      </span>
       <span className="row-go" aria-hidden="true">
         <Icon name="arrow" />
       </span>

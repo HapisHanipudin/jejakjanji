@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-03T15:01:02+00:00",
-  "title": "Design System: JejakJanji",
+  "generatedAt": "2026-11-05T09:36:52.720Z",
+  "title": "JejakJanji — Redesign",
   "extensions": {
     "colorMeta": {
       "accent": {
@@ -82,7 +82,7 @@
       "bg": {
         "role": "neutral",
         "displayName": "Kertas Krem",
-        "canonical": "#fcfbf7",
+        "canonical": "#f7f4ec",
         "tonalRamp": [
           "#322d1a",
           "#5a502b",
@@ -97,7 +97,7 @@
       "band": {
         "role": "neutral",
         "displayName": "Pita Pagi",
-        "canonical": "#f6f8fa",
+        "canonical": "#f7f4ec",
         "tonalRamp": [
           "#1f262e",
           "#334251",
@@ -112,7 +112,7 @@
       "surface": {
         "role": "neutral",
         "displayName": "Kertas Lipat",
-        "canonical": "#f4f3ee",
+        "canonical": "#ffffff",
         "tonalRamp": [
           "#2c2a21",
           "#4d4a37",
@@ -142,7 +142,7 @@
       "heading": {
         "role": "neutral",
         "displayName": "Tinta Judul",
-        "canonical": "#13263b",
+        "canonical": "#17202a",
         "tonalRamp": [
           "#192634",
           "#28415d",
@@ -232,7 +232,7 @@
       "footer": {
         "role": "neutral",
         "displayName": "Malam Balai",
-        "canonical": "#13263b",
+        "canonical": "#f7f4ec",
         "tonalRamp": [
           "#192634",
           "#28415d",
@@ -247,7 +247,7 @@
       "footer-text": {
         "role": "neutral",
         "displayName": "Kertas Malam",
-        "canonical": "#f4f1e8",
+        "canonical": "#17202a",
         "tonalRamp": [
           "#2f2b1d",
           "#554b30",
@@ -262,7 +262,7 @@
       "footer-muted": {
         "role": "neutral",
         "displayName": "Kabut Malam",
-        "canonical": "#b9c8d8",
+        "canonical": "#4f5b66",
         "tonalRamp": [
           "#1f262e",
           "#344251",
@@ -404,7 +404,7 @@
       "refersTo": "input",
       "description": "Labelled search with a magnifier and themed focus.",
       "html": "<label class=\"ds-field\"><span>Cari program</span><span class=\"ds-search\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\"><path d=\"M7 12A5 5 0 107 2a5 5 0 000 10zM13.5 13.5L10.6 10.6\"/></svg><input type=\"search\" placeholder=\"Nama atau awalan kode program\"></span></label>",
-      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; font: 600 14px/1.45 'Plus Jakarta Sans', system-ui, sans-serif; color: var(--color-heading, #13263b); } .ds-search { position: relative; display: block; color: var(--color-text-muted, #4f5b66); } .ds-search svg { position: absolute; left: 14px; top: 50%; translate: 0 -50%; } .ds-search input { width: 100%; box-sizing: border-box; height: 48px; padding: 11px 14px 11px 40px; border: 1px solid var(--color-border-strong, #6b7480); border-radius: 6px; background: var(--color-bg, #fcfbf7); color: var(--color-heading, #13263b); font: 400 16px/24px 'Plus Jakarta Sans', system-ui, sans-serif; transition: border-color 140ms ease, box-shadow 140ms ease; } .ds-search input::placeholder { color: var(--color-text-muted, #4f5b66); } .ds-search input:hover { border-color: var(--color-heading, #13263b); } .ds-search input:focus-visible { border-color: var(--color-accent, #1f4e79); outline: 3px solid var(--color-accent-soft, #dce8f3); outline-offset: 0; box-shadow: 0 0 0 1px var(--color-accent, #1f4e79); }"
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; font: 600 14px/1.45 'Plus Jakarta Sans', system-ui, sans-serif; color: var(--color-heading, #13263b); } .ds-search { position: relative; display: block; color: var(--color-text-muted, #4f5b66); } .ds-search svg { position: absolute; left: 14px; top: 50%; translate: 0 -50%; } .ds-search input { width: 100%; box-sizing: border-box; height: 48px; padding: 11px 14px 11px 40px; border: 1px solid var(--color-border-strong, #6b7480); border-radius: 6px; background: var(--color-bg, #f7f4ec); color: var(--color-heading, #13263b); font: 400 16px/24px 'Plus Jakarta Sans', system-ui, sans-serif; transition: border-color 140ms ease, box-shadow 140ms ease; } .ds-search input::placeholder { color: var(--color-text-muted, #4f5b66); } .ds-search input:hover { border-color: var(--color-heading, #13263b); } .ds-search input:focus-visible { border-color: var(--color-accent, #1f4e79); outline: 3px solid var(--color-accent-soft, #dce8f3); outline-offset: 0; box-shadow: 0 0 0 1px var(--color-accent, #1f4e79); }"
     },
     {
       "name": "Navigation",
@@ -435,33 +435,33 @@
       "refersTo": "card",
       "description": "Flat paper card: 1px warm border, 12px corners, no shadow.",
       "html": "<article class=\"ds-card\"><h3>Pengelolaan Persampahan</h3><p class=\"ds-meta\">2.11.11 · Lingkungan Hidup</p><p class=\"ds-src\">RPJMD · hal. PDF 345</p><p class=\"ds-pagu\">Rp1,32 T <span>· pagu 2026</span></p></article>",
-      "css": ".ds-card { max-width: 360px; padding: 24px; border: 1px solid var(--color-border, #d5cfc0); border-radius: 12px; background: var(--color-bg, #fcfbf7); font-family: 'Plus Jakarta Sans', system-ui, sans-serif; transition: background-color 160ms ease; } .ds-card:hover { background: var(--color-surface, #f4f3ee); } .ds-card h3 { margin: 0 0 6px; color: var(--color-accent, #1f4e79); font-size: 18px; font-weight: 600; line-height: 26px; } .ds-card p { margin: 0; font-size: 13px; line-height: 20px; color: var(--color-text-muted, #4f5b66); } .ds-card .ds-src { color: var(--color-link, #2b5982); } .ds-card .ds-pagu { margin-top: 12px; color: var(--color-heading, #13263b); font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; } .ds-card .ds-pagu span { font-size: 13px; font-weight: 400; color: var(--color-text-muted, #4f5b66); }"
+      "css": ".ds-card { max-width: 360px; padding: 24px; border: 1px solid var(--color-border, #d5cfc0); border-radius: 16px; background: var(--color-bg, #f7f4ec); font-family: 'Plus Jakarta Sans', system-ui, sans-serif; transition: background-color 160ms ease; } .ds-card:hover { background: var(--color-surface, #ffffff); } .ds-card h3 { margin: 0 0 6px; color: var(--color-accent, #1f4e79); font-size: 18px; font-weight: 600; line-height: 26px; } .ds-card p { margin: 0; font-size: 13px; line-height: 20px; color: var(--color-text-muted, #4f5b66); } .ds-card .ds-src { color: var(--color-link, #2b5982); } .ds-card .ds-pagu { margin-top: 12px; color: var(--color-heading, #13263b); font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; } .ds-card .ds-pagu span { font-size: 13px; font-weight: 400; color: var(--color-text-muted, #4f5b66); }"
     },
     {
       "name": "Budget Bar Row",
       "kind": "custom",
       "description": "Signature chart row: linked label, track, bar, short value with one-decimal share.",
       "html": "<a class=\"ds-bar\" href=\"#\"><span class=\"ds-bar-label\">Pendidikan</span><span class=\"ds-bar-track\"><span class=\"ds-bar-fill\" style=\"width:100%\"></span></span><span class=\"ds-bar-value\">Rp19,6 T <small>22,4%</small></span></a>",
-      "css": ".ds-bar { display: grid; grid-template-columns: 140px minmax(0, 1fr) auto; gap: 20px; align-items: center; padding: 6px 8px; border-radius: 6px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; text-decoration: none; transition: background-color 180ms ease; } .ds-bar-label { color: var(--color-link, #2b5982); font-weight: 600; } .ds-bar-track { height: 24px; border-radius: 6px; background: var(--color-surface, #f4f3ee); overflow: hidden; transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-bar-fill { display: block; height: 100%; border-radius: 6px; background: var(--color-bar, #5b84ab); transition: background-color 180ms ease; } .ds-bar-value { color: var(--color-heading, #13263b); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; } .ds-bar-value small { margin-left: 8px; color: var(--color-text-muted, #4f5b66); font-size: 14px; font-weight: 400; } .ds-bar:hover, .ds-bar:focus-visible { background: var(--color-accent-soft, #dce8f3); outline: none; } .ds-bar:hover .ds-bar-track { transform: scaleY(1.18); } .ds-bar:hover .ds-bar-fill, .ds-bar:focus-visible .ds-bar-fill { background: var(--color-accent, #1f4e79); }"
+      "css": ".ds-bar { display: grid; grid-template-columns: 140px minmax(0, 1fr) auto; gap: 20px; align-items: center; padding: 6px 8px; border-radius: 6px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; text-decoration: none; transition: background-color 180ms ease; } .ds-bar-label { color: var(--color-link, #2b5982); font-weight: 600; } .ds-bar-track { height: 24px; border-radius: 6px; background: var(--color-surface, #ffffff); overflow: hidden; transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-bar-fill { display: block; height: 100%; border-radius: 6px; background: var(--color-bar, #5b84ab); transition: background-color 180ms ease; } .ds-bar-value { color: var(--color-heading, #13263b); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; } .ds-bar-value small { margin-left: 8px; color: var(--color-text-muted, #4f5b66); font-size: 14px; font-weight: 400; } .ds-bar:hover, .ds-bar:focus-visible { background: var(--color-accent-soft, #dce8f3); outline: none; } .ds-bar:hover .ds-bar-track { transform: scaleY(1.18); } .ds-bar:hover .ds-bar-fill, .ds-bar:focus-visible .ds-bar-fill { background: var(--color-accent, #1f4e79); }"
     },
     {
       "name": "Checkbox",
       "kind": "input",
       "description": "Themed checkbox with a check that scales in.",
       "html": "<label class=\"ds-check\"><input type=\"checkbox\" checked> Realisasi anggaran program per tahun</label>",
-      "css": ".ds-check { display: flex; gap: 12px; align-items: flex-start; color: var(--color-heading, #13263b); font: 400 16px/24px 'Plus Jakarta Sans', system-ui, sans-serif; cursor: pointer; } .ds-check input { appearance: none; flex: none; display: grid; place-content: center; width: 20px; height: 20px; margin: 2px 0 0; border: 1.5px solid var(--color-border-strong, #6b7480); border-radius: 6px; background: var(--color-bg, #fcfbf7); cursor: pointer; } .ds-check input::after { content: ''; width: 13px; height: 13px; background: #fff; -webkit-mask: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E\") center / contain no-repeat; mask: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E\") center / contain no-repeat; transform: scale(0); transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-check input:hover { border-color: var(--color-accent, #1f4e79); } .ds-check input:checked { border-color: var(--color-accent, #1f4e79); background: var(--color-accent, #1f4e79); } .ds-check input:checked::after { transform: scale(1); } .ds-check input:focus-visible { outline: 3px solid var(--color-accent, #1f4e79); outline-offset: 2px; }"
+      "css": ".ds-check { display: flex; gap: 12px; align-items: flex-start; color: var(--color-heading, #13263b); font: 400 16px/24px 'Plus Jakarta Sans', system-ui, sans-serif; cursor: pointer; } .ds-check input { appearance: none; flex: none; display: grid; place-content: center; width: 20px; height: 20px; margin: 2px 0 0; border: 1.5px solid var(--color-border-strong, #6b7480); border-radius: 6px; background: var(--color-bg, #f7f4ec); cursor: pointer; } .ds-check input::after { content: ''; width: 13px; height: 13px; background: #fff; -webkit-mask: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E\") center / contain no-repeat; mask: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E\") center / contain no-repeat; transform: scale(0); transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-check input:hover { border-color: var(--color-accent, #1f4e79); } .ds-check input:checked { border-color: var(--color-accent, #1f4e79); background: var(--color-accent, #1f4e79); } .ds-check input:checked::after { transform: scale(1); } .ds-check input:focus-visible { outline: 3px solid var(--color-accent, #1f4e79); outline-offset: 2px; }"
     }
   ],
   "narrative": {
-    "northStar": "Lembar Kerja Jurnalis",
-    "overview": "JejakJanji looks like a fact-checker's working sheet: archive ink on cream paper, every figure sitting next to its source page and check date. The mood is careful, neutral, and verifiable. Nothing is dramatised; nothing is decorated to persuade. The interface earns trust by showing its working, not by styling confidence.\n\nDensity is that of a working document: generous section spacing between tasks, but tight, scannable rows inside them (program lists, budget bars, source tables). Navy ink carries action and evidence; cream paper and pale bands carry structure. Colour never carries judgement: there is no red, no green, no score. Status is written in words, and \"Belum diketahui\" is drawn with a dashed outline that is as visible as a solid one.\n\nComponents are precise and calm: hairline borders, slightly rounded corners, no ornament. Motion explains rather than entertains. The one authored moment is the Jejak explorer on a region home: picking one of the three stage cards redraws every curated program's dot for that stage. Around it, motion is feedback: the evidence trail draws in order, a chart grows once when it first comes into view, a chart row reveals how many programs sit behind it, a just-added line flashes, a copy confirms. Everything starts already readable and everything stops under reduced motion.",
+    "northStar": "Redesign — Civic reading desk",
+    "overview": "Cream background, white task surfaces, navy home hero and actions, pale blue evidence band, cream footer. Preserve verified content and functional interactions.",
     "keyCharacteristics": [
-      "Cream paper (`bg`) with archive-ink navy (`accent`) as the single accent; dark navy footer as the closing band.",
+      "Cream #f7f4ec page and footer; white cards; navy hero and primary action.",
       "Plus Jakarta Sans throughout, three weights only (400, 600, 800).",
       "Flat surfaces separated by 1px warm borders and tonal bands; shadows only on floating popovers.",
       "Source, PDF page, and check date always adjacent to the number they support.",
       "Status by word and line style (solid vs dashed), never by colour alone.",
-      "One easing curve for all motion; nothing animates without explaining a change."
+      "Header shape change 420ms; reduced motion disables animation."
     ],
     "rules": [
       {
@@ -499,7 +499,7 @@
       "**Do** put the source document, PDF page, and check date in Caption next to every figure.",
       "**Do** keep \"Pagu indikatif, bukan APBD dan bukan realisasi\" as a chip or caption beside every spending block.",
       "**Do** write status in words and draw \"Belum diketahui\" with a dashed outline.",
-      "**Do** use the single easing curve `cubic-bezier(0.16, 1, 0.3, 1)` with durations of 160–700ms, start every animation from a readable state, and remove all motion under reduced motion.",
+      "Respect reduced motion; preserve 420ms header shape change and existing demo playback.",
       "**Do** keep charts and cards fully drawn by default so print, screenshots, and no-JS show final values.",
       "**Do** theme browser surfaces: selection in Kabut Biru, caret and accent colour in Tinta Arsip, thin scrollbars in Garis Tegas.",
       "**Do** use the SVG icon set (16px grid, 1.6px stroke, currentColor) for arrows, close, check, calendar, and chevrons."
