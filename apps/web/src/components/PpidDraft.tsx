@@ -179,7 +179,8 @@ export function PpidDraft({
               Pilih minimal satu informasi yang diminta.
             </p>
           )}
-          <pre className="letter">
+          {/* Focusable so keyboard users can scroll it when the panel caps its height. */}
+          <pre className="letter" tabIndex={0} role="region" aria-label="Isi surat">
             {teks.split('\n').map((line, li, all) => {
               const isi = line
                 .split(PLACEHOLDER)

@@ -36,6 +36,11 @@ typography:
     fontSize: '2.25rem'
     fontWeight: 800
     lineHeight: 1.22
+  landing-title:
+    fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif'
+    fontSize: '3rem'
+    fontWeight: 800
+    lineHeight: 1.15
   title:
     fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif'
     fontSize: '1.75rem'
@@ -51,6 +56,11 @@ typography:
     fontSize: '1.5rem'
     fontWeight: 700
     lineHeight: 1.2
+  subhead:
+    fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif'
+    fontSize: '1.25rem'
+    fontWeight: 600
+    lineHeight: 1.3
   lead:
     fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif'
     fontSize: '1.125rem'
@@ -171,11 +181,11 @@ A civic reading desk: cream page, white working surfaces, navy actions and a nav
 
 ## Color
 
-Background #f7f4ec, surfaces #ffffff, text #17202a, muted #4f5b66, navy #1f4e79, pale blue #dce8f3, borders #d5cfc0 (hairline) and #6b7480 (inputs, unknown status outline), chart #5b84ab on a #dce8f3 track. Hero text #f4f1e8 and secondary #b9c8d8. Inputs, menus, dialogs and cards are white; notices are pale blue. Measured pairs: navy on pale blue 6.96:1, muted on white 6.95:1, muted on pale blue 5.59:1, white on navy 8.66:1, navy on cream 7.88:1; non-text: unknown outline 4.74:1, bar on track 3.16:1.
+Background #f7f4ec, surfaces #ffffff, shadows and the dialog backdrop from one navy-black (`--shadow-ink`, rgb 19 38 59), text #17202a, muted #4f5b66, navy #1f4e79, pale blue #dce8f3, borders #d5cfc0 (hairline) and #6b7480 (inputs, unknown status outline), chart #5b84ab on a #dce8f3 track. Hero text #f4f1e8 and secondary #b9c8d8. Inputs, menus, dialogs and cards are white; notices are pale blue. Measured pairs: navy on pale blue 6.96:1, muted on white 6.95:1, muted on pale blue 5.59:1, white on navy 8.66:1, navy on cream 7.88:1; non-text: unknown outline 4.74:1, bar on track 3.16:1.
 
 ## Typography
 
-Plus Jakarta Sans, weights 400/600/700/800 (700 only for the wordmark). Body 16px/1.6. Source lines 14px muted. Card titles and region-picker title 28px semibold, line height 1.2 (24px on phones). Section titles 36px extrabold. Page titles and state titles 56px extrabold, line height 1.15 (32px on phones). Figures in cards 24px semibold, tabular numbers.
+Plus Jakarta Sans, weights 400/600/700/800 (700 only for the wordmark). Body 16px/1.6. Source lines 14px muted. Card titles and region-picker title 28px semibold, line height 1.2 (24px on phones). Section titles 36px extrabold. Page titles and state titles 56px extrabold, line height 1.15 (32px on phones). Figures in cards 24px semibold, tabular numbers. A 20px step (`--text-md`) serves the phone wordmark and the demo headings on phones; the landing title is fluid from 36px to 48px. Running text keeps a 36em measure (about 75 characters) (lead, card paragraphs, notices), paragraphs use `text-wrap: pretty`, and headings use `balance`. Font sizes are rem so text scales with the reader's setting; long words break instead of widening the page.
 
 ## Spacing and layout
 
@@ -186,6 +196,7 @@ Plus Jakarta Sans, weights 400/600/700/800 (700 only for the wordmark). Body 16p
 - Icons: one Lucide-style stroke set on a 24px grid (`Icon.tsx`): map pin, file text, file check, circle help/check, info, search, arrow right/up-right, chevrons, folder open, cloud off, hard drive. Decorative; text always carries meaning.
 - Header: navy 32px "J" mark plus 24px bold wordmark; region pill (map pin, name, chevron, warm hairline, pill radius) sits beside the brand; navigation on the right with a 2px navy underline and navy text for the active link.
 - Footer: wordmark, region-scoped quick links (44px targets, navy), correction contact, divider, neutrality note plus the indicative-budget label.
+- Touch targets: 44px. Short text links (wordmark, text actions, money values, region links) keep their look and get an invisible 44px-tall hit area, shortened only where it would overlap a neighbouring target.
 - Buttons: 48px tall, 8px radius, 16px semibold. Primary navy/white; secondary white with 1px navy border; text action navy with arrow. On the navy hero the primary inverts to white/navy.
 - Inputs: white, 1px #6b7480 border, 8px radius, 48px tall, explicit label above.
 - Status pill: icon plus text, 36px tall. Ada: pale blue, solid navy border, file-check icon. Belum diketahui: white, dashed #6b7480 border, help icon.

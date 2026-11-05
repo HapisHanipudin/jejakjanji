@@ -18,6 +18,22 @@ body {
   line-height: var(--leading);
   color: var(--color-text);
   background: var(--color-bg);
+  /* Long words break instead of widening the page when users enlarge text. */
+  overflow-wrap: break-word;
+}
+/* Single-column grids: tracks may shrink below their longest word (text resize up to 200%). */
+.state-panel,
+.program-stages,
+.program-id {
+  grid-template-columns: minmax(0, 1fr);
+}
+.state-panel > * {
+  max-width: 100%;
+}
+
+p,
+li {
+  text-wrap: pretty;
 }
 
 h1,
@@ -138,7 +154,7 @@ td {
   animation: region-enter 180ms ease-out;
 }
 .region-dialog::backdrop {
-  background: rgb(19 38 59 / 45%);
+  background: rgb(var(--shadow-ink) / 45%);
 }
 /* Figma JJ/Region picker 143:51905 (desktop) / 143:51935 (bottom sheet). */
 .region-dialog-body {
@@ -842,7 +858,7 @@ button.trail-card:focus-visible {
     padding-block: var(--space-3);
   }
   .site-header .logo {
-    font-size: 20px;
+    font-size: var(--text-md);
   }
   .site-header .region-entry > .btn {
     padding-inline: var(--space-3);
@@ -854,7 +870,7 @@ button.trail-card:focus-visible {
     width: 100%;
     max-height: 90dvh;
     max-width: 100%;
-    border-radius: 16px 16px 0 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
   .region-dialog-body {
     padding: var(--space-5);
@@ -1005,12 +1021,18 @@ button.trail-card:focus-visible {
   text-wrap: balance;
 }
 .band .lead {
-  max-width: 60rem;
+  max-width: 36em;
   margin: 0;
 }
 .lead {
+  max-width: 36em;
   font-size: var(--text-lg);
   color: var(--color-text-muted);
+}
+/* Reading measure for running text. A multi-paragraph notice narrows as a whole so its tint hugs the text. */
+.box > p,
+.notice:has(> p) {
+  max-width: 36em;
 }
 .section {
   padding-block: var(--space-7);
@@ -1045,7 +1067,7 @@ button.trail-card:focus-visible {
 }
 .hero {
   display: grid;
-  grid-template-columns: 1fr 420px;
+  grid-template-columns: minmax(0, 1fr) 420px;
   gap: var(--space-8);
   align-items: center;
   padding-block: var(--space-8);
@@ -1066,7 +1088,7 @@ button.trail-card:focus-visible {
   gap: 10px;
   margin: 0 0 var(--space-3);
   color: var(--color-heading);
-  font-size: 26px;
+  font-size: var(--text-xl);
   font-weight: var(--font-weight-bold);
   line-height: 34px;
 }
@@ -1180,6 +1202,9 @@ button.trail-card:focus-visible {
   gap: var(--space-3);
   margin-bottom: var(--space-4);
 }
+.box-head > * {
+  min-width: 0;
+}
 .box-head h2 {
   margin: 0;
 }
@@ -1285,7 +1310,7 @@ button.trail-card:focus-visible {
 /* Grids */
 .grid-2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-5);
   align-items: start;
 }
@@ -1296,7 +1321,7 @@ button.trail-card:focus-visible {
 }
 .grid-aside {
   display: grid;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: 400px minmax(0, 1fr);
   gap: var(--space-6);
   align-items: start;
 }
@@ -1309,7 +1334,7 @@ button.trail-card:focus-visible {
 /* Detail page: status card in the right column on desktop, after the indicator on phones. */
 .detail-grid {
   display: grid;
-  grid-template-columns: 1fr 420px;
+  grid-template-columns: minmax(0, 1fr) 420px;
   grid-template-areas:
     'indikator status'
     'pagu status'
@@ -1348,7 +1373,7 @@ button.trail-card:focus-visible {
 }
 .facts {
   display: grid;
-  grid-template-columns: 100px 1fr;
+  grid-template-columns: 100px minmax(0, 1fr);
   gap: var(--space-3) var(--space-4);
   margin: 0 0 var(--space-4);
 }
@@ -1370,6 +1395,22 @@ button.trail-card:focus-visible {
   color: var(--color-heading);
 }
 
+/* Short text targets keep their look but get a 44px-tall hit area (project touch-target rule). */
+.logo,
+.link-strong,
+.money-value,
+.coverage-name a {
+  position: relative;
+}
+.logo::after,
+.link-strong::after,
+.money-value::after,
+.coverage-name a::after {
+  content: '';
+  position: absolute;
+  inset: min(0px, calc((100% - 44px) / 2)) -4px;
+}
+
 /* Money with keyboard-accessible tooltip */
 .money {
   position: relative;
@@ -1381,7 +1422,8 @@ button.trail-card:focus-visible {
   cursor: help;
 }
 .tooltip {
-  visibility: hidden;
+  /* display, not visibility: a hidden tooltip near the right edge must not widen the page. */
+  display: none;
   position: absolute;
   left: 0;
   top: calc(100% + var(--space-1));
@@ -1397,7 +1439,7 @@ button.trail-card:focus-visible {
 }
 .money:hover .tooltip,
 .money:focus-within .tooltip {
-  visibility: visible;
+  display: block;
 }
 
 /* Status pills: dashed vs solid border plus text, never colour alone. */
@@ -1448,9 +1490,8 @@ button.trail-card:focus-visible {
   align-items: center;
   gap: 6px;
   font-size: var(--text-xs);
-  line-height: 18px;
+  line-height: 1.4;
   color: var(--color-text-muted);
-  white-space: nowrap;
 }
 .langkah img {
   display: block;
@@ -1514,6 +1555,9 @@ button.trail-card:focus-visible {
   display: grid;
   gap: var(--space-2);
 }
+.program-id h3 {
+  text-wrap: balance;
+}
 .program-kode {
   color: var(--color-accent);
   font-size: var(--text-sm);
@@ -1534,6 +1578,7 @@ button.trail-card:focus-visible {
 }
 .program-stages li {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
@@ -1865,7 +1910,7 @@ input[type='date'] {
   display: block;
   width: 100%;
   min-width: 0;
-  min-height: 48px;
+  height: 48px;
   text-align: left;
 }
 input[type='date']::-webkit-date-and-time-value {
@@ -1905,8 +1950,8 @@ input[type='date']::-webkit-calendar-picker-indicator {
   right: 4px;
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: var(--radius);
   background: transparent;
@@ -1931,8 +1976,8 @@ input[type='date']::-webkit-calendar-picker-indicator {
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   box-shadow:
-    0 18px 40px -14px rgb(19 38 59 / 30%),
-    0 2px 6px rgb(19 38 59 / 8%);
+    0 18px 40px -14px rgb(var(--shadow-ink) / 30%),
+    0 2px 6px rgb(var(--shadow-ink) / 8%);
 }
 .date-head {
   display: flex;
@@ -2094,8 +2139,8 @@ input[type='date']::-webkit-calendar-picker-indicator {
   border-radius: var(--radius-md);
   background: var(--color-surface);
   box-shadow:
-    0 18px 40px -14px rgb(19 38 59 / 30%),
-    0 2px 6px rgb(19 38 59 / 8%);
+    0 18px 40px -14px rgb(var(--shadow-ink) / 30%),
+    0 2px 6px rgb(var(--shadow-ink) / 8%);
   outline: none;
 }
 .select-option {
@@ -2247,7 +2292,7 @@ fieldset legend + * {
   display: inline-block;
   padding: 4px 10px;
   border: var(--border-width) dashed var(--color-border-strong);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: var(--text-xs);
   color: var(--color-heading);
 }
@@ -2255,7 +2300,7 @@ fieldset legend + * {
 /* Methodology */
 .rule-list > li {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 300px minmax(0, 1fr);
   gap: var(--space-5);
   align-items: center;
   padding-block: 6px;
@@ -2286,6 +2331,8 @@ fieldset legend + * {
 }
 .highlight {
   display: inline-block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   padding: var(--space-2) 14px;
   border-radius: var(--radius);
   background: var(--color-placeholder-bg);
@@ -2336,7 +2383,7 @@ fieldset legend + * {
   .hero,
   .detail-grid,
   .grid-aside {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .detail-grid {
     grid-template-areas: 'indikator' 'status' 'pagu' 'sumber';
@@ -2370,7 +2417,7 @@ fieldset legend + * {
   }
   .landing-grid,
   .other-regions {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .coverage-card {
     padding: var(--space-5);
@@ -2388,7 +2435,7 @@ fieldset legend + * {
     height: 44px;
   }
   .ppid-steps {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-2);
   }
   .ppid-steps li {
@@ -2428,7 +2475,7 @@ fieldset legend + * {
   }
   .grid-2,
   .grid-3 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .box,
   .box-lg,
@@ -2450,11 +2497,11 @@ fieldset legend + * {
     padding: 0 var(--space-4);
   }
   .rule-list > li {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-2);
   }
   .facts {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-1);
   }
   .facts dd {
@@ -2465,6 +2512,7 @@ fieldset legend + * {
   }
   /* Tracker table becomes one card per request; data-label names each cell. */
   .table-cards thead {
+    display: block;
     position: absolute;
     width: 1px;
     height: 1px;
@@ -2560,7 +2608,7 @@ fieldset legend + * {
   border-bottom: 2px solid var(--color-border);
   border-radius: 0;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   text-align: left;
   cursor: pointer;
   transition:
@@ -2582,7 +2630,7 @@ fieldset legend + * {
 }
 .flow-demo-interaction label,
 .flow-request legend {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   font-weight: 600;
 }
 .flow-demo-interaction .select-field {
@@ -2608,7 +2656,7 @@ fieldset legend + * {
 }
 .flow-auto-option {
   padding: var(--space-3);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   border-radius: var(--radius-sm);
   transition: background-color 180ms ease-out;
 }
@@ -2681,7 +2729,7 @@ fieldset legend + * {
   animation: none;
   display: list-item;
   padding: var(--space-1) 0;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 .flow-request-preview ul {
   padding-left: var(--space-5);
@@ -2734,7 +2782,7 @@ fieldset legend + * {
   border-radius: var(--radius);
   padding: 0 var(--space-5) var(--space-5);
   overflow: hidden;
-  box-shadow: 0 8px 24px rgb(19 38 59 / 12%);
+  box-shadow: 0 8px 24px rgb(var(--shadow-ink) / 12%);
 }
 .flow-sheet-title {
   font-weight: 600;
@@ -2758,7 +2806,7 @@ fieldset legend + * {
   flex-shrink: 0;
 }
 .flow-demo-explanation h4 {
-  font-size: 1.625rem;
+  font-size: var(--text-2xl);
   line-height: 1.3;
   margin: 0 0 var(--space-3);
 }
@@ -2794,14 +2842,14 @@ fieldset legend + * {
     grid-column: 1 / -1;
   }
   .flow-demo-scene {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-5);
   }
   .flow-demo-panel {
     padding: var(--space-5);
   }
   .flow-demo-explanation h4 {
-    font-size: 1.25rem;
+    font-size: var(--text-md);
   }
   .flow-demo-explanation {
     grid-row: 1;
@@ -2860,8 +2908,8 @@ fieldset legend + * {
   width: calc(100% - 32px);
   transform: translateY(12px);
   border-color: var(--color-border);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgb(19 38 59 / 12%);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgb(var(--shadow-ink) / 12%);
 }
 .site-header .container {
   max-width: none;
@@ -2945,7 +2993,7 @@ html {
     gap: var(--space-2);
   }
   .site-header .logo {
-    font-size: 1.125rem;
+    font-size: var(--text-lg);
     gap: var(--space-2);
   }
   .site-header .region-trigger {
@@ -2976,8 +3024,8 @@ html {
     padding: var(--space-3);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgb(19 38 59 / 12%);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 24px rgb(var(--shadow-ink) / 12%);
     max-height: calc(100dvh - 120px);
     overflow-y: auto;
   }
@@ -3051,7 +3099,7 @@ html {
   margin-block: var(--space-5);
 }
 .landing-page .flow-demo-explanation h4 {
-  font-size: 1.375rem;
+  font-size: var(--text-xl);
   font-weight: 600;
 }
 .landing-page .flow-demo-explanation p {
@@ -3072,7 +3120,7 @@ html {
   }
   .landing-page .landing-actions {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .landing-page .landing-actions .region-entry {
     display: block;
@@ -3097,7 +3145,7 @@ html {
     padding-inline: var(--space-4);
   }
   .landing-page .flow-demo-explanation h4 {
-    font-size: 1.25rem;
+    font-size: var(--text-md);
   }
 }
 

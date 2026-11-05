@@ -51,6 +51,7 @@
   --text-sm: 0.875rem; /* 14 */
   --text-base: 1rem; /* 16 */
   --text-lg: 1.125rem; /* 18 */
+  --text-md: 1.25rem; /* 20: phone wordmark, demo headings on phones */
   --text-xl: 1.5rem; /* 24: figures in cards, footer wordmark */
   --text-2xl: 1.75rem; /* 28: card and section-card titles */
   --text-3xl: 2.25rem; /* 36: section titles */
@@ -69,6 +70,7 @@
   --radius-lg: 16px; /* cards */
   --radius-pill: 999px;
   --border-width: 1px;
+  --shadow-ink: 19 38 59; /* navy-black RGB for shadows and the dialog backdrop: rgb(var(--shadow-ink) / a) */
   --focus-width: 2px; /* Figma: 2px navy ring with a gap */
 
   /* Layout */
