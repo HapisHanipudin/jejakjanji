@@ -16,6 +16,12 @@ export const metadata: Metadata = { title: 'Daftar program' };
 
 const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
+const STATUS_OPSI = [
+  { value: '', label: 'Semua status' },
+  { value: 'ada', label: 'Ada laporan pelaksanaan' },
+  { value: 'belum_diketahui', label: 'Belum diketahui' },
+];
+
 export default async function ProgramListPage({
   searchParams,
   params,
@@ -84,7 +90,7 @@ export default async function ProgramListPage({
       <div className="section container">
         {/* Plain GET form: works without JavaScript and keeps filters in the shareable URL. */}
         <ProgramFilter action={`/${daerah}/program`} filterKey={filterKey}>
-          <div className="field">
+          <div className="field field-wide">
             <label htmlFor="q">Cari</label>
             <input
               id="q"
@@ -110,19 +116,23 @@ export default async function ProgramListPage({
               ]}
             />
           </div>
-          <div className="field">
-            <label htmlFor="status">Status bukti</label>
-            <ThemedSelect
-              id="status"
-              name="status"
-              defaultValue={filter.status ?? ''}
-              options={[
-                { value: '', label: 'Semua status' },
-                { value: 'ada', label: 'Ada laporan pelaksanaan' },
-                { value: 'belum_diketahui', label: 'Belum diketahui' },
-              ]}
-            />
-          </div>
+          {/* Radio inputs styled as chips: same GET field as before, works without JavaScript. */}
+          <fieldset className="field choice-field">
+            <legend>Status bukti</legend>
+            <div className="choice-row">
+              {STATUS_OPSI.map((o) => (
+                <label key={o.value} className="choice-chip">
+                  <input
+                    type="radio"
+                    name="status"
+                    value={o.value}
+                    defaultChecked={(filter.status ?? '') === o.value}
+                  />
+                  <span>{o.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
         </ProgramFilter>
 
         {aktif.length > 0 && (
@@ -193,6 +203,7 @@ export default async function ProgramListPage({
                         index={i}
                         program={p}
                         regionSlug={daerah}
+                        paguLabel={filtered.data.label}
                         bidangNama={bidangNama.get(p.bidangKode)}
                         doc={docs.find((d) => d.id === p.paguPerTahun[0]?.sourceDocumentId)}
                       />

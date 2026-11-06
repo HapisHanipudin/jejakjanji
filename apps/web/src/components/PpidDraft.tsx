@@ -65,7 +65,7 @@ export function PpidDraft({
   const pelacakHref = `/${region.slug}/pelacak?program=${encodeURIComponent(program.kode)}`;
 
   return (
-    <>
+    <div className="ppid-layout">
       <ol className="ppid-steps" aria-label="Langkah sebelum mengirim permohonan">
         <li>
           <span>Pilih informasi yang diminta.</span>
@@ -96,7 +96,7 @@ export function PpidDraft({
         </li>
       </ol>
       <div className="grid-aside">
-        <div className="stack">
+        <div className="ppid-side">
           <fieldset>
             <legend>Informasi yang diminta</legend>
             {tahap && (
@@ -121,10 +121,8 @@ export function PpidDraft({
               </label>
             ))}
           </fieldset>
-          <section className="box" aria-labelledby="ringkasan-title">
-            <h2 id="ringkasan-title" style={{ fontSize: 'var(--text-lg)' }}>
-              Data program
-            </h2>
+          <section className="box ppid-context" aria-labelledby="ringkasan-title">
+            <h2 id="ringkasan-title">Data program</h2>
             <dl className="facts-stack">
               <dt>Daerah</dt>
               <dd>{region.nama}</dd>
@@ -144,83 +142,89 @@ export function PpidDraft({
           </section>
         </div>
 
-        <section className="box box-lg" aria-labelledby="pratinjau-title">
-          <div className="box-head">
-            <h2 id="pratinjau-title">Pratinjau draf</h2>
-            <span className="legend-chip">[ ] harus diisi pemohon</span>
+        <div className="ppid-main">
+          <section className="box box-lg ppid-letter" aria-labelledby="pratinjau-title">
+            <div className="box-head">
+              <h2 id="pratinjau-title">Pratinjau draf</h2>
+              <span className="legend-chip">[ ] harus diisi pemohon</span>
+            </div>
+            {!adaPilihan && (
+              <p className="notice" role="status">
+                Pilih minimal satu informasi yang diminta.
+              </p>
+            )}
+            <pre className="letter">
+              {teks.split('\n').map((line, li, all) => {
+                const isi = line
+                  .split(PLACEHOLDER)
+                  .map((part, n) => (PLACEHOLDER.test(part) ? <mark key={n}>{part}</mark> : part));
+                const baru = sorot && /^\d+\. /.test(line) && line.endsWith(sorot.teks);
+                return (
+                  <Fragment key={li}>
+                    {baru ? (
+                      <span className="letter-new" key={`baru-${sorot.n}`}>
+                        {isi}
+                      </span>
+                    ) : (
+                      isi
+                    )}
+                    {li < all.length - 1 && '\n'}
+                  </Fragment>
+                );
+              })}
+            </pre>
+          </section>
+          <div className="ppid-actions">
+            <div className="btn-row">
+              <button
+                type="button"
+                className="btn btn-primary btn-copy"
+                data-done={tersalin}
+                onClick={salin}
+                disabled={!adaPilihan}
+              >
+                {tersalin ? (
+                  <>
+                    <Icon name="check" /> Tersalin
+                  </>
+                ) : (
+                  'Salin teks'
+                )}
+              </button>
+              <button
+                type="button"
+                className="btn"
+                disabled={!adaPilihan}
+                onClick={() =>
+                  unduh(`draf-ppid-${region.slug}-${program.kode}.txt`, teks, 'text/plain')
+                }
+              >
+                Unduh sebagai dokumen (.txt)
+              </button>
+            </div>
+            <p role="status" className="small">
+              {pesan}
+            </p>
           </div>
-          {!adaPilihan && (
-            <p className="notice" role="status">
-              Pilih minimal satu informasi yang diminta.
-            </p>
-          )}
-          <pre className="letter">
-            {teks.split('\n').map((line, li, all) => {
-              const isi = line
-                .split(PLACEHOLDER)
-                .map((part, n) => (PLACEHOLDER.test(part) ? <mark key={n}>{part}</mark> : part));
-              const baru = sorot && /^\d+\. /.test(line) && line.endsWith(sorot.teks);
-              return (
-                <Fragment key={li}>
-                  {baru ? (
-                    <span className="letter-new" key={`baru-${sorot.n}`}>
-                      {isi}
-                    </span>
-                  ) : (
-                    isi
-                  )}
-                  {li < all.length - 1 && '\n'}
-                </Fragment>
-              );
-            })}
-          </pre>
-          <div className="btn-row" style={{ marginTop: 'var(--space-5)' }}>
-            <button
-              type="button"
-              className="btn btn-primary btn-copy"
-              data-done={tersalin}
-              onClick={salin}
-              disabled={!adaPilihan}
-            >
-              {tersalin ? (
-                <>
-                  <Icon name="check" /> Tersalin
-                </>
-              ) : (
-                'Salin teks'
-              )}
-            </button>
-            <button
-              type="button"
-              className="btn"
-              disabled={!adaPilihan}
-              onClick={() =>
-                unduh(`draf-ppid-${region.slug}-${program.kode}.txt`, teks, 'text/plain')
-              }
-            >
-              Unduh sebagai dokumen (.txt)
-            </button>
+          <div className="box ppid-channel">
+            {region.ppidUrl ? (
+              <p>
+                <a href={region.ppidUrl} rel="noreferrer" target="_blank">
+                  Buka kanal PPID {region.nama}
+                </a>
+              </p>
+            ) : (
+              <p className="small muted">
+                Tautan kanal PPID {region.nama} belum diverifikasi. Cari kanal resmi sebelum
+                mengirim; situs ini tidak mengirim permohonan.
+              </p>
+            )}
+            <Link className="link-strong" href={pelacakHref}>
+              Lanjut ke Pelacak Permohonan <Icon name="arrow" />
+            </Link>
           </div>
-          <p role="status" className="small" style={{ marginTop: 'var(--space-3)' }}>
-            {pesan}
-          </p>
-          {region.ppidUrl ? (
-            <p>
-              <a href={region.ppidUrl} rel="noreferrer" target="_blank">
-                Buka kanal PPID {region.nama}
-              </a>
-            </p>
-          ) : (
-            <p className="small muted">
-              Tautan kanal PPID {region.nama} belum diverifikasi. Cari kanal resmi sebelum mengirim;
-              situs ini tidak mengirim permohonan.
-            </p>
-          )}
-          <Link className="link-strong" href={pelacakHref}>
-            Lanjut ke Pelacak Permohonan <Icon name="arrow" />
-          </Link>
-        </section>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

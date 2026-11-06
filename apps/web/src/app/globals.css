@@ -27,9 +27,9 @@ h3 {
   color: var(--color-heading);
 }
 h1 {
-  font-size: var(--text-3xl);
+  font-size: var(--text-h1);
   font-weight: var(--font-weight-extrabold);
-  line-height: 1.22;
+  line-height: 1.2;
 }
 h2 {
   font-size: var(--text-2xl);
@@ -68,25 +68,27 @@ html {
   background: var(--color-accent-soft);
   color: var(--color-heading);
 }
-.site-footer ::selection {
-  background: var(--color-footer-muted);
-  color: var(--color-footer);
-}
 .table-wrap,
 .region-dialog {
   scrollbar-width: thin;
 }
 .money-value,
-.figures dd,
 .bar-value,
 .program-pagu,
-.total-row,
 .coverage-number,
 td {
   font-variant-numeric: tabular-nums;
 }
 .icon {
   flex: none;
+}
+/* Figma SVG icons (public/ikon/figma) drawn as a mask so they take currentColor: the files stay
+   untouched and the colour comes from the surrounding text colour or a token. */
+.icon-mask {
+  display: inline-block;
+  background-color: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
 }
 
 .container {
@@ -118,19 +120,55 @@ td {
   margin-block: var(--space-5);
 }
 .site-header .region-entry {
-  margin-left: auto;
+  flex: none;
 }
-.site-header .region-entry > .btn {
-  font-size: var(--text-sm);
+/* Header region button: pin, name, chevron (Figma "Pemilih daerah"). */
+.region-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-link);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.4;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+.region-pill:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+.icon-btn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-link);
+  cursor: pointer;
+}
+.icon-btn:hover {
+  background: var(--color-accent-soft);
 }
 .region-dialog {
   padding: 0;
-  width: min(35rem, calc(100% - 2rem));
+  width: min(40rem, calc(100% - 2rem));
   max-height: calc(100dvh - 2rem);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-bg);
+  background: var(--color-card);
   color: var(--color-text);
 }
 .region-dialog[open] {
@@ -149,25 +187,60 @@ td {
   width: 100%;
 }
 .region-dialog-body .box-head {
-  align-items: start;
+  align-items: center;
   gap: var(--space-4);
 }
-.region-options {
-  margin-block: var(--space-5);
+.region-dialog-body h2 {
+  font-size: var(--text-xl);
+  line-height: 1.2;
+}
+.region-dialog-body .region-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-block: var(--space-4) var(--space-5);
+}
+.region-options li {
+  margin: 0;
 }
 .region-option {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  min-height: 64px;
-  padding: var(--space-3);
-  border-bottom: var(--border-width) solid var(--color-border);
+  gap: var(--space-4);
+  min-height: 80px;
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+  color: var(--color-text);
   text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
 }
 .region-option:hover {
-  background: var(--color-surface);
+  border-color: var(--color-accent);
+}
+.region-option-current {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+.region-option .icon {
+  color: var(--color-link);
+}
+.region-option-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.region-option-text > strong {
+  color: var(--color-heading);
+  font-weight: var(--font-weight-bold);
+}
+.region-option-text > span {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
 }
 .landing-hero h1 {
   max-width: 65rem;
@@ -844,16 +917,6 @@ button.trail-card:focus-visible {
   }
 }
 @media (max-width: 640px) {
-  .site-header .container {
-    gap: var(--space-3);
-    padding-block: var(--space-3);
-  }
-  .site-header .logo {
-    font-size: 20px;
-  }
-  .site-header .region-entry > .btn {
-    padding-inline: var(--space-3);
-  }
   .region-dialog {
     position: fixed;
     inset: auto 0 0;
@@ -861,7 +924,7 @@ button.trail-card:focus-visible {
     width: 100%;
     max-height: 90dvh;
     max-width: 100%;
-    border-radius: 16px 16px 0 0;
+    border-radius: 24px 24px 0 0;
   }
   .region-dialog-body {
     padding: var(--space-5);
@@ -908,30 +971,32 @@ button.trail-card:focus-visible {
 }
 .site-header .container {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2) var(--space-6);
-  min-height: 72px;
+  gap: var(--space-6);
+  min-height: 96px;
+}
+.site-header .nav {
+  margin-left: auto;
 }
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-2);
   color: var(--color-heading);
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   font-weight: var(--font-weight-bold);
+  line-height: 1.2;
   text-decoration: none;
 }
 .logo-mark {
   display: inline-grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--radius);
-  background: var(--color-link);
+  background: var(--color-accent);
   color: var(--color-accent-text);
-  font-size: 15px;
+  font-size: 18px;
 }
 .nav ul {
   display: flex;
@@ -941,8 +1006,10 @@ button.trail-card:focus-visible {
   padding: 0;
 }
 .nav a {
-  display: block;
-  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--space-2) 0;
   color: var(--color-text-muted);
   text-decoration: none;
   border-bottom: 2px solid transparent;
@@ -951,34 +1018,72 @@ button.trail-card:focus-visible {
   color: var(--color-heading);
 }
 .nav a[aria-current='page'] {
-  color: var(--color-heading);
+  color: var(--color-accent);
   font-weight: var(--font-weight-bold);
   border-bottom-color: var(--color-accent);
 }
 
-/* Footer */
+/* Footer: light, closing the page on the same paper (Figma JJ/Footer). */
 .site-footer {
-  background: var(--color-footer);
-  color: var(--color-footer-muted);
+  background: var(--color-bg);
+  border-top: var(--border-width) solid var(--color-border);
+  color: var(--color-text);
   padding-block: var(--space-7);
-  font-size: var(--text-sm);
 }
-.site-footer .footer-brand {
-  color: var(--color-footer-text);
-  font-size: var(--text-xl);
-  font-weight: var(--font-weight-bold);
+.site-footer .container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
 }
 .site-footer p {
-  margin-bottom: var(--space-3);
+  margin: 0;
 }
-.site-footer a {
-  color: var(--color-footer-text);
+.site-footer .footer-brand {
+  color: var(--color-heading);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-extrabold);
+  line-height: 1.6;
+}
+.footer-links ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.footer-links a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+}
+.footer-links a:hover {
+  text-decoration: underline;
+}
+.footer-rule {
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: var(--color-border);
+}
+.site-footer .footer-note {
+  color: var(--color-text-muted);
 }
 
 /* Page bands: full-width backgrounds, content kept in .container. */
 .band {
   background: var(--color-band);
   padding-block: var(--space-7);
+}
+/* Page titles sit on the page paper, no pale band (Figma). Heroes keep theirs until their stage. */
+.band:not(.band-hero) {
+  background: transparent;
+  padding-block: var(--space-8) 0;
+}
+.band:not(.band-hero) + .section {
+  padding-top: var(--space-6);
 }
 .band h1 {
   margin-bottom: var(--space-2);
@@ -993,12 +1098,6 @@ button.trail-card:focus-visible {
 }
 .section {
   padding-block: var(--space-7);
-}
-.section-lg {
-  padding-block: var(--space-9);
-}
-.section-alt {
-  background: var(--color-surface);
 }
 .section-title {
   font-size: var(--text-3xl);
@@ -1071,15 +1170,16 @@ button.trail-card:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 13px 22px;
-  border: 1.5px solid var(--color-accent);
+  min-height: 48px;
+  padding: 12px 24px;
+  border: var(--border-width) solid var(--color-accent);
   border-radius: var(--radius);
-  background: transparent;
+  background: var(--color-card);
   color: var(--color-link);
   font: inherit;
-  font-size: 15px;
+  font-size: var(--text-base);
   font-weight: var(--font-weight-bold);
-  line-height: 20px;
+  line-height: 24px;
   text-decoration: none;
   cursor: pointer;
 }
@@ -1125,19 +1225,16 @@ button.trail-card:focus-visible {
 
 /* Cards and boxes */
 .box {
-  background: var(--color-bg);
+  background: var(--color-card);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 28px;
+  padding: var(--space-5);
 }
 .box > :last-child {
   margin-bottom: 0;
 }
 .box-lg {
   padding: 32px 36px;
-}
-.box-strong {
-  border: 2px solid var(--color-accent);
 }
 .box h2 {
   margin-bottom: var(--space-4);
@@ -1155,10 +1252,10 @@ button.trail-card:focus-visible {
 }
 .notice {
   margin-bottom: var(--space-4);
-  border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-surface);
-  color: var(--color-text-muted);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  background: var(--color-accent-soft);
+  color: var(--color-text);
 }
 .notice > :last-child {
   margin-bottom: 0;
@@ -1181,11 +1278,6 @@ button.trail-card:focus-visible {
   font-size: var(--text-xs);
   color: var(--color-text-muted);
   margin: var(--space-2) 0 0;
-}
-.rule {
-  border: 0;
-  border-top: var(--border-width) solid var(--color-border);
-  margin: var(--space-2) 0;
 }
 
 /* Grids */
@@ -1212,46 +1304,6 @@ button.trail-card:focus-visible {
   padding: 0;
 }
 
-/* Detail page: status card in the right column on desktop, after the indicator on phones. */
-.detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  grid-template-areas:
-    'indikator status'
-    'pagu status'
-    'sumber status';
-  gap: var(--space-5) var(--space-6);
-  align-items: start;
-}
-.area-indikator {
-  grid-area: indikator;
-}
-.area-status {
-  grid-area: status;
-}
-.area-pagu {
-  grid-area: pagu;
-}
-.area-sumber {
-  grid-area: sumber;
-}
-.figures {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-7);
-  margin: 0 0 var(--space-3);
-}
-.figures dt {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-}
-.figures dd {
-  margin: 0;
-  color: var(--color-link);
-  font-size: var(--text-3xl);
-  font-weight: var(--font-weight-extrabold);
-  line-height: 44px;
-}
 .facts {
   display: grid;
   grid-template-columns: 100px 1fr;
@@ -1310,17 +1362,18 @@ button.trail-card:focus-visible {
 .badge {
   display: inline-block;
   padding: 4px 12px;
-  border: 1.25px solid var(--color-accent);
+  border: var(--border-width) solid var(--color-accent);
   border-radius: var(--radius-pill);
   background: var(--color-accent-soft);
   color: var(--color-link);
   font-size: var(--text-xs);
   line-height: 18px;
 }
+/* "Belum diketahui" keeps its dashed outline (DESIGN.md); Figma draws it solid, intentionally not followed. */
 .badge-unknown {
   border-style: dashed;
   border-color: var(--color-border-strong);
-  background: transparent;
+  background: var(--color-card);
   color: var(--color-text-muted);
 }
 
@@ -1360,19 +1413,6 @@ button.trail-card:focus-visible {
 .langkah-ada {
   color: var(--color-text);
   font-weight: var(--font-weight-bold);
-}
-
-/* Status card */
-.status-items > li + li {
-  margin-top: var(--space-5);
-}
-.status-items h3 {
-  margin-bottom: var(--space-2);
-}
-.status-items p {
-  margin: var(--space-2) 0 0;
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
 }
 
 /* Program rows (desktop table-like list, cards on phones). */
@@ -1500,7 +1540,7 @@ button.trail-card:focus-visible {
 }
 .bar-track {
   display: block;
-  background: var(--color-surface);
+  background: var(--color-accent-soft);
   height: var(--bar-height);
   border-radius: var(--radius);
   overflow: hidden;
@@ -1536,17 +1576,6 @@ button.trail-card:focus-visible {
 }
 .bars-compact .bar-track {
   height: 22px;
-}
-.total-row {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-4);
-  margin: 0 0 var(--space-3);
-  color: var(--color-heading);
-  font-weight: var(--font-weight-bold);
-}
-.total-row .total-value {
-  font-size: var(--text-lg);
 }
 
 /* Tables */
@@ -1614,14 +1643,15 @@ select,
   padding: 11px 14px;
   border: var(--border-width) solid var(--color-border-strong);
   border-radius: var(--radius);
-  background: var(--color-bg);
+  background: var(--color-card);
   color: var(--color-heading);
 }
 select,
 .select-button {
   appearance: none;
   padding-right: 40px;
-  background: var(--color-bg) url('/ikon/chevron-down.svg') no-repeat right 14px center / 16px 16px;
+  background: var(--color-card) url('/ikon/figma/chevron-down.svg') no-repeat right 14px center /
+    16px 16px;
 }
 select.select-sm,
 .select-button-sm {
@@ -1660,8 +1690,8 @@ input:-webkit-autofill {
   box-shadow: 0 0 0 40px var(--color-accent-soft) inset;
 }
 input[type='search'] {
-  padding-left: 40px;
-  background: var(--color-bg) url('/ikon/search.svg') no-repeat 14px center / 16px 16px;
+  padding-left: 44px;
+  background: var(--color-card) url('/ikon/figma/search.svg') no-repeat 14px center / 20px 20px;
 }
 input[type='search']::-webkit-search-cancel-button {
   appearance: none;
@@ -1695,7 +1725,7 @@ input[type='date']::-webkit-date-and-time-value {
 input[type='date']::-webkit-calendar-picker-indicator {
   width: 16px;
   height: 16px;
-  background: url('/ikon/calendar.svg') no-repeat center / 16px 16px;
+  background: url('/ikon/figma/calendar.svg') no-repeat center / 20px 20px;
   cursor: pointer;
 }
 
@@ -1717,7 +1747,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
   right: 2px;
   width: 44px;
   height: calc(100% - 4px);
-  background: var(--color-bg);
+  background: var(--color-card);
 }
 .date-trigger {
   position: absolute;
@@ -1995,22 +2025,21 @@ fieldset legend + .notice {
   flex: none;
   display: grid;
   place-content: center;
-  width: 20px;
-  height: 20px;
-  margin: 2px 0 0;
+  width: 24px;
+  height: 24px;
+  margin: 0;
   padding: 0;
-  border: 1.5px solid var(--color-border-strong);
-  border-radius: var(--radius);
-  background: var(--color-bg);
+  border: 1.5px solid var(--color-accent);
+  border-radius: var(--radius-xs);
+  background: var(--color-card);
   cursor: pointer;
 }
 .check input::after {
   content: '';
-  width: 13px;
-  height: 13px;
+  width: 18px;
+  height: 18px;
   background: var(--color-accent-text);
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E")
-    center / contain no-repeat;
+  mask: url('/ikon/figma/check.svg') center / contain no-repeat;
   transform: scale(0);
   transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -2138,12 +2167,8 @@ fieldset legend + .notice {
 /* Tablet */
 @media (max-width: 1024px) {
   .hero,
-  .detail-grid,
   .grid-aside {
     grid-template-columns: 1fr;
-  }
-  .detail-grid {
-    grid-template-areas: 'indikator' 'status' 'pagu' 'sumber';
   }
   .program-head {
     display: none;
@@ -2172,10 +2197,28 @@ fieldset legend + .notice {
 @media (max-width: 760px) {
   :root {
     --text-3xl: 1.75rem;
+    --text-h1: 2rem;
     --text-4xl: 2rem;
   }
   .site-header .container {
-    padding-block: var(--space-3) 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: 0;
+    padding-block: var(--space-4);
+  }
+  .site-header .logo {
+    font-size: 20px;
+  }
+  .site-header .nav {
+    flex: 1 1 100%;
+    margin-left: 0;
+  }
+  .band:not(.band-hero) {
+    padding-top: var(--space-10);
+  }
+  .footer-links ul {
+    column-gap: var(--space-4);
   }
   .nav {
     width: 100%;
@@ -2235,9 +2278,6 @@ fieldset legend + .notice {
   .band,
   .section {
     padding-block: var(--space-6);
-  }
-  .section-lg {
-    padding-block: var(--space-7);
   }
   .hero {
     padding-block: var(--space-6);
@@ -2646,5 +2686,1218 @@ fieldset legend + .notice {
     inset: auto var(--space-4) var(--space-4);
     width: auto;
     max-width: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Beranda (Figma "Redesign" > Beranda). Everything here hangs on classes only the region home
+   uses (band-navy, section-home, section-soft, alokasi-card, bars-stacked, hero-card), so no other
+   page changes. Kept at the end so it wins over the generic rules above.
+   --------------------------------------------------------------------------------------------- */
+.section-home {
+  padding-block: var(--space-8);
+}
+.section-soft {
+  background: var(--color-accent-soft);
+}
+.pagu-plain {
+  display: block;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+
+/* Navy home hero */
+.band-navy {
+  background: var(--color-accent);
+  color: var(--color-hero-text);
+  padding-block: 0;
+}
+.band-navy .hero {
+  grid-template-columns: minmax(0, 1fr) 304px;
+  gap: var(--space-8);
+  padding-block: var(--space-11);
+}
+.band-navy h1 {
+  color: var(--color-hero-text);
+}
+.band-navy .hero .lead,
+.band-navy .muted {
+  color: var(--color-hero-muted);
+}
+.band-navy :focus-visible {
+  outline-color: var(--color-hero-text);
+}
+.band-navy .hero-search label {
+  margin-bottom: var(--space-4);
+  color: var(--color-hero-text);
+  font-size: var(--text-base);
+}
+.band-navy .hero-search-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  max-width: none;
+}
+.band-navy .hero-search-row input {
+  flex: none;
+  width: 100%;
+  min-height: 56px;
+  padding-block: 15px;
+  border-color: transparent;
+}
+.band-navy .btn-primary {
+  border-color: var(--color-card);
+  background: var(--color-card);
+  color: var(--color-accent);
+}
+.band-navy .link-strong {
+  color: var(--color-hero-text);
+}
+.hero-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: var(--border-width) solid var(--color-hero-muted);
+  border-radius: var(--radius-lg);
+  color: var(--color-hero-muted);
+}
+.hero-card p {
+  margin: 0;
+  color: var(--color-hero-muted);
+}
+.hero-card-icon {
+  display: block;
+  color: var(--color-hero-text);
+  line-height: 0;
+}
+.hero-card .coverage-number,
+.hero-card .coverage-number strong {
+  color: var(--color-hero-text);
+}
+.hero-card .coverage-number {
+  margin: 0;
+}
+.hero-card .coverage-meter {
+  max-width: none;
+  margin: 0;
+  background: color-mix(in srgb, var(--color-hero-muted) 30%, transparent);
+}
+.hero-card .coverage-meter > span {
+  background: var(--color-hero-text);
+}
+
+/* Budget allocation: stacked rows (label, value, bar, pagu label, own source) */
+.alokasi-intro {
+  margin: var(--space-4) 0 0;
+}
+.alokasi-card {
+  margin-top: var(--space-6);
+  padding: var(--space-6);
+}
+.bars-stacked {
+  gap: 0;
+}
+.bars-stacked .bar-row {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'label' 'value' 'track' 'note';
+  gap: var(--space-3);
+  align-items: start;
+  padding-block: var(--space-5);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+.bars-stacked .bar-row::before {
+  inset: 0 calc(-1 * var(--space-4));
+}
+.bars-stacked .bar-label {
+  grid-area: label;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.bars-stacked .bar-label::after {
+  content: '';
+  flex: none;
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  -webkit-mask: url('/ikon/figma/arrow-up-right.svg') center / contain no-repeat;
+  mask: url('/ikon/figma/arrow-up-right.svg') center / contain no-repeat;
+}
+.bars-stacked .bar-label a {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.bars-stacked .bar-hint {
+  flex: none;
+  width: auto;
+  text-align: right;
+}
+.bars-stacked .bar-value {
+  grid-area: value;
+  font-size: var(--text-2xl);
+  line-height: 1.6;
+}
+.bars-stacked .bar-track {
+  grid-area: track;
+  height: 12px;
+  border-radius: 6px;
+}
+.bars-stacked .bar-fill {
+  border-radius: 6px;
+}
+.bars-stacked .bar-note {
+  grid-area: note;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.source-line {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+}
+.source-line .icon-mask {
+  margin-top: 3px;
+  color: var(--color-text-muted);
+}
+.source-line > span:last-child {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Stage cards on the soft band */
+.trail-card .card-title {
+  font-weight: var(--font-weight-bold);
+}
+.trail-card-icon {
+  display: block;
+  margin-bottom: var(--space-4);
+  color: var(--color-link);
+  line-height: 0;
+}
+.section-soft button.trail-card[aria-selected='true'] {
+  box-shadow:
+    inset 0 0 0 1px var(--color-accent),
+    0 0 0 4px color-mix(in srgb, var(--color-accent) 22%, transparent);
+}
+
+@media (max-width: 1024px) {
+  .band-navy .hero {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 760px) {
+  .section-home {
+    padding-block: var(--space-10);
+  }
+  .band-navy .hero {
+    gap: var(--space-6);
+    padding-block: var(--space-7);
+  }
+  .alokasi-card {
+    padding: var(--space-4);
+  }
+  .bars-stacked .bar-label a {
+    display: block;
+  }
+  .bars-stacked .bar-hint {
+    width: 100%;
+    text-align: left;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Landing `/` (no Figma frame of its own): Beranda's navy hero language on the landing hero.
+   Scoped to .landing-hero so Beranda and the other pages are untouched.
+   --------------------------------------------------------------------------------------------- */
+.band-hero.landing-hero.band-navy {
+  padding-block: var(--space-11);
+}
+.landing-hero.band-navy h1 {
+  max-width: 65rem;
+  color: var(--color-hero-text);
+}
+.landing-hero.band-navy .lead {
+  color: var(--color-hero-muted);
+}
+.landing-hero.band-navy .btn:not(.btn-primary) {
+  border-color: var(--color-hero-muted);
+  background: transparent;
+  color: var(--color-hero-text);
+}
+.landing-hero.band-navy .btn:not(.btn-primary):hover {
+  border-color: var(--color-hero-text);
+}
+.landing-hero.band-navy .coverage-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-color: var(--color-hero-muted);
+  background: transparent;
+  color: var(--color-hero-muted);
+}
+.landing-hero.band-navy .coverage-card > * {
+  margin: 0;
+}
+.landing-hero.band-navy .coverage-card h2,
+.landing-hero.band-navy .coverage-name {
+  color: var(--color-hero-text);
+}
+.landing-hero.band-navy .coverage-card .coverage-name {
+  font-size: var(--text-xl);
+}
+.landing-hero.band-navy .coverage-card p:not(.coverage-name) {
+  color: var(--color-hero-muted);
+}
+.landing-hero.band-navy .coverage-entry .btn {
+  margin-block: var(--space-4) 0;
+}
+.landing-hero.band-navy .coverage-card .coverage-entry + .coverage-entry {
+  margin-top: var(--space-5);
+}
+@media (max-width: 760px) {
+  .band-hero.landing-hero.band-navy {
+    padding-block: var(--space-7);
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Program list (Figma "Redesign" > Daftar program). Hangs on classes only this page uses
+   (program-filter, choice-*, program-row/list/main/money), at the end so it wins.
+   --------------------------------------------------------------------------------------------- */
+.program-filter {
+  gap: var(--space-5);
+  align-items: flex-start;
+}
+.program-filter .field-wide {
+  flex: 1 1 100%;
+}
+.program-filter .field:not(.field-wide, .choice-field) {
+  flex: 0 1 24rem;
+}
+.program-filter > .btn {
+  align-self: flex-end;
+}
+.program-filter fieldset.choice-field {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.program-filter legend {
+  float: none;
+  width: auto;
+  margin-bottom: 6px;
+  padding: 0;
+  color: var(--color-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+}
+.choice-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+/* Chips are real radio inputs: arrow keys, form value and no-JS submit all stay native. */
+.choice-chip {
+  position: relative;
+  display: inline-flex;
+}
+.choice-chip input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  appearance: none;
+  cursor: pointer;
+}
+.choice-chip span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-card);
+  color: var(--color-link);
+  font-size: var(--text-sm);
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+.choice-chip:hover span {
+  border-color: var(--color-accent);
+}
+/* Selected = tint, border, weight AND a check mark, so it never relies on colour alone. */
+.choice-chip input:checked + span {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  font-weight: var(--font-weight-bold);
+}
+.choice-chip input:checked + span::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  background: currentColor;
+  -webkit-mask: url('/ikon/figma/check.svg') center / contain no-repeat;
+  mask: url('/ikon/figma/check.svg') center / contain no-repeat;
+}
+.choice-chip input:focus-visible + span {
+  outline: var(--focus-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.list-meta {
+  font-size: var(--text-sm);
+}
+.list-meta p[aria-live] {
+  color: var(--color-heading);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-bold);
+}
+.program-head {
+  display: none;
+}
+.program-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+  border-top: 0;
+}
+.program-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+  transition: border-color 160ms ease;
+}
+.program-row:hover {
+  border-color: var(--color-accent);
+  background: var(--color-card);
+}
+.program-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.program-row .program-code {
+  order: -1;
+  color: var(--color-link);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.6;
+}
+.program-row h3 {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+.program-row .program-bidang {
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+.program-row .program-ref {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.program-money {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: var(--border-width) solid var(--color-border);
+}
+.program-row .program-pagu {
+  color: var(--color-heading);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.6;
+  text-align: left;
+}
+.program-row .card-link {
+  color: var(--color-heading);
+}
+.program-pagu .label-mobile {
+  display: inline;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-normal);
+}
+.program-row .pagu-plain {
+  line-height: 1.6;
+}
+.program-row .row-go {
+  top: var(--space-5);
+  right: var(--space-5);
+  translate: -6px 0;
+}
+.program-row:hover .row-go,
+.program-row:focus-within .row-go {
+  translate: 0 0;
+}
+@media (max-width: 760px) {
+  .program-list {
+    grid-template-columns: 1fr;
+  }
+  .program-filter fieldset.choice-field,
+  .program-filter .field:not(.field-wide, .choice-field) {
+    flex: 1 1 100%;
+  }
+  .program-filter > .btn {
+    align-self: stretch;
+  }
+}
+
+/* =====================================================================================
+   Program Detail (Figma 143:47434 desktop / 143:47601 mobile). Kept at the end of the file so
+   it wins over the shared .box, .facts and .badge rules above.
+   ===================================================================================== */
+.detail-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+.detail-meta .source-line {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.detail-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+}
+.detail-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-card);
+  color: var(--color-link);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.detail-chip-kode {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  font-weight: var(--font-weight-bold);
+}
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 400px;
+  gap: var(--space-6);
+  align-items: start;
+}
+.detail-main,
+.detail-aside {
+  display: grid;
+  min-width: 0;
+}
+.detail-main {
+  gap: var(--space-6);
+}
+.detail-aside {
+  gap: var(--space-5);
+}
+/* Evidence panel: sticks at the top while reading the figures, but only when StickyAside finds that
+   it fits in the window (data-sticky='true'). A taller panel, or no JavaScript, keeps normal flow. */
+@media (min-width: 1025px) {
+  .detail-aside[data-sticky='true'] {
+    position: sticky;
+    top: var(--space-5);
+  }
+}
+
+.detail-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+}
+.detail-card > *,
+.detail-card > h2 {
+  margin: 0;
+}
+.detail-card > .btn {
+  align-self: flex-start;
+}
+.detail-card .box-head {
+  gap: var(--space-2) var(--space-3);
+}
+.detail-card .facts {
+  margin: 0;
+}
+.detail-indikator {
+  color: var(--color-heading);
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+.detail-figures {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+}
+.detail-figures > div + div {
+  padding-top: var(--space-4);
+  border-top: var(--border-width) solid var(--color-border);
+}
+.detail-figures dt {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.detail-figures dd {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+}
+.detail-figure-value {
+  color: var(--color-heading);
+  font-size: 2.25rem;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.detail-figures .source-line {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+/* Pagu table: header bar, one row per year (value, label, source), total row. */
+.pagu-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.pagu-table th,
+.pagu-table td {
+  padding: 0;
+  border: 0;
+  color: var(--color-heading);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.6;
+  text-align: left;
+}
+.pagu-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.pagu-table thead th,
+.pagu-table tfoot th,
+.pagu-table tfoot td {
+  padding-block: var(--space-4);
+  background: var(--color-accent-soft);
+}
+.pagu-table tbody {
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+.pagu-table tbody tr:first-child > * {
+  padding-top: var(--space-5);
+}
+.pagu-table .pagu-note td {
+  padding: var(--space-3) 0 var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-normal);
+}
+.pagu-table .pagu-note .pagu-plain {
+  margin-bottom: var(--space-2);
+}
+.pagu-table .pagu-note .source-line {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+/* The value sits at the right edge, so its tooltip opens leftwards instead of past the card. */
+.pagu-table .money .tooltip {
+  right: 0;
+  left: auto;
+  text-align: left;
+}
+.pagu-table + .source {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Evidence panel */
+.evidence-panel {
+  border-color: var(--color-accent);
+}
+.evidence-panel h2 {
+  font-size: var(--text-xl);
+  line-height: 1.2;
+}
+.evidence-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.evidence-step {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) 0 var(--space-3) var(--space-5);
+  border-left: 2px solid var(--color-border);
+}
+.evidence-step-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.evidence-step-head .icon {
+  color: var(--color-link);
+}
+.evidence-step-head h3 {
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+.evidence-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+.evidence-body p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+.evidence-body .source-line {
+  font-size: var(--text-sm);
+}
+.evidence-step .stage-action {
+  margin-top: 0;
+}
+.badge-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.evidence-panel .notice {
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+.detail-ppid p {
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+
+/* The three-stage trail in the panel must stay on one line on phones (a wrapped line used to start
+   with a lone connector). Tighter spacing first; below 380px the connectors go and the dots wrap. */
+@media (max-width: 480px) {
+  .evidence-step {
+    padding-left: var(--space-4);
+  }
+  .evidence-panel .jejak,
+  .evidence-panel .jejak li,
+  .evidence-panel .langkah {
+    gap: 4px;
+  }
+  .evidence-panel .jejak li + li::before {
+    width: 8px;
+  }
+}
+@media (max-width: 380px) {
+  .evidence-panel .jejak li + li::before {
+    display: none;
+  }
+  .evidence-panel .jejak {
+    gap: var(--space-2) var(--space-4);
+  }
+}
+@media (max-width: 1024px) {
+  .detail-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+/* =====================================================================================
+   Metodologi (Figma 143:48318 desktop / 143:48425 mobile): contents card on the left, reading
+   column of flat sections with hairlines on the right, correction card at the end. The contents
+   list is static anchors (no scroll-spy). .rule-list, .correction and .highlight are only used here.
+   ===================================================================================== */
+.method-layout {
+  display: grid;
+  grid-template-columns: 272px minmax(0, 1fr);
+  gap: var(--space-8);
+  align-items: start;
+}
+.method-toc {
+  padding: var(--space-5);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+}
+@media (min-width: 1025px) and (min-height: 520px) {
+  .method-toc {
+    position: sticky;
+    top: var(--space-5);
+  }
+}
+.method-toc-title {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.method-toc ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.method-toc a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--color-link);
+  font-size: var(--text-base);
+  text-decoration: none;
+}
+.method-toc a:hover {
+  text-decoration: underline;
+}
+
+.method-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.method-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-block: var(--space-7);
+  border-bottom: var(--border-width) solid var(--color-border);
+  scroll-margin-top: var(--space-5);
+}
+.method-section:first-child {
+  padding-top: 0;
+}
+.method-section > * {
+  margin: 0;
+}
+.method-section h2 {
+  font-size: var(--text-xl);
+  line-height: 1.2;
+}
+.method-main .rule-list > li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: 0;
+}
+.method-main .rule-list > li + li {
+  margin-top: var(--space-5);
+}
+.method-main .rule-list h3 {
+  margin: 0;
+}
+.method-main .correction {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-top: var(--space-7);
+  padding: var(--space-5);
+  scroll-margin-top: var(--space-5);
+}
+.method-main .correction h2 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-xl);
+  line-height: 1.2;
+}
+.method-main .correction .highlight {
+  padding: 0;
+  background: none;
+  color: var(--color-link);
+}
+
+@media (max-width: 1024px) {
+  .method-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+  .method-section {
+    padding-block: var(--space-10);
+  }
+  .method-main .correction {
+    margin-top: var(--space-10);
+  }
+}
+@media (max-width: 760px) {
+  /* The document table turns into one card per document (see .table-cards); on the paper
+     background the card needs its own surface and outline. */
+  .method-main .table-cards tr {
+    border: var(--border-width) solid var(--color-border);
+    background: var(--color-card);
+  }
+}
+
+/* =====================================================================================
+   Draf PPID (Figma 143:47768 desktop / 143:47894 mobile). Visual only: the form has no applicant
+   fields (the letter keeps [bracketed] parts for the requester to fill after copying), and all
+   rules are scoped to .ppid-layout so the shared fieldset, .letter and .legend-chip styles used by
+   other pages stay as they are.
+   ===================================================================================== */
+.ppid-layout .ppid-steps {
+  gap: var(--space-4);
+  margin: 0 0 var(--space-6);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--color-accent-soft);
+}
+.ppid-layout .ppid-steps li::before {
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+}
+.ppid-layout .grid-aside {
+  grid-template-columns: 400px minmax(0, 1fr);
+  gap: var(--space-6);
+}
+.ppid-side,
+.ppid-main {
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+/* Left column: evidence choice and program context as white cards. */
+.ppid-layout fieldset {
+  padding: var(--space-5);
+  background: var(--color-card);
+}
+.ppid-layout fieldset legend {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.6;
+}
+.ppid-layout .check {
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 48px;
+  margin-block: 0;
+}
+.ppid-context {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.ppid-context > *,
+.ppid-context > h2 {
+  margin: 0;
+}
+.ppid-context h2 {
+  font-size: var(--text-2xl);
+  line-height: 1.6;
+}
+
+/* Right column: the letter as one white card, actions below it, channel links in a last card. */
+.ppid-layout .ppid-letter {
+  padding: var(--space-10);
+}
+.ppid-letter .box-head {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-5);
+  padding-bottom: var(--space-5);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+.ppid-letter h2 {
+  font-size: var(--text-xl);
+  line-height: 1.2;
+}
+.ppid-letter .legend-chip {
+  padding: 0;
+  border: 0;
+  color: var(--color-link);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.ppid-letter .letter {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+.ppid-actions .btn-row {
+  gap: var(--space-4);
+}
+.ppid-actions p {
+  margin: 0;
+}
+.ppid-actions p:not(:empty) {
+  margin-top: var(--space-3);
+}
+.ppid-channel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.ppid-channel > * {
+  margin: 0;
+}
+.ppid-channel .link-strong {
+  align-self: flex-start;
+}
+
+@media (max-width: 1024px) {
+  .ppid-layout .grid-aside {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .ppid-layout .ppid-letter {
+    padding: var(--space-5);
+  }
+}
+
+/* =====================================================================================
+   Pelacak (Figma 143:48020 / 143:48169 with records, 143:49226 / 143:49294 empty). Visual only:
+   storage and export/import in a soft card, the add form as a white card, records as cards (two
+   columns on desktop), empty state as one card. Scoped to .tracker-layout.
+   ===================================================================================== */
+.tracker-layout {
+  display: flex;
+  flex-direction: column;
+}
+.tracker-layout > * + * {
+  margin-top: var(--space-6);
+}
+.tracker-storage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--color-accent-soft);
+  color: var(--color-heading);
+}
+.tracker-storage > * {
+  margin: 0;
+}
+.tracker-storage .icon {
+  color: var(--color-link);
+}
+.tracker-storage p {
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+
+.tracker-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+.tracker-form > *,
+.tracker-form > h2 {
+  margin: 0;
+}
+.tracker-form .form-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+  align-items: start;
+  width: 100%;
+}
+.tracker-form .field {
+  flex: none;
+}
+.tracker-form .notice {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.tracker-form .notice p {
+  margin: 0;
+}
+
+/* Status message and raw-backup button: no space while the message is empty (the live region stays). */
+.tracker-feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+.tracker-feedback p {
+  margin: 0;
+}
+.tracker-layout > .tracker-feedback:not(:has(p:not(:empty), button)) {
+  margin-top: 0;
+}
+
+.tracker-records h2 {
+  margin: 0 0 var(--space-5);
+  font-size: var(--text-3xl);
+  line-height: 1.2;
+}
+.tracker-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+  align-items: start;
+}
+.tracker-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-5);
+  min-width: 0;
+  padding: var(--space-5);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+}
+.tracker-card-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-bottom: var(--space-5);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+.tracker-card-head p,
+.tracker-card-head h3 {
+  margin: 0;
+}
+.tracker-card-code {
+  color: var(--color-link);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.tracker-card-head h3 {
+  font-size: var(--text-xl);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.tracker-card .field {
+  flex: none;
+}
+.tracker-facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+}
+.tracker-facts dt {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.tracker-facts dd {
+  margin: 0;
+  color: var(--color-heading);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.tracker-remaining {
+  margin: 0;
+  color: var(--color-link);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.6;
+}
+.tracker-remaining::first-letter {
+  text-transform: uppercase;
+}
+.tracker-delete {
+  align-self: flex-start;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tracker-card.row-new > * {
+    animation: none;
+  }
+  .tracker-card.row-new {
+    animation: line-new 1600ms ease-out;
+  }
+}
+
+.tracker-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+  padding: var(--space-8);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+}
+.tracker-empty .icon {
+  color: var(--color-link);
+}
+.tracker-empty p {
+  margin: 0;
+  color: var(--color-heading);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+
+@media (max-width: 900px) {
+  .tracker-form .form-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+}
+@media (max-width: 760px) {
+  .tracker-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tracker-empty {
+    padding: var(--space-5);
+  }
+  .tracker-storage .btn-row > .btn,
+  .tracker-form > .btn {
+    flex: 1 1 100%;
+  }
+  .tracker-form > .btn {
+    align-self: stretch;
   }
 }

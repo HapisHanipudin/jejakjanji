@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { Daerah } from '@jejakjanji/shared';
+import { Icon } from './Icon';
 import { REGION_STORAGE_KEY, rememberedRegion, regionForPath, regionPath } from '@/lib/regions';
 import {
   geocodeUrl,
@@ -108,12 +109,23 @@ export function RegionPicker({
   return (
     <div className={landing ? 'region-entry region-entry-landing' : 'region-entry'}>
       <button
-        className={`btn ${landing ? 'btn-primary' : ''}`}
+        className={landing ? 'btn btn-primary' : 'region-pill'}
         type="button"
         onClick={() => open()}
         aria-haspopup="dialog"
       >
-        {current && !landing ? `${current.nama} · ubah` : 'Pilih daerah'}
+        {landing ? (
+          'Pilih daerah'
+        ) : (
+          <>
+            <Icon name="map-pin" />
+            <span>
+              {current ? current.nama : 'Pilih daerah'}
+              {current && <span className="sr-only"> · ubah daerah</span>}
+            </span>
+            <Icon name="chevron-down" />
+          </>
+        )}
       </button>
       {landing && (
         <button className="btn" type="button" onClick={() => open(true)}>
@@ -137,8 +149,8 @@ export function RegionPicker({
         <div className="region-dialog-body">
           <div className="box-head">
             <h2 id={landing ? 'region-title-main' : 'region-title-nav'}>Pilih daerah</h2>
-            <button type="button" className="btn" onClick={close}>
-              Tutup
+            <button type="button" className="icon-btn" onClick={close} aria-label="Tutup">
+              <Icon name="close" size={20} />
             </button>
           </div>
           <p>
@@ -163,16 +175,34 @@ export function RegionPicker({
               .filter((region) =>
                 region.nama.toLocaleLowerCase('id').includes(search.toLocaleLowerCase('id')),
               )
-              .map((region) => (
-                <li key={region.kode}>
-                  <Link className="region-option" href={regionPath(region.slug)} onClick={close}>
-                    <strong>{region.nama}</strong>
-                    <span className="badge">
-                      {region.statusKurasi === 'AKTIF' ? 'Data tersedia' : 'Belum dikurasi'}
-                    </span>
-                  </Link>
-                </li>
-              ))}
+              .map((region) => {
+                const isCurrent = region.kode === current?.kode;
+                const tersedia = region.statusKurasi === 'AKTIF';
+                return (
+                  <li key={region.kode}>
+                    <Link
+                      className={
+                        isCurrent ? 'region-option region-option-current' : 'region-option'
+                      }
+                      href={regionPath(region.slug)}
+                      aria-current={isCurrent ? 'true' : undefined}
+                      onClick={close}
+                    >
+                      <Icon
+                        name={isCurrent ? 'circle-check' : tersedia ? 'map-pin' : 'circle-help'}
+                        size={20}
+                      />
+                      <span className="region-option-text">
+                        <strong>{region.nama}</strong>
+                        <span>
+                          {isCurrent ? 'Daerah saat ini · ' : ''}
+                          {tersedia ? 'Data tersedia' : 'Belum dikurasi'}
+                        </span>
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
           </ul>
           {!regions.some((region) =>
             region.nama.toLocaleLowerCase('id').includes(search.toLocaleLowerCase('id')),

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { FlowDemo } from '@/components/FlowDemo';
+import { Icon } from '@/components/Icon';
 import { RegionPicker } from '@/components/RegionPicker';
 import { ErrorState } from '@/components/States';
 import { getDaerahList, getProgram, getProgramList } from '@/lib/data';
@@ -29,7 +30,7 @@ export default async function LandingPage() {
   );
   return (
     <>
-      <section className="band band-hero landing-hero">
+      <section className="band band-hero band-navy landing-hero">
         <div className="container landing-grid">
           <div>
             <h1 className="landing-title">
@@ -52,6 +53,9 @@ export default async function LandingPage() {
             </p>
           </div>
           <section className="coverage-card" id="cakupan" aria-labelledby="cakupan-title">
+            <span className="hero-card-icon" aria-hidden="true">
+              <Icon name="files-lg" size={48} />
+            </span>
             <h2 id="cakupan-title">Data yang tersedia saat ini</h2>
             {!result.ok ? (
               <ErrorState pesan={result.pesan} />
@@ -85,7 +89,7 @@ export default async function LandingPage() {
           </section>
         </div>
       </section>
-      <section className="section-lg" id="cara-kerja">
+      <section className="section-home" id="cara-kerja">
         <div className="container">
           <h2 className="section-title">Dari rencana sampai bukti</h2>
           <FlowDemo programs={demoPrograms} />
@@ -94,14 +98,16 @@ export default async function LandingPage() {
           </Link>
         </div>
       </section>
-      <section className="section section-alt">
+      <section className="section-home">
         <div className="container">
-          <h2>Satu daerah, sumber yang bisa ditelusuri.</h2>
-          <p>
-            Setiap angka memiliki dokumen sumber, halaman PDF, dan tanggal pemeriksaan. Tanpa skor
-            kepala daerah, leaderboard, atau perbandingan pagu antar daerah.
-          </p>
-          <p className="legend-chip">Pagu indikatif, bukan APBD dan bukan realisasi</p>
+          <div className="box">
+            <h2>Satu daerah, sumber yang bisa ditelusuri.</h2>
+            <p>
+              Setiap angka memiliki dokumen sumber, halaman PDF, dan tanggal pemeriksaan. Tanpa skor
+              kepala daerah, leaderboard, atau perbandingan pagu antar daerah.
+            </p>
+            <p className="legend-chip">Pagu indikatif, bukan APBD dan bukan realisasi</p>
+          </div>
         </div>
       </section>
     </>

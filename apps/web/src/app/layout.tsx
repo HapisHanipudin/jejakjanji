@@ -9,7 +9,7 @@ import './globals.css';
 // Self-hosted at build time by next/font; exposed as --font-jakarta for tokens.css.
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  weight: ['400', '600', '800'],
+  weight: ['400', '600', '700'],
   variable: '--font-jakarta',
   display: 'swap',
 });
@@ -36,7 +36,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
         <main id="konten" tabIndex={-1}>
           {children}
         </main>
-        <Footer />
+        <Footer regions={regions.ok ? regions.data.data : []} />
         <ScrollMotion />
       </body>
     </html>

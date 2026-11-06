@@ -23,7 +23,7 @@ export default async function PelacakPage({
     <>
       <PageHeader
         title="Pelacak permohonan informasi"
-        lead="Catat permohonan yang sudah Anda kirim ke PPID dan pantau tenggat jawabannya. Tanpa akun: data hanya tersimpan di browser ini dan tidak dikirim ke server. Ekspor secara berkala agar tidak hilang."
+        lead="Catat permohonan yang sudah Anda kirim ke PPID dan pantau tenggat jawabannya."
       />
       <div className="section container">
         {!programs.ok && (

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
 import type { NilaiStatus, StatusBukti } from '@jejakjanji/shared/status';
+import { Icon, type IconName } from './Icon';
 import { JejakLangkah } from './JejakBukti';
 
 type Tahap = keyof StatusBukti;
@@ -11,6 +12,7 @@ type ProgramJejak = { kode: string; nama: string; status: StatusBukti };
 const TAHAP: {
   key: Tahap;
   label: string;
+  icon: IconName;
   teks: string;
   penanda: string;
   statusPenanda: NilaiStatus;
@@ -18,6 +20,7 @@ const TAHAP: {
   {
     key: 'rencana',
     label: 'Rencana',
+    icon: 'file-text-md',
     penanda: 'Ada di rencana',
     statusPenanda: 'ada',
     teks: 'Program prioritas dari RPJMD 2025 sampai 2029, lengkap dengan indikator dan target.',
@@ -25,13 +28,15 @@ const TAHAP: {
   {
     key: 'anggaran',
     label: 'Anggaran',
+    icon: 'wallet-md',
     penanda: 'Dianggarkan?',
     statusPenanda: 'belum_diketahui',
     teks: 'Pagu indikatif per tahun dengan halaman rujukan di dokumen sumber.',
   },
   {
     key: 'pelaksanaan',
-    label: 'Bukti',
+    label: 'Pelaksanaan',
+    icon: 'files-md',
     penanda: 'Ada laporan?',
     statusPenanda: 'belum_diketahui',
     teks: 'Belum diketahui bila bukti kosong. Anda bisa meminta informasi lewat PPID.',
@@ -93,6 +98,9 @@ export function JejakExplorer({
         {TAHAP.map((t, i) => {
           const isi = (
             <>
+              <span className="trail-card-icon" aria-hidden="true">
+                <Icon name={t.icon} size={28} />
+              </span>
               <span aria-hidden="true">
                 <JejakLangkah label={t.penanda} status={t.statusPenanda} />
               </span>

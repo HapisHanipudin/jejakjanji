@@ -9,6 +9,8 @@ export type Bar = {
   href?: string;
   /** Short context revealed on hover/focus (always shown on touch). */
   hint?: string;
+  /** Extra lines under the bar (stacked layout): the pagu label and the row's own source. */
+  note?: ReactNode;
 };
 
 /** Horizontal bars as plain elements; width is proportional to the largest value. */
@@ -16,16 +18,22 @@ export function BarChart({
   bars,
   caption,
   compact = false,
+  stacked = false,
 }: {
   bars: Bar[];
   caption: string;
   compact?: boolean;
+  /** Figma home layout: label, value, bar, then the note, one column per row. */
+  stacked?: boolean;
 }) {
   const max = Math.max(...bars.map((b) => b.value), 1);
   return (
     <figure style={{ margin: 0 }}>
       <figcaption className="sr-only">{caption}</figcaption>
-      <ul className={compact ? 'bars bars-compact' : 'bars'} data-reveal="">
+      <ul
+        className={compact ? 'bars bars-compact' : stacked ? 'bars bars-stacked' : 'bars'}
+        data-reveal=""
+      >
         {bars.map((b, i) => (
           <li key={b.key} className="bar-row" style={{ '--i': i } as CSSProperties}>
             <span className="bar-label">
@@ -47,6 +55,7 @@ export function BarChart({
               <span className="bar-fill" style={{ width: `${(b.value / max) * 100}%` }} />
             </span>
             <span className="bar-value">{b.display}</span>
+            {b.note && <div className="bar-note">{b.note}</div>}
           </li>
         ))}
       </ul>

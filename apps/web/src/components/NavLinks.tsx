@@ -12,7 +12,13 @@ const ITEMS = [
   { href: '/metodologi', label: 'Metodologi' },
 ];
 
-export function NavLinks({ regions }: { regions: Daerah[] }) {
+export function NavLinks({
+  regions,
+  variant = 'header',
+}: {
+  regions: Daerah[];
+  variant?: 'header' | 'footer';
+}) {
   const pathname = usePathname();
   const region = regionForPath(pathname, regions);
   const items = region
@@ -25,15 +31,21 @@ export function NavLinks({ regions }: { regions: Daerah[] }) {
         { href: '/metodologi', label: 'Metodologi' },
       ];
   const active = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+  const footer = variant === 'footer';
   return (
-    <nav className="nav" aria-label="Menu utama">
+    <nav
+      className={footer ? 'footer-links' : 'nav'}
+      aria-label={footer ? 'Tautan singkat' : 'Menu utama'}
+    >
       <ul>
         {items.map((i) => (
           <li key={i.href}>
             <Link
               href={i.href}
               aria-current={
-                (i.label === 'Beranda' ? pathname === i.href : active(i.href)) ? 'page' : undefined
+                !footer && (i.label === 'Beranda' ? pathname === i.href : active(i.href))
+                  ? 'page'
+                  : undefined
               }
             >
               {i.label}

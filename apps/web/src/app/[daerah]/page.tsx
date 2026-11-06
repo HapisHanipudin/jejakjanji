@@ -34,7 +34,7 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
 
   return (
     <>
-      <div className="band band-hero">
+      <div className="band band-hero band-navy">
         <section className="container hero" aria-labelledby="hero-title">
           <div>
             <h1 id="hero-title">Telusuri program prioritas {region.nama}</h1>
@@ -87,7 +87,10 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
               </Link>
             </p>
           </div>
-          <div aria-label="Cakupan data">
+          <div className="hero-card" aria-label="Cakupan data">
+            <span className="hero-card-icon" aria-hidden="true">
+              <Icon name="files-lg" size={48} />
+            </span>
             {programs.ok ? (
               <>
                 <p className="coverage-number">
@@ -126,14 +129,11 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
         </section>
       </div>
 
-      <section className="section-lg" aria-labelledby="alokasi-title">
+      <section className="section-home" aria-labelledby="alokasi-title">
         <div className="container">
-          <div className="box-head">
-            <h2 id="alokasi-title" className="section-title">
-              Ke mana belanja daerah 2026 dialokasikan
-            </h2>
-            {bidang.ok && <PaguLabel label={bidang.data.label} />}
-          </div>
+          <h2 id="alokasi-title" className="section-title">
+            Ke mana belanja daerah 2026 dialokasikan
+          </h2>
           {!bidang.ok ? (
             <ErrorState pesan={bidang.pesan} />
           ) : bidang.data.data.length === 0 ? (
@@ -145,16 +145,16 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
                 .sort((a, b) => b.paguIndikatif2026 - a.paguIndikatif2026)
                 .slice(0, 6);
               const docs = sumber.ok ? sumber.data.data : [];
-              const docIds = [...new Set(top.map((b) => b.sourceDocumentId))];
               return (
                 <>
-                  <p className="lead">
+                  <p className="muted alokasi-intro">
                     Enam bidang urusan pemerintahan (kode 1-3) dengan pagu terbesar. Unsur
                     pendukung, penunjang, pengawasan, kewilayahan, dan pemerintahan umum (kode 4-8)
                     tidak termasuk. Pilih satu bidang untuk melihat program di dalamnya.
                   </p>
-                  <div className="box" style={{ padding: 'var(--space-6)' }}>
+                  <div className="box alokasi-card">
                     <BarChart
+                      stacked
                       caption="Pagu indikatif 2026 per bidang urusan"
                       bars={top.map((b) => ({
                         key: b.kode,
@@ -167,6 +167,16 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
                         })(),
                         value: b.paguIndikatif2026,
                         href: `/${daerah}/program?bidang=${encodeURIComponent(b.kode)}`,
+                        note: (
+                          <>
+                            <PaguLabel plain label={bidang.data.label} />
+                            <SourceBox
+                              line
+                              doc={docs.find((d) => d.id === b.sourceDocumentId)}
+                              pages={[b.pageRef]}
+                            />
+                          </>
+                        ),
                         display: (
                           <>
                             <Money jumlah={b.paguIndikatif2026} satuan="rp" />
@@ -175,14 +185,6 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
                         ),
                       }))}
                     />
-                    <hr className="rule" style={{ marginTop: 'var(--space-5)' }} />
-                    {docIds.map((id) => (
-                      <SourceBox
-                        key={id}
-                        doc={docs.find((d) => d.id === id)}
-                        pages={top.filter((b) => b.sourceDocumentId === id).map((b) => b.pageRef)}
-                      />
-                    ))}
                     {!sumber.ok && (
                       <ErrorState pesan={sumber.pesan} judul="Detail sumber belum bisa dimuat" />
                     )}
@@ -194,7 +196,7 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
         </div>
       </section>
 
-      <section className="section-lg section-alt" aria-labelledby="cara-title">
+      <section className="section-home section-soft" aria-labelledby="cara-title">
         <div className="container jejak-section">
           <h2 id="cara-title" className="section-title">
             Dari rencana sampai bukti
@@ -218,30 +220,32 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
         </div>
       </section>
 
-      <section className="section-lg" aria-labelledby="daerah-lain-title">
-        <div className="container other-regions">
-          <div>
-            <h2 id="daerah-lain-title" className="section-title">
-              Daerah lain
-            </h2>
-            <p>
-              JejakJanji disiapkan untuk banyak daerah. Data aktif saat ini:{' '}
-              <strong>{aktif.join(', ')}</strong>. Tiap daerah ditampilkan sendiri, tanpa
-              perbandingan pagu atau peringkat.
-            </p>
-            <p className="muted">
-              Punya dokumen RPJMD daerah lain? Kirim tautannya ke{' '}
-              <a href={`mailto:${KONTAK_KOREKSI}`}>{KONTAK_KOREKSI}</a>. Belum dikurasi bukan
-              penilaian kinerja pemerintah.
-            </p>
-          </div>
-          <div className="btn-row">
-            <Link className="btn" href="/#cakupan">
-              Lihat cakupan daerah
-            </Link>
-            <Link className="btn" href={`/${daerah}/metodologi`}>
-              Baca Metodologi
-            </Link>
+      <section className="section-home" aria-labelledby="daerah-lain-title">
+        <div className="container">
+          <div className="box other-regions">
+            <div>
+              <h2 id="daerah-lain-title" className="card-title">
+                Daerah lain
+              </h2>
+              <p>
+                JejakJanji disiapkan untuk banyak daerah. Data aktif saat ini:{' '}
+                <strong>{aktif.join(', ')}</strong>. Tiap daerah ditampilkan sendiri, tanpa
+                perbandingan pagu atau peringkat.
+              </p>
+              <p className="muted">
+                Punya dokumen RPJMD daerah lain? Kirim tautannya ke{' '}
+                <a href={`mailto:${KONTAK_KOREKSI}`}>{KONTAK_KOREKSI}</a>. Belum dikurasi bukan
+                penilaian kinerja pemerintah.
+              </p>
+            </div>
+            <div className="btn-row">
+              <Link className="btn" href="/#cakupan">
+                Lihat cakupan daerah
+              </Link>
+              <Link className="btn" href={`/${daerah}/metodologi`}>
+                Baca Metodologi
+              </Link>
+            </div>
           </div>
         </div>
       </section>

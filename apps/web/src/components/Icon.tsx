@@ -1,18 +1,51 @@
-// One stroke icon set (16px grid, 1.6px stroke, currentColor), matching the Figma calendar and
-// chevron assets. Decorative only: the surrounding text always carries the meaning.
-const PATHS = {
-  close: 'M4.5 4.5l7 7M11.5 4.5l-7 7',
-  arrow: 'M3 8h10M9 4l4 4-4 4',
-  check: 'M3.5 8.5l3 3 6-7',
-  'chevron-left': 'M10 4L6 8l4 4',
-  'chevron-right': 'M6 4l4 4-4 4',
-  calendar:
-    'M4 3.5h8a1.5 1.5 0 011.5 1.5v7a1.5 1.5 0 01-1.5 1.5H4A1.5 1.5 0 012.5 12V5A1.5 1.5 0 014 3.5zM2.5 6.5h11M5.5 2v3M10.5 2v3',
+import type { CSSProperties } from 'react';
+
+// Icons used across the UI. Names that exist in the Figma set are the Figma SVG files in
+// public/ikon/figma, drawn as a CSS mask so they take the surrounding text colour (currentColor).
+// The remaining names keep the in-house 16px/1.6px stroke glyphs (Figma has no calendar-month arrows).
+// Decorative only: the surrounding text always carries the meaning.
+const FIGMA_FILES = {
+  close: 'x',
+  arrow: 'arrow-right',
+  check: 'check',
+  calendar: 'calendar',
+  'chevron-down': 'chevron-down',
+  'map-pin': 'map-pin',
+  'circle-check': 'circle-check',
+  'circle-help': 'circle-help',
+  'arrow-up-right': 'arrow-up-right',
+  'file-text': 'file-text',
+  'files-lg': 'files-lg',
+  'file-text-md': 'file-text-md',
+  'wallet-md': 'wallet-md',
+  'files-md': 'files-md',
+  search: 'search',
+  'file-check': 'file-check',
+  'file-check-md': 'file-check-md',
+  'hard-drive': 'hard-drive',
+  'folder-open': 'folder-open',
 } as const;
 
-export type IconName = keyof typeof PATHS;
+const PATHS = {
+  'chevron-left': 'M10 4L6 8l4 4',
+  'chevron-right': 'M6 4l4 4-4 4',
+} as const;
+
+export type IconName = keyof typeof FIGMA_FILES | keyof typeof PATHS;
 
 export function Icon({ name, size = 16 }: { name: IconName; size?: number }) {
+  if (name in FIGMA_FILES) {
+    const file = FIGMA_FILES[name as keyof typeof FIGMA_FILES];
+    return (
+      <span
+        className="icon icon-mask"
+        style={
+          { width: size, height: size, '--icon': `url(/ikon/figma/${file}.svg)` } as CSSProperties
+        }
+        aria-hidden="true"
+      />
+    );
+  }
   return (
     <svg
       className="icon"
@@ -27,7 +60,7 @@ export function Icon({ name, size = 16 }: { name: IconName; size?: number }) {
       aria-hidden="true"
       focusable="false"
     >
-      <path d={PATHS[name]} />
+      <path d={PATHS[name as keyof typeof PATHS]} />
     </svg>
   );
 }
