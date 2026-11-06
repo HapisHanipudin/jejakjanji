@@ -1,0 +1,42 @@
+# Tindak lanjut audit antislop 001 (2026-11-05)
+
+Nomor yang disetujui: semua, 1 sampai 10 (termasuk 2). Basis: `e089493`. Belum di-commit.
+
+## Hasil per nomor
+
+| No  | Status  | Perubahan                                                                                                                                                                                                                                                                                          | Bukti                                                                                                                                                                                                           |
+| --- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Selesai | `globals.css`: satu aturan pointer untuk `select:not(:disabled)`, `summary`, dan label yang membungkus checkbox atau radio; `select:disabled` memakai `not-allowed`.                                                                                                                               | Di keempat lebar, kursor semua select dan tombol select di halaman daftar adalah `pointer`.                                                                                                                     |
+| 2   | Selesai | `SourceBox` mendapat opsi `pageOnly`. Beranda daerah menampilkan satu baris sumber lengkap di atas bagan bila keenam bidang berasal dari dokumen yang sama; tiap baris hanya "Hal. PDF 480 buka halaman" (tautan ke `#page=`). Bila dokumennya berbeda, setiap baris tetap memakai sumber lengkap. | Baris atas: dokumen, versi, hal. PDF 480 dan 481, tanggal cek. Tinggi beranda 390px turun dari 5371 menjadi 5126px; 1280px menjadi 3578px.                                                                      |
+| 3   | Selesai | Ikon di judul langkah Jejak bukti dihapus; ikon lencana tetap ada.                                                                                                                                                                                                                                 | 1 ikon per langkah (sebelumnya 2), di ketiga langkah.                                                                                                                                                           |
+| 4   | Selesai | `<br>` paksa di judul landing dihapus; `text-wrap: balance` membagi judul dengan rata.                                                                                                                                                                                                             | 1280px: tiga baris seimbang ("Telusuri program / daerahmu, dari / rencana sampai bukti"), tanpa kata yatim.                                                                                                     |
+| 5   | Selesai | Lead detail dipecah menjadi `span.meta-item` dengan pemisah "·" yang menempel di akhir item.                                                                                                                                                                                                       | 390px: tidak ada baris yang diawali pemisah (tangkapan layar `lead-390.png`).                                                                                                                                   |
+| 6   | Selesai | Breadcrumb detail, PPID, dan daftar: daerah dan Program menjadi dua `li` dengan pemisah chevron yang sama; daftar kini memakai `nav` dengan tautan ke beranda daerah.                                                                                                                              | Detail: `/dki-jakarta`, `/dki-jakarta/program`, bidang, kode. Daftar: `/dki-jakarta`, Program (`aria-current`).                                                                                                 |
+| 7   | Selesai | Ikon hard-drive dipindah ke dalam `h2` panel penyimpanan, sebaris dengan teks.                                                                                                                                                                                                                     | Selisih titik tengah ikon dan judul di bawah 4px.                                                                                                                                                               |
+| 8   | Selesai | `.request-list-title`: 48px di atas, 16px di bawah.                                                                                                                                                                                                                                                | Terukur 48 dan 16 di keempat lebar.                                                                                                                                                                             |
+| 9   | Selesai | `.letter-panel` sticky di `top: 88px` untuk ≥1025px dengan tinggi viewport ≥800px. Dalam mode ini, tinggi surat dibatasi `calc(100vh - 400px)` dan isinya scroll di dalam panel, sehingga Salin dan Unduh tetap terlihat.                                                                          | Setelah scroll, pratinjau tetap di atas pada 1280 dan 1440. Dengan semua pilihan dicentang dan alamat panjang, tombol Salin tetap terlihat di viewport setinggi 800 dan 900px. Di ponsel panel mengalir normal. |
+| 10  | Selesai | Em dash di `DESIGN.md` dan `.impeccable/design.json` diganti titik dua atau dihapus. DESIGN.md juga diperbarui untuk bagan dan langkah bukti.                                                                                                                                                      | `grep -c "—"` bernilai 0 di kedua file.                                                                                                                                                                         |
+
+Satu kesalahan muncul lalu diperbaiki: pemisah pertama memakai escape CSS `\00a0` yang tampil rusak. Sekarang memakai `'·'` dengan `margin-inline`.
+
+## Pemeriksaan
+
+- `bun run typecheck`: lulus. `bun run lint`: lulus (setelah Prettier memformat `app/page.tsx` dan berkas audit). `bun run test`: 45 lulus, 3 dilewati (butuh DB).
+- `next build --webpack`: lulus. Server produksi lokal di :3124 dengan API preview.
+- Overflow horizontal: 0 dari 28 (7 rute × 1280/1440/390/375).
+- Regresi interaksi `interact.mjs`: 23/23 lulus. Cakupannya: bentuk navbar, hamburger dan Escape, dialog daerah, demo landing (play, pause, langkah, radio), reduced motion, isian PPID ke pratinjau, salin, unduh, tanpa request berisi teks pemohon, migrasi pelacak v1 ke v2, ekspor, impor, pencarian kosong, 404, dan tautan footer.
+- Galat konsol: satu 404 sesekali di landing (1280) yang tidak muncul lagi saat diulang dengan pencatat respons. Kemungkinan prefetch; tidak terkait perubahan ini.
+
+## Delivery Gate
+
+Block 1 (Hard Gate): semua "tidak". R-02 0 em dash di teks yang ditulis; R-03 0/28 overflow; R-17/18/36/38 tanpa angka atau klaim baru (bagan memakai sumber dan halaman yang sama dari API); R-24 breadcrumb baru menuju rute yang ada; R-26/R-35 23 interaksi diklik dan lulus; R-27 status kosong dan galat tidak diubah; R-32 fokus tidak diubah; R-39 pointer di semua kontrol bawaan; R-40 tidak ada media atau skrip baru.
+
+Block 2 (Purpose-Gate): tidak ada teknik baru. Pemisah "·" dan chevron breadcrumb mengikuti pola yang sudah ada.
+
+Block 3 (Liveliness): dial tetap ENERGY 2 / RHYTHM 3 / MOTION 2 dari DESIGN.md. Fokus per layar tidak berubah. Bagan kini memberi ruang lebih besar untuk angka karena sumbernya tidak diulang.
+
+Block 4 (Craftsmanship): semua "tidak". Setiap perubahan punya alasan satu baris di tabel di atas.
+
+## Batas
+
+Tidak diuji di Safari, Firefox, perangkat fisik, atau pembaca layar. Fokus keyboard pada area surat yang bisa di-scroll hanya mengandalkan perilaku bawaan Chrome; belum diperiksa di browser lain.

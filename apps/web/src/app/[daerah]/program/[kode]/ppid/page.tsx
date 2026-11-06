@@ -32,9 +32,10 @@ export default async function PpidPage({
           <nav className="breadcrumb" aria-label="Remah roti">
             <ol>
               <li>
-                <Link href={`/${daerah}/program`}>
-                  {res.ok ? res.data.daerah?.nama : daerah} › Program
-                </Link>
+                <Link href={`/${daerah}`}>{res.ok ? res.data.daerah?.nama : daerah}</Link>
+              </li>
+              <li>
+                <Link href={`/${daerah}/program`}>Program</Link>
               </li>
               <li>
                 <Link href={`/${daerah}/program/${encodeURIComponent(kode)}`}>

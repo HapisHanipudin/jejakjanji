@@ -70,7 +70,16 @@ export default async function ProgramListPage({
     <>
       <PageHeader
         title={`Program prioritas RPJMD ${region.nama}`}
-        breadcrumb={<p className="breadcrumb">{region.nama} › Program</p>}
+        breadcrumb={
+          <nav className="breadcrumb" aria-label="Remah roti">
+            <ol>
+              <li>
+                <Link href={`/${daerah}`}>{region.nama}</Link>
+              </li>
+              <li aria-current="page">Program</li>
+            </ol>
+          </nav>
+        }
         lead={
           <>
             {all.ok
@@ -181,11 +190,6 @@ export default async function ProgramListPage({
                 </div>
               ) : (
                 <>
-                  <div className="program-head" aria-hidden="true">
-                    <span>Program dan sumber</span>
-                    <span className="num">Pagu indikatif 2026</span>
-                    <span>Jejak bukti</span>
-                  </div>
                   <ul className="program-list program-results" key={filterKey}>
                     {filtered.data.data.map((p, i) => (
                       <ProgramCard

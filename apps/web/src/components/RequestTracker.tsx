@@ -1,6 +1,7 @@
 'use client';
 
 import type { Daerah } from '@jejakjanji/shared';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { CATATAN_TINJAU_HUKUM, PERPANJANGAN_HARI_KERJA, TENGGAT_HARI_KERJA } from '@/content/legal';
 import { formatTanggal } from '@/lib/format';
@@ -17,6 +18,8 @@ import {
 } from '@/lib/pelacak-store';
 import { unduh } from '@/lib/unduh';
 import { DateField } from './DateField';
+import { Icon } from './Icon';
+import { StatePanel } from './States';
 import { ThemedSelect } from './ThemedSelect';
 
 type ProgramOpt = { kode: string; nama: string };
@@ -165,8 +168,47 @@ export function RequestTracker({
 
   return (
     <div className="stack">
+      <section className="storage-panel" aria-labelledby="simpan-title">
+        <h2 id="simpan-title">
+          <Icon name="hard-drive" size={20} />
+          Data hanya tersimpan di browser ini.
+        </h2>
+        <p>
+          Catatan memakai localStorage dan tidak dikirim ke server. Menghapus data browser dapat
+          menghapus catatan Anda. Ekspor JSON secara berkala; impor kembali file itu untuk
+          memulihkan catatan di browser pilihan Anda.
+        </p>
+        <div className="btn-row">
+          <button
+            type="button"
+            className="btn"
+            disabled={!all.length}
+            onClick={() =>
+              unduh(
+                `pelacak-jejakjanji-${hariIni()}.json`,
+                JSON.stringify({ versi: 2, permohonan: all }, null, 2),
+                'application/json',
+              )
+            }
+          >
+            Ekspor JSON<span className="sr-only"> (semua daerah)</span>
+          </button>
+          <label className="btn">
+            Impor JSON<span className="sr-only"> (unggah file)</span>
+            <input
+              type="file"
+              accept="application/json,.json"
+              className="sr-only"
+              disabled={blocked}
+              onChange={impor}
+            />
+          </label>
+        </div>
+      </section>
       <form className="box" onSubmit={tambah} aria-labelledby="catat-title">
-        <h2 id="catat-title">Catat permohonan baru</h2>
+        <h2 id="catat-title" className="box-title">
+          Catat permohonan baru
+        </h2>
         <div className="form-row">
           <div className="field">
             <label htmlFor="program">Program</label>
@@ -231,45 +273,31 @@ export function RequestTracker({
         </button>
       )}
 
-      <section className="box" aria-labelledby="daftar-title">
-        <div className="box-head">
-          <h2 id="daftar-title">
-            Permohonan saya di {region.nama} ({daftar.length})
-          </h2>
-          <div className="btn-row">
-            <button
-              type="button"
-              className="btn"
-              disabled={!all.length}
-              onClick={() =>
-                unduh(
-                  `pelacak-jejakjanji-${hariIni()}.json`,
-                  JSON.stringify({ versi: 2, permohonan: all }, null, 2),
-                  'application/json',
-                )
-              }
-            >
-              Ekspor semua daerah<span className="sr-only"> (unduh JSON)</span>
-            </button>
-            <label className="btn">
-              Impor<span className="sr-only"> (unggah JSON)</span>
-              <input
-                type="file"
-                accept="application/json,.json"
-                className="sr-only"
-                disabled={blocked}
-                onChange={impor}
-              />
-            </label>
-          </div>
-        </div>
+      <section aria-labelledby="daftar-title">
+        <h2 id="daftar-title" className="section-title request-list-title">
+          Permohonan saya di {region.nama} ({daftar.length})
+        </h2>
         {items == null ? (
           <p className="muted">Memuat data dari browser ini...</p>
         ) : daftar.length === 0 ? (
-          <p className="notice">Belum ada permohonan yang dicatat di browser ini.</p>
+          <StatePanel
+            level={2}
+            icon="folder-open"
+            title="Belum ada catatan permohonan"
+            actions={
+              <Link className="btn btn-primary" href={`/${region.slug}/program`}>
+                Pilih program untuk draf PPID
+              </Link>
+            }
+          >
+            <p>
+              Mulai dari program yang ingin Anda pahami. Buat draf, kirim sendiri melalui kanal
+              PPID, lalu catat permohonannya di sini.
+            </p>
+          </StatePanel>
         ) : (
           <div className="table-wrap">
-            <table className="table-plain table-cards">
+            <table className="table-plain table-cards request-table">
               <thead>
                 <tr>
                   <th scope="col">Program</th>

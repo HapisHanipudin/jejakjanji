@@ -145,7 +145,9 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
                 .sort((a, b) => b.paguIndikatif2026 - a.paguIndikatif2026)
                 .slice(0, 6);
               const docs = sumber.ok ? sumber.data.data : [];
+              // One shared document: name it once above the rows, rows keep their own PDF page.
               const docIds = [...new Set(top.map((b) => b.sourceDocumentId))];
+              const shared = docIds.length === 1 ? docs.find((d) => d.id === docIds[0]) : undefined;
               return (
                 <>
                   <p className="lead">
@@ -153,7 +155,8 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
                     pendukung, penunjang, pengawasan, kewilayahan, dan pemerintahan umum (kode 4-8)
                     tidak termasuk. Pilih satu bidang untuk melihat program di dalamnya.
                   </p>
-                  <div className="box" style={{ padding: 'var(--space-6)' }}>
+                  <div className="box chart-box">
+                    {shared && <SourceBox doc={shared} pages={top.map((b) => b.pageRef)} />}
                     <BarChart
                       caption="Pagu indikatif 2026 per bidang urusan"
                       bars={top.map((b) => ({
@@ -173,16 +176,15 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
                             <span className="muted">{formatPersen(b.proporsi)}</span>
                           </>
                         ),
+                        source: (
+                          <SourceBox
+                            doc={docs.find((d) => d.id === b.sourceDocumentId)}
+                            pages={[b.pageRef]}
+                            pageOnly={!!shared}
+                          />
+                        ),
                       }))}
                     />
-                    <hr className="rule" style={{ marginTop: 'var(--space-5)' }} />
-                    {docIds.map((id) => (
-                      <SourceBox
-                        key={id}
-                        doc={docs.find((d) => d.id === id)}
-                        pages={top.filter((b) => b.sourceDocumentId === id).map((b) => b.pageRef)}
-                      />
-                    ))}
                     {!sumber.ok && (
                       <ErrorState pesan={sumber.pesan} judul="Detail sumber belum bisa dimuat" />
                     )}

@@ -1,0 +1,71 @@
+[
+  {
+    "name": "navbar shape and reverse",
+    "ok": true,
+    "detail": {
+      "top": {
+        "w": 350,
+        "h": 82,
+        "main": 82
+      },
+      "floating": {
+        "w": 366,
+        "h": 62,
+        "main": 82
+      },
+      "back": {
+        "w": 350,
+        "h": 82,
+        "main": 82
+      }
+    }
+  },
+  {
+    "name": "hamburger",
+    "ok": true
+  },
+  {
+    "name": "Escape menu",
+    "ok": true
+  },
+  {
+    "name": "region dialog",
+    "ok": true
+  },
+  {
+    "name": "Escape dialog",
+    "ok": true
+  },
+  {
+    "name": "demo next",
+    "ok": true
+  },
+  {
+    "name": "demo prev",
+    "ok": true
+  },
+  {
+    "name": "reduced motion",
+    "ok": true
+  },
+  {
+    "name": "PPID controls",
+    "ok": true
+  },
+  {
+    "name": "empty tracker",
+    "ok": true
+  },
+  {
+    "name": "v1 migration",
+    "ok": true
+  },
+  {
+    "name": "empty search",
+    "ok": true
+  },
+  {
+    "name": "not found",
+    "ok": true
+  }
+]
