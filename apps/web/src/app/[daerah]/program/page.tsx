@@ -14,6 +14,12 @@ import { namaBidangRingkas } from '@/lib/format';
 
 export const metadata: Metadata = { title: 'Daftar program' };
 
+const STATUS_OPSI = [
+  { value: '', label: 'Semua status' },
+  { value: 'ada', label: 'Ada laporan pelaksanaan' },
+  { value: 'belum_diketahui', label: 'Belum diketahui' },
+];
+
 const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
 export default async function ProgramListPage({
@@ -119,19 +125,24 @@ export default async function ProgramListPage({
               ]}
             />
           </div>
-          <div className="field">
-            <label htmlFor="status">Status bukti</label>
-            <ThemedSelect
-              id="status"
-              name="status"
-              defaultValue={filter.status ?? ''}
-              options={[
-                { value: '', label: 'Semua status' },
-                { value: 'ada', label: 'Ada laporan pelaksanaan' },
-                { value: 'belum_diketahui', label: 'Belum diketahui' },
-              ]}
-            />
-          </div>
+          {/* Radios styled as chips: every option visible, same GET field, works without JavaScript. */}
+          <fieldset className="field status-choice">
+            <legend>Status bukti</legend>
+            <div className="choice-row">
+              {STATUS_OPSI.map((o) => (
+                <label key={o.value} className="choice-chip">
+                  <input
+                    className="sr-only"
+                    type="radio"
+                    name="status"
+                    value={o.value}
+                    defaultChecked={(filter.status ?? '') === o.value}
+                  />
+                  {o.label}
+                </label>
+              ))}
+            </div>
+          </fieldset>
         </ProgramFilter>
 
         {aktif.length > 0 && (

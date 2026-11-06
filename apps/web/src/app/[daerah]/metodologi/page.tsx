@@ -138,7 +138,7 @@ export default async function MetodologiPage({ params }: PageProps<'/[daerah]/me
           </section>
 
           <section aria-labelledby="netralitas" className="stack">
-            <h2 id="netralitas" tabIndex={-1} className="sr-only">
+            <h2 id="netralitas" tabIndex={-1}>
               Netralitas
             </h2>
             <div className="grid-2">

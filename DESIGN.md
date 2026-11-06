@@ -203,6 +203,8 @@ Plus Jakarta Sans, weights 400/600/700/800 (700 only for the wordmark). Body 16p
 - Source line: file icon plus 14px muted text: document, version, PDF page, check date, link.
 - Program card: code, title, field, source line, three stage rows (label left, pill right), divider, 2026 RPJMD pagu with full value in tooltip and the mandatory label, "Lihat detail". The whole card is the link.
 - Budget chart: stacked rows (field link plus arrow-up-right, curated-program count, value plus share, 12px track, PDF page with a link), separated by hairlines inside one white card. When all rows share one RKPD document, its full source line (document, version, pages, check date) sits once at the top of the card.
+- Detail pagu: a real table (year header cell, 22px track, value, total in `tfoot`) so screen readers get row and column headers; one shared source line below it.
+- Tracker records: one white card per request (code line, title, definition list of agency, sent date and deadline, then status select and delete).
 - Evidence step: 2px left rule, stage title, pill (its icon is the only icon in the step), search notes, source line.
 - Notice: pale blue, 16px radius and padding, optional info icon.
 - Landing demo: one white frame (header, steps, stage, controls); inside it a small app window with a navy title bar, cream body like the real pages, white controls, 8px radius and the header's soft shadow, so the simulated screen stands apart from the explanation.
@@ -224,5 +226,6 @@ Header shape transition: 420ms cubic-bezier(0.22,1,0.36,1), widening about 64px 
 - "Belum diketahui" keeps a dashed outline (product rule) where Figma draws a solid one.
 - Budget chart keeps the mandatory label once in the section header rather than repeating it on every row; each row instead carries its own RKPD page. Figma's stage icon in the evidence step is dropped because the pill already carries the same icon.
 - PPID applicant fields fill bracket placeholders in the preview only. They are not stored and not sent. Figma's "Tahun informasi" field is omitted because the reviewed letter template has no year placeholder.
+- Program list status filter uses radio chips (48px, pill) on their own row beside the submit button, where Figma draws a select: every option stays visible, one click, still a plain GET field. The PPID call to action sits in its own card under the evidence panel.
 - Tracker storage notice holds export/import; the empty state links to the program list because a PPID draft needs a chosen program.
 - Hamburger menu, header shape animation, evidence explorer, chart, tracker v2 import/export/migration remain. No scores, accounts, dark mode, splash screen or backend additions.
