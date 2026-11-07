@@ -1688,6 +1688,24 @@ button.trail-card:focus-visible {
 .program-row:hover {
   border-color: var(--color-border-strong);
 }
+/* Corner arrow: always visible link cue, nudges right on hover or keyboard focus. */
+.row-go {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  display: grid;
+  color: var(--color-accent);
+  transition: translate 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.program-row:hover .row-go,
+.program-row:focus-within .row-go {
+  translate: 4px 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .row-go {
+    transition: none;
+  }
+}
 /* Keep tooltip triggers and source links above the stretched link. */
 .program-row .source a,
 .program-row .money {

@@ -61,6 +61,9 @@ export function ProgramCard({
         </p>
         <p className="program-pagu-label">{LABEL_PAGU}</p>
       </div>
+      <span className="row-go" aria-hidden="true">
+        <Icon name="arrow" size={20} />
+      </span>
     </li>
   );
 }
