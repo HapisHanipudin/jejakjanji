@@ -29,25 +29,47 @@ export function pilihanUntukTahap(tahap: TahapDiminta | undefined): Pilihan {
 /** Square-bracket parts are never filled by the system; the requester fills them after copying. */
 export const PLACEHOLDER = /(\[[^\]]+\])/;
 
+/**
+ * Optional applicant entries typed on the PPID page. They only replace their own bracket in the
+ * preview; they are never stored or sent. An empty entry keeps its bracket.
+ */
+export const PEMOHON_FIELDS = [
+  { key: 'nama', label: 'Nama lengkap', autoComplete: 'name' },
+  { key: 'alamat', label: 'Alamat', autoComplete: 'street-address' },
+  { key: 'kontak', label: 'Email atau nomor telepon', autoComplete: 'email' },
+  { key: 'perangkat', label: 'Perangkat daerah tujuan', autoComplete: 'off' },
+  { key: 'tujuan', label: 'Tujuan penggunaan', autoComplete: 'off' },
+  { key: 'cara', label: 'Cara memperoleh informasi', autoComplete: 'off' },
+  { key: 'tempat', label: 'Tempat dan tanggal surat', autoComplete: 'off' },
+] as const;
+
+export type Pemohon = Partial<Record<(typeof PEMOHON_FIELDS)[number]['key'], string>>;
+
 export function buatSurat(
   program: { nama: string; kode: string; halaman: number; sumber: string },
   pilihan: Pilihan,
+  pemohon: Pemohon = {},
 ): string {
+  const isi = (key: keyof Pemohon, kurung: string) => pemohon[key]?.trim() || kurung;
+  const alamatKontak =
+    pemohon.alamat?.trim() || pemohon.kontak?.trim()
+      ? `${isi('alamat', '[alamat]')}, ${isi('kontak', '[kontak]')}`
+      : '[alamat dan kontak]';
   const daftar = INFORMASI.filter((i) => pilihan[i.key]).map((i, n) => `${n + 1}. ${i.teks}`);
   return [
-    '[Tempat, tanggal]',
+    isi('tempat', '[Tempat, tanggal]'),
     '',
     'Kepada Yth.',
-    'Pejabat Pengelola Informasi dan Dokumentasi (PPID) [Nama perangkat daerah]',
+    `Pejabat Pengelola Informasi dan Dokumentasi (PPID) ${isi('perangkat', '[Nama perangkat daerah]')}`,
     '',
     'Perihal: Permohonan informasi publik',
     '',
-    `Saya [nama pemohon], [alamat dan kontak], berdasarkan ${UU_KIP}, memohon informasi mengenai program ${program.nama} (kode ${program.kode}) sebagaimana tercantum dalam ${program.sumber}, halaman PDF ${program.halaman}, berupa:`,
+    `Saya ${isi('nama', '[nama pemohon]')}, ${alamatKontak}, berdasarkan ${UU_KIP}, memohon informasi mengenai program ${program.nama} (kode ${program.kode}) sebagaimana tercantum dalam ${program.sumber}, halaman PDF ${program.halaman}, berupa:`,
     ...daftar,
     '',
-    'Tujuan penggunaan informasi: [tujuan]. Cara memperoleh: [salinan digital / lihat langsung].',
+    `Tujuan penggunaan informasi: ${isi('tujuan', '[tujuan]')}. Cara memperoleh: ${isi('cara', '[salinan digital / lihat langsung]')}.`,
     '',
     'Hormat saya,',
-    '[Nama pemohon]',
+    isi('nama', '[Nama pemohon]'),
   ].join('\n');
 }

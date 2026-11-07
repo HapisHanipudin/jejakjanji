@@ -20,7 +20,7 @@ const TAHAP: {
   {
     key: 'rencana',
     label: 'Rencana',
-    icon: 'file-text-md',
+    icon: 'file-text',
     penanda: 'Ada di rencana',
     statusPenanda: 'ada',
     teks: 'Program prioritas dari RPJMD 2025 sampai 2029, lengkap dengan indikator dan target.',
@@ -28,7 +28,7 @@ const TAHAP: {
   {
     key: 'anggaran',
     label: 'Anggaran',
-    icon: 'wallet-md',
+    icon: 'wallet',
     penanda: 'Dianggarkan?',
     statusPenanda: 'belum_diketahui',
     teks: 'Pagu indikatif per tahun dengan halaman rujukan di dokumen sumber.',
@@ -36,7 +36,7 @@ const TAHAP: {
   {
     key: 'pelaksanaan',
     label: 'Pelaksanaan',
-    icon: 'files-md',
+    icon: 'files',
     penanda: 'Ada laporan?',
     statusPenanda: 'belum_diketahui',
     teks: 'Belum diketahui bila bukti kosong. Anda bisa meminta informasi lewat PPID.',

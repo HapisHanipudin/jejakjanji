@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { FlowDemo } from '@/components/FlowDemo';
-import { Icon } from '@/components/Icon';
 import { RegionPicker } from '@/components/RegionPicker';
 import { ErrorState } from '@/components/States';
 import { getDaerahList, getProgram, getProgramList } from '@/lib/data';
@@ -29,17 +28,13 @@ export default async function LandingPage() {
     result.ok && result.data.data ? [result.data.data] : [],
   );
   return (
-    <>
-      <section className="band band-hero band-navy landing-hero">
+    <div className="landing-page">
+      <section className="band band-hero landing-hero">
         <div className="container landing-grid">
           <div>
-            <h1 className="landing-title">
-              Telusuri program daerahmu,
-              <br className="desktop-only" /> dari rencana sampai bukti.
-            </h1>
+            <h1 className="landing-title">Telusuri program daerahmu, dari rencana sampai bukti</h1>
             <p className="lead">
-              Dari dokumen resmi ke informasi yang bisa diperiksa: program, pagu indikatif, dan
-              bukti pelaksanaan. Pilih daerah yang ingin Anda telusuri.
+              Periksa program prioritas, pagu indikatif, dan bukti pelaksanaan dari dokumen resmi.
             </p>
             <div className="landing-actions">
               <RegionPicker
@@ -49,13 +44,10 @@ export default async function LandingPage() {
               />
             </div>
             <p className="small muted">
-              Lokasi bersifat opsional. Saran daerah tetap Anda konfirmasi.
+              Pilih daerah secara manual, atau gunakan lokasi dengan persetujuan Anda.
             </p>
           </div>
           <section className="coverage-card" id="cakupan" aria-labelledby="cakupan-title">
-            <span className="hero-card-icon" aria-hidden="true">
-              <Icon name="files-lg" size={48} />
-            </span>
             <h2 id="cakupan-title">Data yang tersedia saat ini</h2>
             {!result.ok ? (
               <ErrorState pesan={result.pesan} />
@@ -89,7 +81,7 @@ export default async function LandingPage() {
           </section>
         </div>
       </section>
-      <section className="section-home" id="cara-kerja">
+      <section className="section-lg" id="cara-kerja">
         <div className="container">
           <h2 className="section-title">Dari rencana sampai bukti</h2>
           <FlowDemo programs={demoPrograms} />
@@ -98,18 +90,16 @@ export default async function LandingPage() {
           </Link>
         </div>
       </section>
-      <section className="section-home">
+      <section className="section section-alt">
         <div className="container">
-          <div className="box">
-            <h2>Satu daerah, sumber yang bisa ditelusuri.</h2>
-            <p>
-              Setiap angka memiliki dokumen sumber, halaman PDF, dan tanggal pemeriksaan. Tanpa skor
-              kepala daerah, leaderboard, atau perbandingan pagu antar daerah.
-            </p>
-            <p className="legend-chip">Pagu indikatif, bukan APBD dan bukan realisasi</p>
-          </div>
+          <h2>Satu daerah, sumber yang bisa ditelusuri</h2>
+          <p>
+            Setiap angka memiliki dokumen sumber, halaman PDF, dan tanggal pemeriksaan. Tanpa skor
+            kepala daerah, leaderboard, atau perbandingan pagu antar daerah.
+          </p>
+          <p className="legend-chip">Pagu indikatif, bukan APBD dan bukan realisasi</p>
         </div>
       </section>
-    </>
+    </div>
   );
 }

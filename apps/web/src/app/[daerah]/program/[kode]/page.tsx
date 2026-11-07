@@ -3,11 +3,11 @@ import { Icon } from '@/components/Icon';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { ProgramDetail } from '@jejakjanji/shared';
+import { BarChart } from '@/components/BarChart';
 import { JejakBukti } from '@/components/JejakBukti';
 import { Money } from '@/components/Money';
 import { PageHeader } from '@/components/PageHeader';
 import { SourceBox, type SourceDoc } from '@/components/SourceBox';
-import { StickyAside } from '@/components/StickyAside';
 import { StatusBadge } from '@/components/StatusBadge';
 import { EmptyState, ErrorState, PaguLabel } from '@/components/States';
 import { BELUM_BUKAN_GAGAL, STATUS_TEKS } from '@/content/site';
@@ -53,8 +53,6 @@ export default async function ProgramDetailPage({ params }: PageProps<'/[daerah]
   const bidangRingkas = bidangNama ? namaBidangRingkas(bidangNama) : `Bidang ${p.bidangKode}`;
   const bidangHref = `/${daerah}/program?bidang=${encodeURIComponent(p.bidangKode)}`;
 
-  const bidangChip = bidangNama ? `Bidang ${bidangRingkas}` : bidangRingkas;
-
   return (
     <>
       <PageHeader
@@ -63,7 +61,10 @@ export default async function ProgramDetailPage({ params }: PageProps<'/[daerah]
           <nav className="breadcrumb" aria-label="Remah roti">
             <ol>
               <li>
-                <Link href={`/${daerah}/program`}>{res.data.daerah?.nama} › Program</Link>
+                <Link href={`/${daerah}`}>{res.data.daerah?.nama}</Link>
+              </li>
+              <li>
+                <Link href={`/${daerah}/program`}>Program</Link>
               </li>
               <li>
                 <Link href={bidangHref}>{bidangRingkas}</Link>
@@ -73,82 +74,70 @@ export default async function ProgramDetailPage({ params }: PageProps<'/[daerah]
           </nav>
         }
       >
-        <div className="detail-meta">
-          <p className="detail-chips">
-            <span className="detail-chip detail-chip-kode kode">
-              <span className="sr-only">Kode </span>
-              {p.kode}
-            </span>
-            <span className="detail-chip">{bidangChip}</span>
-          </p>
-          <SourceBox line doc={p.sumber} pages={[p.pageRef]} />
-        </div>
+        <p className="detail-chips">
+          <span className="detail-chip detail-chip-kode kode">
+            <span className="sr-only">Kode </span>
+            {p.kode}
+          </span>
+          <span className="detail-chip">Bidang {bidangRingkas}</span>
+        </p>
       </PageHeader>
 
       <div className="section container">
-        <div className="detail-layout">
-          <div className="detail-main">
-            <section className="box detail-card" aria-labelledby="indikator-title">
-              <h2 id="indikator-title">Indikator utama</h2>
-              <p className="detail-indikator">
-                {p.indikator} ({p.satuan})
-              </p>
-              <dl className="detail-figures">
-                <div>
-                  <dt>Kondisi awal</dt>
-                  <dd>
-                    <span className="detail-figure-value">{p.kondisiAwal}</span>
-                    <SourceBox line doc={p.sumber} pages={[p.pageRef]} />
-                  </dd>
-                </div>
-                <div>
-                  <dt>Target 2026</dt>
-                  <dd>
-                    <span className="detail-figure-value">{p.target2026}</span>
-                    <SourceBox line doc={p.sumber} pages={[p.pageRef]} />
-                  </dd>
-                </div>
-              </dl>
-            </section>
+        <div className="detail-grid">
+          <section className="area-indikator box" aria-labelledby="indikator-title">
+            <h2 id="indikator-title">Indikator utama</h2>
+            <p className="lead" style={{ color: 'var(--color-heading)' }}>
+              {p.indikator} ({p.satuan})
+            </p>
+            <dl className="figures">
+              <div>
+                <dt>Kondisi awal</dt>
+                <dd>{p.kondisiAwal}</dd>
+              </div>
+              <div>
+                <dt>Target 2026</dt>
+                <dd>{p.target2026}</dd>
+              </div>
+            </dl>
+            <SourceBox doc={p.sumber} pages={[p.pageRef]} />
+          </section>
 
-            <PaguSection p={p} label={label} docs={docs} />
-
-            <section className="box detail-card" aria-labelledby="sumber-title">
-              <h2 id="sumber-title">Sumber dan tanggal cek</h2>
-              <dl className="facts">
-                <dt>Dokumen</dt>
-                <dd>
-                  {p.sumber.title} ({p.sumber.version})
-                </dd>
-                <dt>Halaman</dt>
-                <dd>PDF {p.pageRef}</dd>
-                <dt>Diperiksa</dt>
-                <dd>{formatTanggal(p.sumber.checkedAt)}</dd>
-              </dl>
-              {p.sumber.url ? (
-                <a className="btn" href={`${p.sumber.url}#page=${p.pageRef}`} rel="noopener">
-                  Buka dokumen sumber (hal. PDF {p.pageRef})
-                </a>
-              ) : (
-                <p className="muted small">Tautan dokumen belum tersedia.</p>
-              )}
-            </section>
-          </div>
-
-          {/* Evidence panel stays in view while reading the figures on desktop, but only while it
-              fits in the window (StickyAside); otherwise it scrolls with the page. */}
-          <StickyAside className="detail-aside">
+          <div className="area-status detail-aside">
             <StatusCard p={p} docs={docs} regionSlug={daerah} />
-            <section className="box detail-card detail-ppid" aria-label="Minta informasi">
-              <p>Kami hanya membuat draf. Anda yang mengirimnya.</p>
+            <section className="box" aria-label="Minta informasi">
               <Link
                 href={`/${daerah}/program/${encodeURIComponent(p.kode)}/ppid`}
-                className="btn btn-primary"
+                className="btn btn-primary btn-block"
               >
                 Minta informasi ke PPID
               </Link>
+              <p className="source">Kami hanya membuat draf. Anda yang mengirimnya.</p>
             </section>
-          </StickyAside>
+          </div>
+
+          <PaguSection p={p} label={label} docs={docs} />
+
+          <section className="area-sumber box" aria-labelledby="sumber-title">
+            <h2 id="sumber-title">Sumber dan tanggal cek</h2>
+            <dl className="facts">
+              <dt>Dokumen</dt>
+              <dd>
+                {p.sumber.title} ({p.sumber.version})
+              </dd>
+              <dt>Halaman</dt>
+              <dd>PDF {p.pageRef}</dd>
+              <dt>Diperiksa</dt>
+              <dd>{formatTanggal(p.sumber.checkedAt)}</dd>
+            </dl>
+            {p.sumber.url ? (
+              <a className="btn" href={`${p.sumber.url}#page=${p.pageRef}`} rel="noopener">
+                Buka dokumen sumber (hal. PDF {p.pageRef})
+              </a>
+            ) : (
+              <p className="muted small">Tautan dokumen belum tersedia.</p>
+            )}
+          </section>
         </div>
       </div>
     </>
@@ -159,7 +148,7 @@ function PaguSection({ p, label, docs }: { p: Detail; label: string; docs: Sourc
   const total = totalPagu(p.pagu);
   const pertama = p.pagu[0];
   return (
-    <section className="box detail-card" aria-labelledby="pagu-title">
+    <section className="area-pagu box" aria-labelledby="pagu-title">
       <div className="box-head">
         <h2 id="pagu-title">Pagu indikatif RPJMD</h2>
         <PaguLabel label={label} />
@@ -168,52 +157,36 @@ function PaguSection({ p, label, docs }: { p: Detail; label: string; docs: Sourc
         <EmptyState>Belum ada data pagu untuk program ini.</EmptyState>
       ) : (
         <>
-          <table className="pagu-table">
-            <caption className="sr-only">Pagu indikatif per tahun, juta rupiah</caption>
-            <thead>
-              <tr>
-                <th scope="col">Tahun</th>
-                <th scope="col" className="num">
-                  Pagu
-                </th>
-              </tr>
-            </thead>
-            {p.pagu.map((f) => (
-              <tbody key={f.tahun}>
-                <tr>
-                  <th scope="row">{f.tahun}</th>
-                  <td className="num">
-                    <Money jumlah={f.jumlahJutaRp} satuan="juta_rp" />
-                  </td>
-                </tr>
-                <tr className="pagu-note">
-                  <td colSpan={2}>
-                    <PaguLabel label={label} plain />
-                    <SourceBox
-                      line
-                      doc={docs.find((d) => d.id === f.sourceDocumentId)}
-                      pages={[f.pageRef]}
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            ))}
-            {total && (
-              <tfoot>
-                <tr>
-                  <th scope="row">Total {total.rentang}</th>
-                  <td className="num">
-                    <Money jumlah={total.jumlahJutaRp} satuan="juta_rp" />
-                  </td>
-                </tr>
-              </tfoot>
-            )}
-          </table>
+          <BarChart
+            compact
+            caption="Pagu indikatif per tahun, juta rupiah"
+            bars={p.pagu.map((f) => ({
+              key: String(f.tahun),
+              label: f.tahun,
+              value: f.jumlahJutaRp,
+              display: <Money jumlah={f.jumlahJutaRp} satuan="juta_rp" />,
+            }))}
+            total={
+              total
+                ? {
+                    label: `Total ${total.rentang}`,
+                    display: <Money jumlah={total.jumlahJutaRp} satuan="juta_rp" />,
+                  }
+                : undefined
+            }
+          />
           <p className="source">
             Satuan sumber: juta rupiah. Pagu {pertama.tahun}:{' '}
             {formatRupiahPenuh(pertama.jumlahJutaRp, 'juta_rp')}. Total adalah jumlah angka per
             tahun di atas.
           </p>
+          {[...new Set(p.pagu.map((f) => f.sourceDocumentId))].map((id) => (
+            <SourceBox
+              key={id}
+              doc={docs.find((d) => d.id === id)}
+              pages={p.pagu.filter((f) => f.sourceDocumentId === id).map((f) => f.pageRef)}
+            />
+          ))}
         </>
       )}
     </section>
@@ -227,47 +200,45 @@ function StatusCard({ p, docs, regionSlug }: { p: Detail; docs: SourceDoc[]; reg
     pelaksanaan: 'PELAKSANAAN',
   } as const;
   return (
-    <section className="detail-card evidence-panel" aria-labelledby="status-title">
-      <h2 id="status-title">Status bukti</h2>
-      <JejakBukti status={p.statusBukti} animate />
-      <ul className="list-plain evidence-steps">
+    <section className="box box-strong" aria-labelledby="status-title">
+      <h2 id="status-title">Jejak bukti</h2>
+      <p className="muted small">Setiap tahap punya rujukan dan batas pencariannya sendiri.</p>
+      <div style={{ marginBottom: 'var(--space-5)' }}>
+        <JejakBukti status={p.statusBukti} animate />
+      </div>
+      <ul className="list-plain status-items">
         {(Object.keys(jenisMap) as (keyof typeof jenisMap)[]).map((k) => {
           const ev = p.evidence.filter((e) => e.jenis === jenisMap[k]);
           const bersumber = ev.filter((e) => e.sourceDocumentId != null);
           const pencarian = ev.filter((e) => e.sourceDocumentId == null);
-          const ada = p.statusBukti[k] === 'ada';
           return (
-            <li key={k} className="evidence-step">
-              <div className="evidence-step-head">
-                <Icon name={ada ? 'file-check-md' : 'search'} size={20} />
-                <h3>{STATUS_TEKS[k].judul}</h3>
-              </div>
-              <StatusBadge jenis={k} status={p.statusBukti[k]} icon />
+            <li key={k}>
+              <h3>
+                <Icon name={p.statusBukti[k] === 'ada' ? 'file-check' : 'search'} size={20} />
+                {STATUS_TEKS[k].judul}
+              </h3>
+              <StatusBadge jenis={k} status={p.statusBukti[k]} bare />
               {bersumber.map((e) => (
-                <div key={e.id} className="evidence-body">
-                  {e.catatan && <p>{e.catatan}</p>}
+                <div key={e.id}>
                   <SourceBox
-                    line
                     prefix="Bukti"
                     doc={docs.find((d) => d.id === e.sourceDocumentId)}
                     pages={e.pageRef != null ? [e.pageRef] : []}
                   />
+                  {e.catatan && <p>{e.catatan}</p>}
                 </div>
               ))}
-              {p.statusBukti[k] === 'belum_diketahui' && (
-                <div className="evidence-body">
-                  {pencarian.length > 0 ? (
-                    pencarian.map((e) => (
-                      <p key={e.id}>
-                        Sudah dicari{e.cakupanPencarian ? `: ${e.cakupanPencarian}` : ''} (diperiksa{' '}
-                        {formatTanggal(e.checkedAt)}).{e.catatan ? ` ${e.catatan}` : ''}
-                      </p>
-                    ))
-                  ) : (
-                    <p>Belum ada catatan pencarian bukti.</p>
-                  )}
-                </div>
-              )}
+              {p.statusBukti[k] === 'belum_diketahui' &&
+                (pencarian.length > 0 ? (
+                  pencarian.map((e) => (
+                    <p key={e.id}>
+                      Sudah dicari{e.cakupanPencarian ? `: ${e.cakupanPencarian}` : ''} (diperiksa{' '}
+                      {formatTanggal(e.checkedAt)}).{e.catatan ? ` ${e.catatan}` : ''}
+                    </p>
+                  ))
+                ) : (
+                  <p>Belum ada catatan pencarian bukti.</p>
+                ))}
               {p.statusBukti[k] === 'belum_diketahui' && k !== 'rencana' && (
                 <Link
                   className="stage-action"
@@ -281,7 +252,9 @@ function StatusCard({ p, docs, regionSlug }: { p: Detail; docs: SourceDoc[]; reg
           );
         })}
       </ul>
-      <p className="notice notice-strong">{BELUM_BUKAN_GAGAL}</p>
+      <p className="notice notice-strong" style={{ marginBottom: 0 }}>
+        {BELUM_BUKAN_GAGAL}
+      </p>
     </section>
   );
 }

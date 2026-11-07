@@ -1,6 +1,7 @@
 'use client';
 
 import type { Daerah } from '@jejakjanji/shared';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { CATATAN_TINJAU_HUKUM, PERPANJANGAN_HARI_KERJA, TENGGAT_HARI_KERJA } from '@/content/legal';
 import { formatTanggal } from '@/lib/format';
@@ -18,6 +19,7 @@ import {
 import { unduh } from '@/lib/unduh';
 import { DateField } from './DateField';
 import { Icon } from './Icon';
+import { StatePanel } from './States';
 import { ThemedSelect } from './ThemedSelect';
 
 type ProgramOpt = { kode: string; nama: string };
@@ -165,14 +167,16 @@ export function RequestTracker({
   const adaProgram = programs.length > 0;
 
   return (
-    <div className="tracker-layout">
-      <div className="tracker-storage">
-        <Icon name="hard-drive" size={20} />
+    <div className="stack">
+      <section className="storage-panel" aria-labelledby="simpan-title">
+        <h2 id="simpan-title">
+          <Icon name="hard-drive" size={20} />
+          Data hanya tersimpan di browser ini.
+        </h2>
         <p>
-          <strong>
-            Tanpa akun: data hanya tersimpan di browser ini dan tidak dikirim ke server.
-          </strong>{' '}
-          Ekspor secara berkala agar tidak hilang.
+          Catatan memakai localStorage dan tidak dikirim ke server. Menghapus data browser dapat
+          menghapus catatan Anda. Ekspor JSON secara berkala; impor kembali file itu untuk
+          memulihkan catatan di browser pilihan Anda.
         </p>
         <div className="btn-row">
           <button
@@ -187,10 +191,10 @@ export function RequestTracker({
               )
             }
           >
-            Ekspor semua daerah<span className="sr-only"> (unduh JSON)</span>
+            Ekspor JSON<span className="sr-only"> (semua daerah)</span>
           </button>
           <label className="btn">
-            Impor<span className="sr-only"> (unggah JSON)</span>
+            Impor JSON<span className="sr-only"> (unggah file)</span>
             <input
               type="file"
               accept="application/json,.json"
@@ -200,10 +204,11 @@ export function RequestTracker({
             />
           </label>
         </div>
-      </div>
-
-      <form className="box tracker-form" onSubmit={tambah} aria-labelledby="catat-title">
-        <h2 id="catat-title">Catat permohonan baru</h2>
+      </section>
+      <form className="box" onSubmit={tambah} aria-labelledby="catat-title">
+        <h2 id="catat-title" className="box-title">
+          Catat permohonan baru
+        </h2>
         <div className="form-row">
           <div className="field">
             <label htmlFor="program">Program</label>
@@ -235,6 +240,7 @@ export function RequestTracker({
         <button
           type="submit"
           className="btn btn-primary"
+          style={{ marginBlock: 'var(--space-4)' }}
           disabled={!adaProgram || items == null || blocked}
         >
           Simpan dan hitung tenggat
@@ -254,34 +260,43 @@ export function RequestTracker({
         </div>
       </form>
 
-      <div className="tracker-feedback">
-        <p role="status">{pesan}</p>
-        {rawBackup && (
-          <button
-            className="btn"
-            type="button"
-            onClick={() =>
-              unduh(`cadangan-mentah-pelacak-${hariIni()}.json`, rawBackup, 'application/json')
-            }
-          >
-            Unduh cadangan mentah
-          </button>
-        )}
-      </div>
+      <p role="status">{pesan}</p>
+      {rawBackup && (
+        <button
+          className="btn"
+          type="button"
+          onClick={() =>
+            unduh(`cadangan-mentah-pelacak-${hariIni()}.json`, rawBackup, 'application/json')
+          }
+        >
+          Unduh cadangan mentah
+        </button>
+      )}
 
-      <section className="tracker-records" aria-labelledby="daftar-title">
-        <h2 id="daftar-title">
+      <section aria-labelledby="daftar-title">
+        <h2 id="daftar-title" className="section-title request-list-title">
           Permohonan saya di {region.nama} ({daftar.length})
         </h2>
         {items == null ? (
           <p className="muted">Memuat data dari browser ini...</p>
         ) : daftar.length === 0 ? (
-          <div className="tracker-empty">
-            <Icon name="folder-open" size={48} />
-            <p>Belum ada permohonan yang dicatat di browser ini.</p>
-          </div>
+          <StatePanel
+            level={2}
+            icon="folder-open"
+            title="Belum ada catatan permohonan"
+            actions={
+              <Link className="btn btn-primary" href={`/${region.slug}/program`}>
+                Pilih program untuk draf PPID
+              </Link>
+            }
+          >
+            <p>
+              Mulai dari program yang ingin Anda pahami. Buat draf, kirim sendiri melalui kanal
+              PPID, lalu catat permohonannya di sini.
+            </p>
+          </StatePanel>
         ) : (
-          <ul className="list-plain tracker-list">
+          <ul className="list-plain request-list">
             {daftar.map((p) => {
               const t = tenggat(p);
               const sisa = today ? selisihHariKerja(today, t) : null;
@@ -289,72 +304,76 @@ export function RequestTracker({
               return (
                 <li
                   key={p.id}
-                  className={p.id === baruId ? 'tracker-card row-new' : 'tracker-card'}
-                  data-permohonan
+                  className={p.id === baruId ? 'request-card row-new' : 'request-card'}
                 >
-                  <div className="tracker-card-head">
-                    <p className="tracker-card-code">
+                  <div>
+                    <p className="xsmall muted">
                       {p.daerahNama} › <span className="kode">{p.programKode}</span>
                     </p>
                     <h3>{p.programNama}</h3>
                   </div>
-                  <dl className="tracker-facts">
+                  <dl className="request-facts">
                     <div>
-                      <dt>Perangkat daerah tujuan</dt>
+                      <dt>Perangkat daerah</dt>
                       <dd>{p.perangkatDaerah}</dd>
                     </div>
                     <div>
-                      <dt>Tanggal kirim</dt>
+                      <dt>Dikirim</dt>
                       <dd>{formatTanggal(p.tanggalKirim)}</dd>
                     </div>
                     <div>
-                      <dt>Tenggat (perkiraan)</dt>
-                      <dd>{formatTanggal(t)}</dd>
+                      <dt>Tenggat perkiraan</dt>
+                      <dd>
+                        {formatTanggal(t)}
+                        {!selesai && sisa != null && (
+                          <span className="xsmall muted">
+                            {' '}
+                            · {sisa >= 0 ? `sisa ${sisa} hari kerja` : `lewat ${-sisa} hari kerja`}
+                          </span>
+                        )}
+                      </dd>
                     </div>
                   </dl>
-                  <div className="field">
-                    <label htmlFor={`status-${p.id}`}>
-                      Status permohonan<span className="sr-only"> {p.programKode}</span>
-                    </label>
-                    <ThemedSelect
-                      id={`status-${p.id}`}
-                      value={p.status}
+                  <div className="request-actions">
+                    <div className="field">
+                      <label htmlFor={`status-${p.id}`}>
+                        Status<span className="sr-only"> permohonan {p.programKode}</span>
+                      </label>
+                      <ThemedSelect
+                        id={`status-${p.id}`}
+                        value={p.status}
+                        disabled={blocked}
+                        onChange={(e) =>
+                          simpan(
+                            all.map((x) =>
+                              x.id === p.id
+                                ? { ...x, status: e.target.value as StatusPermohonan }
+                                : x,
+                            ),
+                            'Status diperbarui.',
+                          )
+                        }
+                        options={STATUS_PERMOHONAN.map((s) => ({
+                          value: s,
+                          label: STATUS_LABEL[s],
+                        }))}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="btn"
                       disabled={blocked}
-                      onChange={(e) =>
+                      onClick={() =>
+                        confirm(`Hapus permohonan ${p.programKode}?`) &&
                         simpan(
-                          all.map((x) =>
-                            x.id === p.id
-                              ? { ...x, status: e.target.value as StatusPermohonan }
-                              : x,
-                          ),
-                          'Status diperbarui.',
+                          all.filter((x) => x.id !== p.id),
+                          'Permohonan dihapus.',
                         )
                       }
-                      options={STATUS_PERMOHONAN.map((s) => ({
-                        value: s,
-                        label: STATUS_LABEL[s],
-                      }))}
-                    />
+                    >
+                      Hapus<span className="sr-only"> permohonan {p.programKode}</span>
+                    </button>
                   </div>
-                  {!selesai && sisa != null && (
-                    <p className="tracker-remaining">
-                      {sisa >= 0 ? `sisa ${sisa} hari kerja` : `lewat ${-sisa} hari kerja`}
-                    </p>
-                  )}
-                  <button
-                    type="button"
-                    className="btn tracker-delete"
-                    disabled={blocked}
-                    onClick={() =>
-                      confirm(`Hapus permohonan ${p.programKode}?`) &&
-                      simpan(
-                        all.filter((x) => x.id !== p.id),
-                        'Permohonan dihapus.',
-                      )
-                    }
-                  >
-                    Hapus<span className="sr-only"> permohonan {p.programKode}</span>
-                  </button>
                 </li>
               );
             })}

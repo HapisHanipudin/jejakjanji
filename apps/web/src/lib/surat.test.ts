@@ -42,6 +42,19 @@ test('bagian dalam kurung siku tidak diisi sistem', () => {
   }
 });
 
+test('isian pemohon mengganti kurung siku miliknya saja; isian kosong tetap kurung siku', () => {
+  const s = buatSurat(program, pilihanBawaan(), {
+    nama: '  Sari  ',
+    kontak: 'sari@contoh.id',
+    tujuan: ' ',
+  });
+  expect(s).toContain('Saya Sari, [alamat], sari@contoh.id, berdasarkan');
+  expect(s).toContain('Hormat saya,\nSari');
+  expect(s).toContain('Tujuan penggunaan informasi: [tujuan].');
+  expect(s).toContain('(PPID) [Nama perangkat daerah]');
+  expect(s.startsWith('[Tempat, tanggal]')).toBe(true);
+});
+
 test('tahap dari Detail memilih butir yang sesuai; nilai lain kembali ke bawaan', () => {
   expect(pilihanUntukTahap('anggaran')).toEqual({ capaian: false, anggaran: true, dokumen: false });
   expect(pilihanUntukTahap('pelaksanaan')).toEqual({

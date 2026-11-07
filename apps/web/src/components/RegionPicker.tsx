@@ -109,33 +109,28 @@ export function RegionPicker({
   return (
     <div className={landing ? 'region-entry region-entry-landing' : 'region-entry'}>
       <button
-        className={landing ? 'btn btn-primary' : 'region-pill'}
+        className={landing ? 'btn btn-primary region-trigger' : 'btn region-trigger'}
         type="button"
         onClick={() => open()}
         aria-haspopup="dialog"
       >
-        {landing ? (
-          'Pilih daerah'
-        ) : (
-          <>
-            <Icon name="map-pin" />
-            <span>
-              {current ? current.nama : 'Pilih daerah'}
-              {current && <span className="sr-only"> · ubah daerah</span>}
-            </span>
-            <Icon name="chevron-down" />
-          </>
-        )}
+        {!landing && <Icon name="map-pin" />}
+        <span>
+          {current && !landing ? (
+            <>
+              {current.nama}
+              <span className="sr-only">, ubah daerah</span>
+            </>
+          ) : (
+            'Pilih daerah'
+          )}
+        </span>
+        {!landing && <Icon name="chevron-down" />}
       </button>
       {landing && (
-        <button className="btn" type="button" onClick={() => open(true)}>
+        <button className="btn" type="button" onClick={() => open(true)} aria-haspopup="dialog">
           Gunakan lokasi saya
         </button>
-      )}
-      {landing && last && (
-        <Link className="btn" href={regionPath(last.slug)}>
-          Lanjut ke {last.nama}
-        </Link>
       )}
       <dialog
         ref={dialog}
@@ -149,14 +144,22 @@ export function RegionPicker({
         <div className="region-dialog-body">
           <div className="box-head">
             <h2 id={landing ? 'region-title-main' : 'region-title-nav'}>Pilih daerah</h2>
-            <button type="button" className="icon-btn" onClick={close} aria-label="Tutup">
+            <button type="button" className="icon-button" onClick={close} aria-label="Tutup">
               <Icon name="close" size={20} />
             </button>
           </div>
-          <p>
-            Data aktif saat ini DKI Jakarta. Daerah lain ditambahkan setelah sumber dan datanya
-            diperiksa.
+          <p className="muted">
+            Ketersediaan data mengikuti cakupan kurasi, bukan penilaian daerah. Data aktif saat ini
+            DKI Jakarta; daerah lain ditambahkan setelah sumber dan datanya diperiksa.
           </p>
+          {landing && last && (
+            <p className="small">
+              <Link href={regionPath(last.slug)} onClick={close}>
+                Lanjut ke {last.nama}
+              </Link>{' '}
+              · terakhir dipilih
+            </p>
+          )}
           <label htmlFor={landing ? 'region-search-main' : 'region-search-nav'}>Cari daerah</label>
           <input
             id={landing ? 'region-search-main' : 'region-search-nav'}
@@ -176,27 +179,25 @@ export function RegionPicker({
                 region.nama.toLocaleLowerCase('id').includes(search.toLocaleLowerCase('id')),
               )
               .map((region) => {
-                const isCurrent = region.kode === current?.kode;
-                const tersedia = region.statusKurasi === 'AKTIF';
+                const dipilih = !landing && current?.kode === region.kode;
+                const aktif = region.statusKurasi === 'AKTIF';
                 return (
                   <li key={region.kode}>
                     <Link
-                      className={
-                        isCurrent ? 'region-option region-option-current' : 'region-option'
-                      }
+                      className="region-option"
                       href={regionPath(region.slug)}
-                      aria-current={isCurrent ? 'true' : undefined}
                       onClick={close}
+                      aria-current={dipilih ? 'true' : undefined}
                     >
                       <Icon
-                        name={isCurrent ? 'circle-check' : tersedia ? 'map-pin' : 'circle-help'}
+                        name={dipilih ? 'circle-check' : aktif ? 'map-pin' : 'circle-help'}
                         size={20}
                       />
-                      <span className="region-option-text">
+                      <span>
                         <strong>{region.nama}</strong>
-                        <span>
-                          {isCurrent ? 'Daerah saat ini · ' : ''}
-                          {tersedia ? 'Data tersedia' : 'Belum dikurasi'}
+                        <span className="region-option-status">
+                          {dipilih ? 'Daerah saat ini · ' : ''}
+                          {aktif ? 'Data tersedia' : 'Belum dikurasi'}
                         </span>
                       </span>
                     </Link>

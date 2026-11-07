@@ -14,13 +14,13 @@ import { namaBidangRingkas } from '@/lib/format';
 
 export const metadata: Metadata = { title: 'Daftar program' };
 
-const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
-
 const STATUS_OPSI = [
   { value: '', label: 'Semua status' },
   { value: 'ada', label: 'Ada laporan pelaksanaan' },
   { value: 'belum_diketahui', label: 'Belum diketahui' },
 ];
+
+const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
 export default async function ProgramListPage({
   searchParams,
@@ -76,7 +76,16 @@ export default async function ProgramListPage({
     <>
       <PageHeader
         title={`Program prioritas RPJMD ${region.nama}`}
-        breadcrumb={<p className="breadcrumb">{region.nama} › Program</p>}
+        breadcrumb={
+          <nav className="breadcrumb" aria-label="Remah roti">
+            <ol>
+              <li>
+                <Link href={`/${daerah}`}>{region.nama}</Link>
+              </li>
+              <li aria-current="page">Program</li>
+            </ol>
+          </nav>
+        }
         lead={
           <>
             {all.ok
@@ -90,7 +99,7 @@ export default async function ProgramListPage({
       <div className="section container">
         {/* Plain GET form: works without JavaScript and keeps filters in the shareable URL. */}
         <ProgramFilter action={`/${daerah}/program`} filterKey={filterKey}>
-          <div className="field field-wide">
+          <div className="field">
             <label htmlFor="q">Cari</label>
             <input
               id="q"
@@ -116,19 +125,20 @@ export default async function ProgramListPage({
               ]}
             />
           </div>
-          {/* Radio inputs styled as chips: same GET field as before, works without JavaScript. */}
-          <fieldset className="field choice-field">
+          {/* Radios styled as chips: every option visible, same GET field, works without JavaScript. */}
+          <fieldset className="field status-choice">
             <legend>Status bukti</legend>
             <div className="choice-row">
               {STATUS_OPSI.map((o) => (
                 <label key={o.value} className="choice-chip">
                   <input
+                    className="sr-only"
                     type="radio"
                     name="status"
                     value={o.value}
                     defaultChecked={(filter.status ?? '') === o.value}
                   />
-                  <span>{o.label}</span>
+                  {o.label}
                 </label>
               ))}
             </div>
@@ -191,11 +201,6 @@ export default async function ProgramListPage({
                 </div>
               ) : (
                 <>
-                  <div className="program-head" aria-hidden="true">
-                    <span>Program dan sumber</span>
-                    <span className="num">Pagu indikatif 2026</span>
-                    <span>Jejak bukti</span>
-                  </div>
                   <ul className="program-list program-results" key={filterKey}>
                     {filtered.data.data.map((p, i) => (
                       <ProgramCard
@@ -203,7 +208,6 @@ export default async function ProgramListPage({
                         index={i}
                         program={p}
                         regionSlug={daerah}
-                        paguLabel={filtered.data.label}
                         bidangNama={bidangNama.get(p.bidangKode)}
                         doc={docs.find((d) => d.id === p.paguPerTahun[0]?.sourceDocumentId)}
                       />
