@@ -109,12 +109,7 @@ export function RegionPicker({
   return (
     <div className={landing ? 'region-entry region-entry-landing' : 'region-entry'}>
       <button
-        className={
-          landing &&
-          !regions.some((region) => region.kode === '31' && region.statusKurasi === 'AKTIF')
-            ? 'btn btn-primary region-trigger'
-            : 'btn region-trigger'
-        }
+        className={landing ? 'btn btn-primary region-trigger' : 'btn region-trigger'}
         type="button"
         onClick={() => open()}
         aria-haspopup="dialog"
@@ -132,6 +127,11 @@ export function RegionPicker({
         </span>
         {!landing && <Icon name="chevron-down" />}
       </button>
+      {landing && (
+        <button className="btn" type="button" onClick={() => open(true)} aria-haspopup="dialog">
+          Gunakan lokasi saya
+        </button>
+      )}
       <dialog
         ref={dialog}
         className="region-dialog"

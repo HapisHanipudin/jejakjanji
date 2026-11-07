@@ -87,7 +87,10 @@ export default async function HomePage({ params }: PageProps<'/[daerah]'>) {
               </Link>
             </p>
           </div>
-          <div aria-label="Cakupan data">
+          <div className="hero-card" aria-label="Cakupan data">
+            <span className="hero-card-icon" aria-hidden="true">
+              <Icon name="files" size={40} />
+            </span>
             {programs.ok ? (
               <>
                 <p className="coverage-number">

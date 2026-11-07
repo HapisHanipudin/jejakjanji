@@ -2,15 +2,14 @@ import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { LABEL_PAGU, type ProgramList } from '@jejakjanji/shared';
 import { Icon } from './Icon';
-import { StatusBadge } from './StatusBadge';
+import { JejakBukti } from './JejakBukti';
 import { Money } from './Money';
-import { SourceBox, type SourceDoc } from './SourceBox';
-import { STATUS_TEKS } from '@/content/site';
-import { namaBidangRingkas, namaProgram } from '@/lib/format';
+import type { SourceDoc } from './SourceBox';
+import { formatTanggal, namaBidangRingkas, namaProgram } from '@/lib/format';
 
 type Item = ProgramList['data'][number];
 
-/** One program card (Figma JJ/Program card 143:51902): identity, source, three stages, 2026 pagu. */
+/** One program card: code, name, field, short source line, evidence trail, 2026 pagu. */
 export function ProgramCard({
   program,
   bidangNama,
@@ -40,29 +39,30 @@ export function ProgramCard({
         <p className="program-bidang">
           {bidangNama ? namaBidangRingkas(bidangNama) : program.bidangKode}
         </p>
-        <SourceBox doc={doc} pages={pages} />
+        {pages.length > 0 && (
+          <p className="source-line">
+            <Icon name="file-text" />
+            <span>
+              {doc?.type ?? 'Sumber'} · hal. PDF {pages.join(', ')}
+              {doc && <> · diperiksa {formatTanggal(doc.checkedAt)}</>}
+            </span>
+          </p>
+        )}
       </div>
-      <ul className="program-stages list-plain" aria-label="Jejak bukti">
-        {(['rencana', 'anggaran', 'pelaksanaan'] as const).map((stage) => (
-          <li key={stage}>
-            <span>{STATUS_TEKS[stage].singkat}</span>
-            <StatusBadge jenis={stage} status={program.statusBukti[stage]} bare />
-          </li>
-        ))}
-      </ul>
+      <JejakBukti status={program.statusBukti} />
       <div className="program-pagu">
-        <p className="program-pagu-year">2026 · Pagu RPJMD</p>
         <p className="program-pagu-value">
           {program.pagu2026 ? (
             <Money jumlah={program.pagu2026.jumlahJutaRp} satuan="juta_rp" />
           ) : (
             <span className="muted">Tidak tercantum</span>
           )}
+          <span className="program-pagu-year"> pagu 2026</span>
         </p>
         <p className="program-pagu-label">{LABEL_PAGU}</p>
       </div>
-      <span className="link-strong" aria-hidden="true">
-        Lihat detail <Icon name="arrow" />
+      <span className="row-go" aria-hidden="true">
+        <Icon name="arrow" size={20} />
       </span>
     </li>
   );

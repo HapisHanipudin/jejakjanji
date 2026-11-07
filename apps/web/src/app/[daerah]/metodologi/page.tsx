@@ -37,7 +37,10 @@ export default async function MetodologiPage({ params }: PageProps<'/[daerah]/me
         lead="Dari mana angka berasal, bagaimana status bukti ditentukan, dan apa yang tidak kami lakukan."
       />
       <div className="section container methodology-layout">
-        <nav className="box methodology-nav" aria-label="Di halaman ini">
+        <nav className="box methodology-nav" aria-labelledby="toc-title">
+          <p id="toc-title" className="methodology-nav-title">
+            Di halaman ini
+          </p>
           <a href="#dok-title">Sumber data</a>
           <a href="#status-title">Arti status</a>
           <a href="#pagu-title">Cara membaca pagu</a>
@@ -45,7 +48,7 @@ export default async function MetodologiPage({ params }: PageProps<'/[daerah]/me
           <a href="#koreksi-title">Kontak koreksi</a>
         </nav>
         <div className="stack">
-          <section className="box" aria-labelledby="dok-title">
+          <section className="method-section" aria-labelledby="dok-title">
             <h2 id="dok-title">Dokumen sumber</h2>
             {!sumber.ok ? (
               <ErrorState pesan={sumber.pesan} />
@@ -93,7 +96,7 @@ export default async function MetodologiPage({ params }: PageProps<'/[daerah]/me
             </p>
           </section>
 
-          <section className="box" aria-labelledby="status-title">
+          <section className="method-section" aria-labelledby="status-title">
             <h2 id="status-title">Aturan status bukti</h2>
             <ul className="list-plain rule-list">
               {ATURAN.map((a) => (
@@ -124,7 +127,7 @@ export default async function MetodologiPage({ params }: PageProps<'/[daerah]/me
             </ul>
           </section>
 
-          <section className="box" aria-labelledby="pagu-title">
+          <section className="method-section" aria-labelledby="pagu-title">
             <h2 id="pagu-title">Cara membaca pagu</h2>
             <p>
               Pagu program adalah pagu indikatif RPJMD dalam juta rupiah. Pagu per bidang urusan
@@ -138,7 +141,7 @@ export default async function MetodologiPage({ params }: PageProps<'/[daerah]/me
           </section>
 
           <section aria-labelledby="netralitas" className="stack">
-            <h2 id="netralitas" tabIndex={-1} className="sr-only">
+            <h2 id="netralitas" tabIndex={-1}>
               Netralitas
             </h2>
             <div className="grid-2">

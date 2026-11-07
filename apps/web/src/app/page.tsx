@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { FlowDemo } from '@/components/FlowDemo';
+import { Icon } from '@/components/Icon';
 import { RegionPicker } from '@/components/RegionPicker';
 import { ErrorState } from '@/components/States';
 import { getDaerahList, getProgram, getProgramList } from '@/lib/data';
@@ -17,7 +18,6 @@ export default async function LandingPage() {
   );
   const counts = lists.map((list) => list?.length ?? null);
   const jakartaIndex = active.findIndex((region) => region.kode === '31');
-  const jakarta = active[jakartaIndex];
   const candidates = lists[jakartaIndex] ?? [];
   const examples = await Promise.all(
     [...candidates]
@@ -38,11 +38,6 @@ export default async function LandingPage() {
               Periksa program prioritas, pagu indikatif, dan bukti pelaksanaan dari dokumen resmi.
             </p>
             <div className="landing-actions">
-              {jakarta && (
-                <Link className="btn btn-primary" href={`/${jakarta.slug}`}>
-                  Jelajahi {jakarta.nama}
-                </Link>
-              )}
               <RegionPicker
                 regions={regions}
                 error={result.ok ? undefined : result.pesan}
@@ -54,6 +49,9 @@ export default async function LandingPage() {
             </p>
           </div>
           <section className="coverage-card" id="cakupan" aria-labelledby="cakupan-title">
+            <span className="hero-card-icon" aria-hidden="true">
+              <Icon name="files" size={40} />
+            </span>
             <h2 id="cakupan-title">Data yang tersedia saat ini</h2>
             {!result.ok ? (
               <ErrorState pesan={result.pesan} />
@@ -62,7 +60,7 @@ export default async function LandingPage() {
                 {active.map((region, i) => (
                   <li className="coverage-entry" key={region.kode}>
                     <p className="coverage-name">
-                      <Link href={`/${region.slug}`}>{region.nama}</Link>
+                      {region.nama}
                       <span className="badge">Aktif</span>
                     </p>
                     <p className="muted small">
@@ -71,6 +69,9 @@ export default async function LandingPage() {
                         : 'Program prioritas RPJMD dikurasi'}{' '}
                       beserta konteks pagu RKPD, halaman PDF, dan tanggal cek.
                     </p>
+                    <Link className="btn btn-primary btn-block" href={`/${region.slug}`}>
+                      Jelajahi {region.nama}
+                    </Link>
                   </li>
                 ))}
               </ul>

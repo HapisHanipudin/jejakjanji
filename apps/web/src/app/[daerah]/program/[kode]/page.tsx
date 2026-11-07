@@ -57,15 +57,6 @@ export default async function ProgramDetailPage({ params }: PageProps<'/[daerah]
     <>
       <PageHeader
         title={namaProgram(p.nama)}
-        lead={
-          <>
-            <span className="meta-item">
-              Kode <span className="kode">{p.kode}</span>
-            </span>
-            <span className="meta-item">Bidang {bidangRingkas}</span>
-            <span className="meta-item">{p.sumber.title}</span>
-          </>
-        }
         breadcrumb={
           <nav className="breadcrumb" aria-label="Remah roti">
             <ol>
@@ -82,7 +73,15 @@ export default async function ProgramDetailPage({ params }: PageProps<'/[daerah]
             </ol>
           </nav>
         }
-      />
+      >
+        <p className="detail-chips">
+          <span className="detail-chip detail-chip-kode kode">
+            <span className="sr-only">Kode </span>
+            {p.kode}
+          </span>
+          <span className="detail-chip">Bidang {bidangRingkas}</span>
+        </p>
+      </PageHeader>
 
       <div className="section container">
         <div className="detail-grid">
@@ -104,7 +103,18 @@ export default async function ProgramDetailPage({ params }: PageProps<'/[daerah]
             <SourceBox doc={p.sumber} pages={[p.pageRef]} />
           </section>
 
-          <StatusCard p={p} docs={docs} regionSlug={daerah} />
+          <div className="area-status detail-aside">
+            <StatusCard p={p} docs={docs} regionSlug={daerah} />
+            <section className="box" aria-label="Minta informasi">
+              <Link
+                href={`/${daerah}/program/${encodeURIComponent(p.kode)}/ppid`}
+                className="btn btn-primary btn-block"
+              >
+                Minta informasi ke PPID
+              </Link>
+              <p className="source">Kami hanya membuat draf. Anda yang mengirimnya.</p>
+            </section>
+          </div>
 
           <PaguSection p={p} label={label} docs={docs} />
 
@@ -156,16 +166,15 @@ function PaguSection({ p, label, docs }: { p: Detail; label: string; docs: Sourc
               value: f.jumlahJutaRp,
               display: <Money jumlah={f.jumlahJutaRp} satuan="juta_rp" />,
             }))}
+            total={
+              total
+                ? {
+                    label: `Total ${total.rentang}`,
+                    display: <Money jumlah={total.jumlahJutaRp} satuan="juta_rp" />,
+                  }
+                : undefined
+            }
           />
-          <hr className="rule" style={{ marginBlock: 'var(--space-4)' }} />
-          {total && (
-            <p className="total-row">
-              <span>Total {total.rentang}</span>
-              <span className="total-value">
-                <Money jumlah={total.jumlahJutaRp} satuan="juta_rp" />
-              </span>
-            </p>
-          )}
           <p className="source">
             Satuan sumber: juta rupiah. Pagu {pertama.tahun}:{' '}
             {formatRupiahPenuh(pertama.jumlahJutaRp, 'juta_rp')}. Total adalah jumlah angka per
@@ -191,7 +200,7 @@ function StatusCard({ p, docs, regionSlug }: { p: Detail; docs: SourceDoc[]; reg
     pelaksanaan: 'PELAKSANAAN',
   } as const;
   return (
-    <section className="area-status box box-strong" aria-labelledby="status-title">
+    <section className="box box-strong" aria-labelledby="status-title">
       <h2 id="status-title">Jejak bukti</h2>
       <p className="muted small">Setiap tahap punya rujukan dan batas pencariannya sendiri.</p>
       <div style={{ marginBottom: 'var(--space-5)' }}>
@@ -204,7 +213,10 @@ function StatusCard({ p, docs, regionSlug }: { p: Detail; docs: SourceDoc[]; reg
           const pencarian = ev.filter((e) => e.sourceDocumentId == null);
           return (
             <li key={k}>
-              <h3>{STATUS_TEKS[k].judul}</h3>
+              <h3>
+                <Icon name={p.statusBukti[k] === 'ada' ? 'file-check' : 'search'} size={20} />
+                {STATUS_TEKS[k].judul}
+              </h3>
               <StatusBadge jenis={k} status={p.statusBukti[k]} bare />
               {bersumber.map((e) => (
                 <div key={e.id}>
@@ -240,16 +252,9 @@ function StatusCard({ p, docs, regionSlug }: { p: Detail; docs: SourceDoc[]; reg
           );
         })}
       </ul>
-      <p className="notice notice-strong" style={{ marginBlock: 'var(--space-5)' }}>
+      <p className="notice notice-strong" style={{ marginBottom: 0 }}>
         {BELUM_BUKAN_GAGAL}
       </p>
-      <Link
-        href={`/${regionSlug}/program/${encodeURIComponent(p.kode)}/ppid`}
-        className="btn btn-primary btn-block"
-      >
-        Minta informasi ke PPID
-      </Link>
-      <p className="source">Kami hanya membuat draf. Anda yang mengirimnya.</p>
     </section>
   );
 }

@@ -296,92 +296,88 @@ export function RequestTracker({
             </p>
           </StatePanel>
         ) : (
-          <div className="table-wrap">
-            <table className="table-plain table-cards request-table">
-              <thead>
-                <tr>
-                  <th scope="col">Program</th>
-                  <th scope="col">Tanggal kirim</th>
-                  <th scope="col">Tenggat (perkiraan)</th>
-                  <th scope="col">Status (ubah di sini)</th>
-                  <th scope="col">
-                    <span className="sr-only">Aksi</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {daftar.map((p) => {
-                  const t = tenggat(p);
-                  const sisa = today ? selisihHariKerja(today, t) : null;
-                  const selesai = p.status === 'dijawab' || p.status === 'ditolak';
-                  return (
-                    <tr key={p.id} className={p.id === baruId ? 'row-new' : undefined}>
-                      <td>
-                        <strong style={{ color: 'var(--color-heading)' }}>{p.programNama}</strong>
-                        <br />
-                        <span className="xsmall muted">
-                          {p.daerahNama} › <span className="kode">{p.programKode}</span> |{' '}
-                          {p.perangkatDaerah}
-                        </span>
-                      </td>
-                      <td data-label="Dikirim">{formatTanggal(p.tanggalKirim)}</td>
-                      <td data-label="Tenggat perkiraan">
+          <ul className="list-plain request-list">
+            {daftar.map((p) => {
+              const t = tenggat(p);
+              const sisa = today ? selisihHariKerja(today, t) : null;
+              const selesai = p.status === 'dijawab' || p.status === 'ditolak';
+              return (
+                <li
+                  key={p.id}
+                  className={p.id === baruId ? 'request-card row-new' : 'request-card'}
+                >
+                  <div>
+                    <p className="xsmall muted">
+                      {p.daerahNama} › <span className="kode">{p.programKode}</span>
+                    </p>
+                    <h3>{p.programNama}</h3>
+                  </div>
+                  <dl className="request-facts">
+                    <div>
+                      <dt>Perangkat daerah</dt>
+                      <dd>{p.perangkatDaerah}</dd>
+                    </div>
+                    <div>
+                      <dt>Dikirim</dt>
+                      <dd>{formatTanggal(p.tanggalKirim)}</dd>
+                    </div>
+                    <div>
+                      <dt>Tenggat perkiraan</dt>
+                      <dd>
                         {formatTanggal(t)}
                         {!selesai && sisa != null && (
                           <span className="xsmall muted">
-                            <br />
-                            {sisa >= 0 ? `sisa ${sisa} hari kerja` : `lewat ${-sisa} hari kerja`}
+                            {' '}
+                            · {sisa >= 0 ? `sisa ${sisa} hari kerja` : `lewat ${-sisa} hari kerja`}
                           </span>
                         )}
-                      </td>
-                      <td data-label="Status permohonan">
-                        <label className="sr-only" htmlFor={`status-${p.id}`}>
-                          Ubah status permohonan {p.programKode}
-                        </label>
-                        <ThemedSelect
-                          id={`status-${p.id}`}
-                          className="select-sm"
-                          value={p.status}
-                          disabled={blocked}
-                          onChange={(e) =>
-                            simpan(
-                              all.map((x) =>
-                                x.id === p.id
-                                  ? { ...x, status: e.target.value as StatusPermohonan }
-                                  : x,
-                              ),
-                              'Status diperbarui.',
-                            )
-                          }
-                          options={STATUS_PERMOHONAN.map((s) => ({
-                            value: s,
-                            label: STATUS_LABEL[s],
-                          }))}
-                        />
-                      </td>
-                      <td className="num">
-                        <button
-                          type="button"
-                          className="btn"
-                          style={{ padding: '8px 14px' }}
-                          disabled={blocked}
-                          onClick={() =>
-                            confirm(`Hapus permohonan ${p.programKode}?`) &&
-                            simpan(
-                              all.filter((x) => x.id !== p.id),
-                              'Permohonan dihapus.',
-                            )
-                          }
-                        >
-                          Hapus<span className="sr-only"> permohonan {p.programKode}</span>
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      </dd>
+                    </div>
+                  </dl>
+                  <div className="request-actions">
+                    <div className="field">
+                      <label htmlFor={`status-${p.id}`}>
+                        Status<span className="sr-only"> permohonan {p.programKode}</span>
+                      </label>
+                      <ThemedSelect
+                        id={`status-${p.id}`}
+                        value={p.status}
+                        disabled={blocked}
+                        onChange={(e) =>
+                          simpan(
+                            all.map((x) =>
+                              x.id === p.id
+                                ? { ...x, status: e.target.value as StatusPermohonan }
+                                : x,
+                            ),
+                            'Status diperbarui.',
+                          )
+                        }
+                        options={STATUS_PERMOHONAN.map((s) => ({
+                          value: s,
+                          label: STATUS_LABEL[s],
+                        }))}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="btn"
+                      disabled={blocked}
+                      onClick={() =>
+                        confirm(`Hapus permohonan ${p.programKode}?`) &&
+                        simpan(
+                          all.filter((x) => x.id !== p.id),
+                          'Permohonan dihapus.',
+                        )
+                      }
+                    >
+                      Hapus<span className="sr-only"> permohonan {p.programKode}</span>
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         )}
       </section>
     </div>

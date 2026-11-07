@@ -17,7 +17,7 @@ export function JejakLangkah({ label, status }: { label: string; status: NilaiSt
   );
 }
 
-/** Rencana → Anggaran → Bukti, computed from the program's evidence status. */
+/** Rencana → Anggaran → Pelaksanaan, computed from the program's evidence status. */
 export function JejakBukti({
   status,
   animate = false,
@@ -34,7 +34,7 @@ export function JejakBukti({
         <JejakLangkah label="Anggaran" status={status.anggaran} />
       </li>
       <li>
-        <JejakLangkah label="Bukti" status={status.pelaksanaan} />
+        <JejakLangkah label="Pelaksanaan" status={status.pelaksanaan} />
       </li>
     </ul>
   );
