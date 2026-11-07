@@ -266,6 +266,11 @@ td {
 .hero-card .coverage-number {
   margin: 0;
 }
+.hero-card-icon {
+  display: block;
+  color: var(--color-hero-text);
+  line-height: 0;
+}
 .hero-card .coverage-meter {
   max-width: none;
   margin: 0;

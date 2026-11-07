@@ -202,7 +202,7 @@ Plus Jakarta Sans, weights 400/600/700/800 (700 only for the wordmark). Body 16p
 - Status pill: icon plus text, 36px tall. Ada: pale blue, solid navy border, file-check icon. Belum diketahui: white, dashed #6b7480 border, help icon.
 - Source line: file icon plus 14px muted text: document, version, PDF page, check date, link.
 - Program card: code, title, field, short source line (document type, PDF pages, check date), the inline evidence trail (Rencana, Anggaran, Pelaksanaan), divider, 2026 RPJMD pagu with full value in tooltip and the mandatory label. The whole card is the link.
-- Hero side card (landing coverage, region coverage count): outlined in hero secondary on the navy band, no fill, no icon. The landing card holds the "Jelajahi" action next to the region it opens; secondary buttons on the band are outlined the same way.
+- Hero side card (landing coverage, region coverage count): outlined in hero secondary on the navy band, no fill, a 40px files icon (decorative, aria-hidden) above the content. The landing card holds the "Jelajahi" action next to the region it opens; secondary buttons on the band are outlined the same way.
 - Budget chart: stacked rows (field link plus arrow-up-right, curated-program count, value plus share, 12px track, PDF page with a link), separated by hairlines inside one white card. When all rows share one RKPD document, its full source line (document, version, pages, check date) sits once at the top of the card.
 - Detail pagu: a real table (year header cell, 22px track, value, total in `tfoot`) so screen readers get row and column headers; one shared source line below it.
 - Tracker records: one white card per request (code line, title, definition list of agency, sent date and deadline, then status select and delete).
@@ -223,7 +223,7 @@ Header shape transition: 420ms cubic-bezier(0.22,1,0.36,1), widening about 64px 
 ## Adaptations
 
 - Figma sample money, dates, documents, categories, regions and tracker records are excluded. API and verified sources own all facts.
-- Ported from PR #10 on top of main: compact program cards, outlined hero cards, code and field chips under the detail title, stage icons in the evidence panel, PPID steps on a pale-blue band, unboxed methodology text sections. PR #10's decorative card icons, repeated per-row sources and mobile tab-row navigation were left out.
+- Ported from PR #10 on top of main: compact program cards, outlined hero cards, code and field chips under the detail title, stage icons in the evidence panel, PPID steps on a pale-blue band, unboxed methodology text sections. PR #10's repeated per-row sources and mobile tab-row navigation were left out.
 - National landing keeps the multi-region entry and the simulation label; Figma has no national frame, so it reuses the hero, card and button language.
 - "Belum diketahui" keeps a dashed outline (product rule) where Figma draws a solid one.
 - Budget chart keeps the mandatory label once in the section header rather than repeating it on every row; each row instead carries its own RKPD page. Figma's stage icon in the evidence step is dropped because the pill already carries the same icon.

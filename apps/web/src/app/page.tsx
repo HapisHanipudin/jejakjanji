@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { FlowDemo } from '@/components/FlowDemo';
+import { Icon } from '@/components/Icon';
 import { RegionPicker } from '@/components/RegionPicker';
 import { ErrorState } from '@/components/States';
 import { getDaerahList, getProgram, getProgramList } from '@/lib/data';
@@ -48,6 +49,9 @@ export default async function LandingPage() {
             </p>
           </div>
           <section className="coverage-card" id="cakupan" aria-labelledby="cakupan-title">
+            <span className="hero-card-icon" aria-hidden="true">
+              <Icon name="files" size={40} />
+            </span>
             <h2 id="cakupan-title">Data yang tersedia saat ini</h2>
             {!result.ok ? (
               <ErrorState pesan={result.pesan} />
