@@ -1,5 +1,11 @@
 import { expect, test } from 'vitest';
-import { buatSurat, isTahapDiminta, pilihanBawaan, pilihanUntukTahap } from './surat.ts';
+import {
+  buatSurat,
+  isTahapDiminta,
+  mailtoSurat,
+  pilihanBawaan,
+  pilihanUntukTahap,
+} from './surat.ts';
 
 const program = {
   nama: 'Program Uji',
@@ -66,4 +72,11 @@ test('tahap dari Detail memilih butir yang sesuai; nilai lain kembali ke bawaan'
   expect(isTahapDiminta('anggaran')).toBe(true);
   expect(isTahapDiminta('rencana')).toBe(false);
   expect(isTahapDiminta(['anggaran'])).toBe(false);
+});
+
+test('mailtoSurat encodes subject and CRLF body without a recipient', () => {
+  const href = mailtoSurat('Perihal & uji', 'Baris 1\nBaris 2 [nama]');
+  expect(href).toBe(
+    'mailto:?subject=Perihal%20%26%20uji&body=Baris%201%0D%0ABaris%202%20%5Bnama%5D',
+  );
 });

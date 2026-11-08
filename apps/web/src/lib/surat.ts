@@ -73,3 +73,10 @@ export function buatSurat(
     isi('nama', '[Nama pemohon]'),
   ].join('\n');
 }
+
+/** `mailto:` with no recipient: the user picks the PPID address in their own mail app. */
+export function mailtoSurat(perihal: string, teks: string): string {
+  // RFC 6068: line breaks in a mailto body are CRLF.
+  const body = encodeURIComponent(teks.replace(/\r?\n/g, '\r\n'));
+  return `mailto:?subject=${encodeURIComponent(perihal)}&body=${body}`;
+}

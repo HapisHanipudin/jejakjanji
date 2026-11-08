@@ -2594,8 +2594,11 @@ fieldset legend + * {
   .facts dd {
     margin-bottom: var(--space-2);
   }
+  /* Cap the letter so Salin, Bagikan, and email sit one scroll away, not 800px below. */
   .letter {
     padding: var(--space-4);
+    max-height: 55vh;
+    overflow-y: auto;
   }
   /* Tracker table becomes one card per request; data-label names each cell. */
   .table-cards thead {

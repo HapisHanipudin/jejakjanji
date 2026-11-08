@@ -7,6 +7,7 @@ import {
   PEMOHON_FIELDS,
   PLACEHOLDER,
   buatSurat,
+  mailtoSurat,
   pilihanUntukTahap,
   type Pemohon,
   type Pilihan,
@@ -47,8 +48,13 @@ export function PpidDraft({
   // Feedback only: the item just added to the letter, and a short "copied" state.
   const [sorot, setSorot] = useState<{ teks: string; n: number }>();
   const [tersalin, setTersalin] = useState(false);
+  // Detected after mount so server and first client render match.
+  const [bisaBagikan, setBisaBagikan] = useState(false);
   const teks = buatSurat(program, pilihan, pemohon);
   const adaPilihan = Object.values(pilihan).some(Boolean);
+  const perihal = `Permohonan informasi publik: ${namaProgram(program.nama)} (${program.kode})`;
+
+  useEffect(() => setBisaBagikan(typeof navigator.share === 'function'), []);
 
   useEffect(() => {
     if (!tersalin) return;
@@ -66,6 +72,24 @@ export function PpidDraft({
     }
   }
 
+  // Both hand the letter to the user's own apps; the site itself sends nothing.
+  async function bagikan() {
+    try {
+      await navigator.share({ title: perihal, text: teks });
+      setPesan('Draf dibagikan ke aplikasi pilihan Anda.');
+    } catch (e) {
+      if (e instanceof DOMException && e.name === 'AbortError') return;
+      setPesan('Gagal membagikan. Gunakan Salin teks lalu tempel di aplikasi tujuan.');
+    }
+  }
+
+  function bukaEmail() {
+    window.location.href = mailtoSurat(perihal, teks);
+    setPesan(
+      'Aplikasi email dibuka. Isi alamat PPID sendiri; bila isi surat terpotong, gunakan Salin teks.',
+    );
+  }
+
   const pelacakHref = `/${region.slug}/pelacak?program=${encodeURIComponent(program.kode)}`;
 
   return (
@@ -78,7 +102,7 @@ export function PpidDraft({
           <span>Lengkapi bagian dalam [kurung siku].</span>
         </li>
         <li>
-          <span>Salin atau unduh draf.</span>
+          <span>Salin, bagikan, kirim lewat email, atau unduh draf.</span>
         </li>
         <li>
           <span>
@@ -215,6 +239,14 @@ export function PpidDraft({
               ) : (
                 'Salin teks'
               )}
+            </button>
+            {bisaBagikan && (
+              <button type="button" className="btn" disabled={!adaPilihan} onClick={bagikan}>
+                Bagikan
+              </button>
+            )}
+            <button type="button" className="btn" disabled={!adaPilihan} onClick={bukaEmail}>
+              Buka di aplikasi email
             </button>
             <button
               type="button"
