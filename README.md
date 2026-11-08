@@ -5,6 +5,33 @@ saat ini DKI Jakarta 2025-2029 dan pagu indikatifnya
 (lomba Web In Action, MIA 2026). Setiap angka punya sumber, halaman PDF, dan tanggal cek.
 Semua angka belanja adalah **pagu indikatif, bukan APBD dan bukan realisasi**.
 
+## Tujuan
+
+Masalah: program prioritas daerah tersebar di dokumen RPJMD dan RKPD ratusan halaman. Warga sulit
+memeriksa program apa yang direncanakan, berapa pagunya, dan bukti apa yang sudah tersedia.
+
+JejakJanji punya tiga tujuan (rincian di [docs/product-spec.md](docs/product-spec.md)):
+
+1. Warga menemukan program prioritas RPJMD beserta halaman rujukannya dalam satu tampilan.
+2. Setiap angka pagu tampil dengan satuan, sumber, halaman PDF, tanggal cek, dan label pagu indikatif.
+3. Warga dapat bertindak lewat jalur resmi: draf permohonan PPID dan pelacak tenggat.
+
+Bukan tujuan: skor, peringkat, atau penilaian kinerja kepala daerah; menyatakan janji ditepati
+atau diingkari; akun pengguna. Bila bukti belum ada, status ditulis "belum diketahui", bukan gagal.
+
+## Fitur utama
+
+- **Daftar dan detail program**: filter bidang, status bukti, dan pencarian; indikator, pagu per
+  tahun, dan kotak sumber dengan halaman PDF.
+- **Status bukti netral**: "ada" hanya bila bukti punya dokumen sumber; selain itu "belum
+  diketahui" (garis putus-putus, tidak merah).
+- **Draf permohonan PPID**: dibuat di browser, lalu disalin, dibagikan (Web Share di HP), dibuka di
+  aplikasi email, atau diunduh .txt. Situs tidak mengirim permohonan dan tidak menyimpan isian.
+- **Pelacak permohonan**: catat tanggal kirim dan tenggat jawaban di `localStorage`; ekspor dan impor
+  JSON untuk cadangan, dengan peringatan bahwa data hanya ada di browser.
+- **Struktur multi-daerah**: URL `/[daerah]/...` dan tabel per `daerah_kode`; data aktif saat ini
+  DKI Jakarta.
+
 ## Struktur
 
 | Folder            | Isi                                                                              |
@@ -103,9 +130,27 @@ Panduan persiapan dan deployment Cloudflare Workers + Neon: [docs/DEPLOYMENT.md]
 
 Next.js dan React untuk web; Hono di Cloudflare Workers untuk API; PostgreSQL, Drizzle ORM, Zod, dan bun workspaces. Tailwind CSS v4 dan token CSS untuk tampilan; Vitest untuk tes.
 
-## Progress first draft
+## Menambah daerah
+
+Komponen web dan endpoint API tidak perlu diubah: rute `/[daerah]` dan semua tabel sudah memakai
+`daerah_kode`. Daerah yang terdaftar tetapi berstatus `BELUM_DIKURASI` sudah tampil sebagai empty
+state. Langkah untuk mengaktifkan daerah baru:
+
+1. Audit dokumen RPJMD dan RKPD daerah itu; catat di [docs/SOURCES.md](docs/SOURCES.md).
+2. Tambahkan baris program dan bidang urusan ke `data/*.csv` dengan `daerah_kode` baru
+   (format di [data/README.md](data/README.md)). Jangan mengisi data karangan.
+3. Ubah `scripts/seed.ts`: seed saat ini sengaja hanya menerima `daerah_kode` `31` (skema zod CSV,
+   dokumen sumber, baris tabel `daerah`, dan filter evidence). Ini perubahan yang belum dikerjakan.
+4. Jalankan `bun run db:seed`, lalu periksa `/[slug-daerah]` dan
+   `GET /api/program?daerah=<kode>`.
+
+## Status saat ini
 
 Enam layar dan empat endpoint baca sudah tersedia, berikut CSV 10 program dan 44 bidang urusan, migrasi, seed, draf PPID, serta pelacak lokal. Cakupan data awal adalah 10 dari 82 program prioritas daerah (RPJMD Tabel III.28, mulai PDF 337, diperiksa 22 Oktober 2026).
+
+Setelah umpan balik mentor FDS (8 November 2026): draf PPID mendapat tombol Bagikan dan Buka di
+aplikasi email, serta pratinjau surat yang lebih pendek di HP supaya tombol aksi tetap terlihat.
+Diuji di lebar 375px; tombol Bagikan belum diuji di perangkat HP sungguhan.
 
 API dan web preview multi-daerah tersedia pada Worker terpisah; lihat
 [docs/preview-verification.md](docs/preview-verification.md) untuk URL, migrasi

@@ -12,6 +12,8 @@ export const daerahSchema = z.object({
   tingkat: z.enum(['PROVINSI', 'KABUPATEN', 'KOTA']),
   statusKurasi: z.enum(['BELUM_DIKURASI', 'AKTIF']),
   ppidUrl: z.url({ protocol: /^https?$/ }).nullable(),
+  // Default keeps the web working against an API deployed before migration 0002.
+  ppidEmail: z.email().nullable().default(null),
 });
 export const daerahListSchema = z.object({ data: z.array(daerahSchema) });
 export type Daerah = z.infer<typeof daerahSchema>;

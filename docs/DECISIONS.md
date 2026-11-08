@@ -241,3 +241,17 @@ tidak berubah.
 RKPD PDF 480–483: segmen pertama kode 1 (Tabel 5.16, urusan wajib pelayanan dasar), 2 (5.17, wajib nonpelayanan dasar), dan 3 (5.18, pilihan) adalah urusan pemerintahan; 4–8 (Tabel 5.19–5.23) adalah unsur pendukung, penunjang, pengawasan, kewilayahan, dan pemerintahan umum (Keuangan 5.02 termasuk unsur penunjang).
 
 Keputusan PM 29 Oktober 2026: bagan memfilter segmen 1, 2, dan 3 sebelum pengurutan pagu dan pemilihan enam terbesar; teks bagan menyebut bahwa kode 4–8 tidak termasuk, karena beberapa unsur (5.02, 7.01) berpagu lebih besar dari bidang keenam (1.05, Rp2.978.345.596.653). Semua batang bertaut ke daftar program terfilter, termasuk bidang tanpa program dikurasi (halaman menampilkan keadaan kosong). Proporsi tetap terhadap total belanja RKPD; tidak dihitung ulang terhadap enam batang.
+
+## Bagikan dan email draf PPID — 8 November 2026
+
+Menindaklanjuti saran mentor FDS (alur PPID mudah di HP). Draf PPID kini punya tombol **Bagikan** (Web Share API, hanya tampil bila browser mendukung) dan **Buka di aplikasi email** (`mailto:` berisi perihal dan isi surat, tanpa penerima).
+
+Asumsi, perlu konfirmasi PM: kedua tombol hanya menyerahkan teks ke aplikasi milik pengguna (lembar bagikan sistem atau klien email). Situs tetap tidak mengirim permohonan dan tidak menyimpan isian; pengguna sendiri memilih penerima dan menekan kirim. Ini dianggap sesuai aturan "situs tidak mengirim permohonan atas nama pengguna". Alamat email PPID tidak diisi otomatis karena belum ada alamat yang diverifikasi. Beberapa klien email memotong `mailto:` yang panjang; pesan status mengarahkan pengguna ke Salin teks.
+
+## Email PPID per daerah — 8 November 2026
+
+Tabel `daerah` mendapat kolom `ppid_email` (boleh kosong, migrasi `0002`), di samping `ppid_url`. Tombol "Buka di aplikasi email" mengisi penerima dari kolom itu; bila kosong, penerima tetap kosong. Menambah daerah cukup lewat data.
+
+Jakarta diisi `ppid@jakarta.go.id`, satu-satunya email di footer ppid.jakarta.go.id dan halaman Kontak Kami (diperiksa 8 November 2026). Alamat itu kontak umum, bukan alamat khusus permohonan; halaman permohonan-informasi memakai formulir online dan tidak menyebut pengiriman lewat email. Halaman draf menampilkan catatan itu di dekat tombol. Email PPID pembantu per perangkat daerah belum dikurasi.
+
+Urutan rilis: jalankan migrasi `0002` sebelum men-deploy API baru, karena API memilih semua kolom `daerah`. Skema zod web memberi `ppidEmail` nilai bawaan `null`, jadi web baru tetap jalan dengan API lama.

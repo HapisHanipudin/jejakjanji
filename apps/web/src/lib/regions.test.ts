@@ -10,6 +10,7 @@ const jakarta: Daerah = {
   tingkat: 'PROVINSI',
   statusKurasi: 'AKTIF',
   ppidUrl: null,
+  ppidEmail: null,
 };
 const fixture: Daerah = {
   ...jakarta,

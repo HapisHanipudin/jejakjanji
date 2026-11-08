@@ -25,6 +25,7 @@ export const daerah = pgTable(
     indukKode: text('induk_kode'),
     statusKurasi: statusKurasi('status_kurasi').notNull().default('BELUM_DIKURASI'),
     ppidUrl: text('ppid_url'),
+    ppidEmail: text('ppid_email'),
   },
   (t) => [foreignKey({ columns: [t.indukKode], foreignColumns: [t.kode] })],
 );

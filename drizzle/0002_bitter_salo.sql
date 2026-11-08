@@ -1,0 +1,1 @@
+ALTER TABLE "daerah" ADD COLUMN "ppid_email" text;

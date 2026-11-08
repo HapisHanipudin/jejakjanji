@@ -112,3 +112,22 @@ pengguna. Alur persetujuan, konfirmasi, serta respons lokasi tiruan sudah diuji;
 tidak ada koordinat pribadi dibaca dalam pengujian otomatis. Persetujuan hukum
 final tim dan hari libur kalender belum diselesaikan. Penanda TODO-REVIEW serta
 penjelasan bahwa Pelacak hanya menghitung perkiraan tetap ditampilkan.
+
+## Migrasi 0002 (`ppid_email`) — 8 November 2026
+
+Pengguna menyetujui migrasi 0002 di Neon development yang sama (`neondb`,
+`ep-blue-queen-ao572ka5`). Migrasi hanya menambah kolom `daerah.ppid_email`
+(nullable). Tidak ada cadangan penuh baru; jumlah baris dicatat sebelum dan
+sesudah dan tetap sama: 1 daerah, 2 dokumen, 44 bidang, 10 program,
+50 funding, 10 evidence. Journal Drizzle bertambah satu baris (id 3).
+
+Jakarta diisi `ppid@jakarta.go.id` lewat `UPDATE ... coalesce`, setara dengan
+seed, tanpa menjalankan ulang seed penuh. Role baca-saja memakai hak SELECT
+tingkat tabel, jadi kolom baru ikut terbaca.
+
+Setelah migrasi: `/api/daerah` dan `/api/program` memberi 200 pada API
+produksi, API `-preview`, dan API preview branch PR #12; hanya API branch yang
+mengembalikan `ppidEmail`. Web preview branch masih membaca API produksi
+(`API_BASE_URL` di `apps/web/wrangler.toml`), jadi penerima email baru terisi
+di web setelah API dengan kode baru di-deploy. Rollback: `ALTER TABLE daerah
+DROP COLUMN ppid_email` dan hapus baris journal id 3, setelah API lama aktif.

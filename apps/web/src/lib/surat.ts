@@ -73,3 +73,11 @@ export function buatSurat(
     isi('nama', '[Nama pemohon]'),
   ].join('\n');
 }
+
+/** `mailto:` link; without `penerima` the user picks the PPID address in their own mail app. */
+export function mailtoSurat(perihal: string, teks: string, penerima?: string | null): string {
+  // RFC 6068: line breaks in a mailto body are CRLF.
+  const body = encodeURIComponent(teks.replace(/\r?\n/g, '\r\n'));
+  // The address comes from the API, already validated as an email by zod.
+  return `mailto:${penerima ?? ''}?subject=${encodeURIComponent(perihal)}&body=${body}`;
+}
