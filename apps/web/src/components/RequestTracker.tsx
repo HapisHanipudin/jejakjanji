@@ -4,7 +4,7 @@ import type { Daerah } from '@jejakjanji/shared';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { CATATAN_TINJAU_HUKUM, PERPANJANGAN_HARI_KERJA, TENGGAT_HARI_KERJA } from '@/content/legal';
-import { formatTanggal } from '@/lib/format';
+import { formatTanggal, namaProgram } from '@/lib/format';
 import { hariIni, selisihHariKerja, tambahHariKerja } from '@/lib/hari-kerja';
 import {
   PERANGKAT_DAERAH_MAX,
@@ -310,7 +310,7 @@ export function RequestTracker({
                     <p className="xsmall muted">
                       {p.daerahNama} › <span className="kode">{p.programKode}</span>
                     </p>
-                    <h3>{p.programNama}</h3>
+                    <h3>{namaProgram(p.programNama)}</h3>
                   </div>
                   <dl className="request-facts">
                     <div>

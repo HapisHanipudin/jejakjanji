@@ -544,6 +544,29 @@ td {
 .program-filter[data-pending='true'] {
   border-color: var(--color-accent);
 }
+/* Phones: keep the filter to roughly half a screen so the first program shows above the fold.
+   Status chips scroll sideways; the cut-off last chip signals there is more. */
+@media (max-width: 760px) {
+  .program-filter.form-row {
+    gap: var(--space-3);
+  }
+  /* A fieldset defaults to min-width: min-content, which would let the nowrap row widen the page. */
+  .program-filter .status-choice {
+    min-width: 0;
+  }
+  .program-filter .choice-row {
+    /* Contains the absolutely positioned sr-only radios, which would otherwise widen the page. */
+    position: relative;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-inline: calc(-1 * var(--space-5));
+    padding-inline: var(--space-5);
+    scrollbar-width: none;
+  }
+  .program-filter .choice-chip {
+    flex: none;
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
   .landing-title {
     animation: landing-open 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
