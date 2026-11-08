@@ -1,0 +1,693 @@
+{
+  "id": "7d2cd66f-74e2-4e16-8fa3-5714f3604683",
+  "prevId": "a2e0e42b-048b-4676-b461-fff0c12fa023",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.bidang_urusan": {
+      "name": "bidang_urusan",
+      "schema": "",
+      "columns": {
+        "daerah_kode": {
+          "name": "daerah_kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'31'"
+        },
+        "kode": {
+          "name": "kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nama": {
+          "name": "nama",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pagu_indikatif_2026": {
+          "name": "pagu_indikatif_2026",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proporsi": {
+          "name": "proporsi",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_document_id": {
+          "name": "source_document_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "page_ref": {
+          "name": "page_ref",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "bidang_urusan_daerah_kode_daerah_kode_fk": {
+          "name": "bidang_urusan_daerah_kode_daerah_kode_fk",
+          "tableFrom": "bidang_urusan",
+          "tableTo": "daerah",
+          "columnsFrom": [
+            "daerah_kode"
+          ],
+          "columnsTo": [
+            "kode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "bidang_urusan_daerah_kode_source_document_id_source_document_daerah_kode_id_fk": {
+          "name": "bidang_urusan_daerah_kode_source_document_id_source_document_daerah_kode_id_fk",
+          "tableFrom": "bidang_urusan",
+          "tableTo": "source_document",
+          "columnsFrom": [
+            "daerah_kode",
+            "source_document_id"
+          ],
+          "columnsTo": [
+            "daerah_kode",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "bidang_urusan_daerah_kode_kode_pk": {
+          "name": "bidang_urusan_daerah_kode_kode_pk",
+          "columns": [
+            "daerah_kode",
+            "kode"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.daerah": {
+      "name": "daerah",
+      "schema": "",
+      "columns": {
+        "kode": {
+          "name": "kode",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nama": {
+          "name": "nama",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tingkat": {
+          "name": "tingkat",
+          "type": "daerah_tingkat",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "induk_kode": {
+          "name": "induk_kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status_kurasi": {
+          "name": "status_kurasi",
+          "type": "status_kurasi",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'BELUM_DIKURASI'"
+        },
+        "ppid_url": {
+          "name": "ppid_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ppid_email": {
+          "name": "ppid_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "daerah_induk_kode_daerah_kode_fk": {
+          "name": "daerah_induk_kode_daerah_kode_fk",
+          "tableFrom": "daerah",
+          "tableTo": "daerah",
+          "columnsFrom": [
+            "induk_kode"
+          ],
+          "columnsTo": [
+            "kode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "daerah_slug_unique": {
+          "name": "daerah_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.evidence": {
+      "name": "evidence",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "daerah_kode": {
+          "name": "daerah_kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'31'"
+        },
+        "program_kode": {
+          "name": "program_kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "jenis": {
+          "name": "jenis",
+          "type": "evidence_jenis",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_document_id": {
+          "name": "source_document_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "page_ref": {
+          "name": "page_ref",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cakupan_pencarian": {
+          "name": "cakupan_pencarian",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "checked_at": {
+          "name": "checked_at",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "catatan": {
+          "name": "catatan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "evidence_daerah_kode_daerah_kode_fk": {
+          "name": "evidence_daerah_kode_daerah_kode_fk",
+          "tableFrom": "evidence",
+          "tableTo": "daerah",
+          "columnsFrom": [
+            "daerah_kode"
+          ],
+          "columnsTo": [
+            "kode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "evidence_daerah_kode_program_kode_program_daerah_kode_kode_fk": {
+          "name": "evidence_daerah_kode_program_kode_program_daerah_kode_kode_fk",
+          "tableFrom": "evidence",
+          "tableTo": "program",
+          "columnsFrom": [
+            "daerah_kode",
+            "program_kode"
+          ],
+          "columnsTo": [
+            "daerah_kode",
+            "kode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "evidence_daerah_kode_source_document_id_source_document_daerah_kode_id_fk": {
+          "name": "evidence_daerah_kode_source_document_id_source_document_daerah_kode_id_fk",
+          "tableFrom": "evidence",
+          "tableTo": "source_document",
+          "columnsFrom": [
+            "daerah_kode",
+            "source_document_id"
+          ],
+          "columnsTo": [
+            "daerah_kode",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.funding": {
+      "name": "funding",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "daerah_kode": {
+          "name": "daerah_kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'31'"
+        },
+        "program_kode": {
+          "name": "program_kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tahun": {
+          "name": "tahun",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "jenis": {
+          "name": "jenis",
+          "type": "funding_jenis",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "jumlah_juta_rp": {
+          "name": "jumlah_juta_rp",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_document_id": {
+          "name": "source_document_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "page_ref": {
+          "name": "page_ref",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "funding_daerah_kode_daerah_kode_fk": {
+          "name": "funding_daerah_kode_daerah_kode_fk",
+          "tableFrom": "funding",
+          "tableTo": "daerah",
+          "columnsFrom": [
+            "daerah_kode"
+          ],
+          "columnsTo": [
+            "kode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "funding_daerah_kode_program_kode_program_daerah_kode_kode_fk": {
+          "name": "funding_daerah_kode_program_kode_program_daerah_kode_kode_fk",
+          "tableFrom": "funding",
+          "tableTo": "program",
+          "columnsFrom": [
+            "daerah_kode",
+            "program_kode"
+          ],
+          "columnsTo": [
+            "daerah_kode",
+            "kode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "funding_daerah_kode_source_document_id_source_document_daerah_kode_id_fk": {
+          "name": "funding_daerah_kode_source_document_id_source_document_daerah_kode_id_fk",
+          "tableFrom": "funding",
+          "tableTo": "source_document",
+          "columnsFrom": [
+            "daerah_kode",
+            "source_document_id"
+          ],
+          "columnsTo": [
+            "daerah_kode",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "funding_daerah_kode_program_kode_tahun_jenis_unique": {
+          "name": "funding_daerah_kode_program_kode_tahun_jenis_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "daerah_kode",
+            "program_kode",
+            "tahun",
+            "jenis"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.program": {
+      "name": "program",
+      "schema": "",
+      "columns": {
+        "daerah_kode": {
+          "name": "daerah_kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'31'"
+        },
+        "kode": {
+          "name": "kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nama": {
+          "name": "nama",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bidang_kode": {
+          "name": "bidang_kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "indikator": {
+          "name": "indikator",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "satuan": {
+          "name": "satuan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kondisi_awal": {
+          "name": "kondisi_awal",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "target_2026": {
+          "name": "target_2026",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_document_id": {
+          "name": "source_document_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "page_ref": {
+          "name": "page_ref",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "verified": {
+          "name": "verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "program_daerah_kode_daerah_kode_fk": {
+          "name": "program_daerah_kode_daerah_kode_fk",
+          "tableFrom": "program",
+          "tableTo": "daerah",
+          "columnsFrom": [
+            "daerah_kode"
+          ],
+          "columnsTo": [
+            "kode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "program_daerah_kode_bidang_kode_bidang_urusan_daerah_kode_kode_fk": {
+          "name": "program_daerah_kode_bidang_kode_bidang_urusan_daerah_kode_kode_fk",
+          "tableFrom": "program",
+          "tableTo": "bidang_urusan",
+          "columnsFrom": [
+            "daerah_kode",
+            "bidang_kode"
+          ],
+          "columnsTo": [
+            "daerah_kode",
+            "kode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "program_daerah_kode_source_document_id_source_document_daerah_kode_id_fk": {
+          "name": "program_daerah_kode_source_document_id_source_document_daerah_kode_id_fk",
+          "tableFrom": "program",
+          "tableTo": "source_document",
+          "columnsFrom": [
+            "daerah_kode",
+            "source_document_id"
+          ],
+          "columnsTo": [
+            "daerah_kode",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "program_daerah_kode_kode_pk": {
+          "name": "program_daerah_kode_kode_pk",
+          "columns": [
+            "daerah_kode",
+            "kode"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.source_document": {
+      "name": "source_document",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "daerah_kode": {
+          "name": "daerah_kode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'31'"
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "source_document_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "checked_at": {
+          "name": "checked_at",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "source_document_daerah_kode_daerah_kode_fk": {
+          "name": "source_document_daerah_kode_daerah_kode_fk",
+          "tableFrom": "source_document",
+          "tableTo": "daerah",
+          "columnsFrom": [
+            "daerah_kode"
+          ],
+          "columnsTo": [
+            "kode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "source_document_daerah_kode_type_version_unique": {
+          "name": "source_document_daerah_kode_type_version_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "daerah_kode",
+            "type",
+            "version"
+          ]
+        },
+        "source_document_daerah_kode_id_unique": {
+          "name": "source_document_daerah_kode_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "daerah_kode",
+            "id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.daerah_tingkat": {
+      "name": "daerah_tingkat",
+      "schema": "public",
+      "values": [
+        "PROVINSI",
+        "KABUPATEN",
+        "KOTA"
+      ]
+    },
+    "public.evidence_jenis": {
+      "name": "evidence_jenis",
+      "schema": "public",
+      "values": [
+        "RENCANA",
+        "ANGGARAN",
+        "PELAKSANAAN"
+      ]
+    },
+    "public.funding_jenis": {
+      "name": "funding_jenis",
+      "schema": "public",
+      "values": [
+        "INDIKATIF_RPJMD"
+      ]
+    },
+    "public.source_document_type": {
+      "name": "source_document_type",
+      "schema": "public",
+      "values": [
+        "RPJMD",
+        "RKPD"
+      ]
+    },
+    "public.status_kurasi": {
+      "name": "status_kurasi",
+      "schema": "public",
+      "values": [
+        "BELUM_DIKURASI",
+        "AKTIF"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

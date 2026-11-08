@@ -184,10 +184,16 @@ async function main() {
           statusKurasi: 'AKTIF',
           // Official Jakarta PPID FAQ and request form, checked 3 November 2026.
           ppidUrl: 'https://ppid.jakarta.go.id/permohonan-informasi',
+          // General PPID contact in the footer of ppid.jakarta.go.id and its Kontak Kami page,
+          // checked 8 November 2026. The site lists the online form as the request channel.
+          ppidEmail: 'ppid@jakarta.go.id',
         })
         .onConflictDoUpdate({
           target: daerah.kode,
-          set: { ppidUrl: sql`coalesce(${daerah.ppidUrl}, excluded.ppid_url)` },
+          set: {
+            ppidUrl: sql`coalesce(${daerah.ppidUrl}, excluded.ppid_url)`,
+            ppidEmail: sql`coalesce(${daerah.ppidEmail}, excluded.ppid_email)`,
+          },
         });
       const docs = await tx
         .insert(sourceDocument)

@@ -84,9 +84,11 @@ export function PpidDraft({
   }
 
   function bukaEmail() {
-    window.location.href = mailtoSurat(perihal, teks);
+    window.location.href = mailtoSurat(perihal, teks, region.ppidEmail);
     setPesan(
-      'Aplikasi email dibuka. Isi alamat PPID sendiri; bila isi surat terpotong, gunakan Salin teks.',
+      region.ppidEmail
+        ? `Aplikasi email dibuka dengan penerima ${region.ppidEmail}. Bila isi surat terpotong, gunakan Salin teks.`
+        : 'Aplikasi email dibuka. Isi alamat PPID sendiri; bila isi surat terpotong, gunakan Salin teks.',
     );
   }
 
@@ -272,6 +274,12 @@ export function PpidDraft({
             <p className="small muted">
               Tautan kanal PPID {region.nama} belum diverifikasi. Cari kanal resmi sebelum mengirim;
               situs ini tidak mengirim permohonan.
+            </p>
+          )}
+          {region.ppidEmail && (
+            <p className="small muted">
+              Tombol email memakai {region.ppidEmail}, alamat kontak umum PPID {region.nama}.
+              Periksa kanal resmi permohonan di situs PPID sebelum mengirim.
             </p>
           )}
           <Link className="link-strong" href={pelacakHref}>

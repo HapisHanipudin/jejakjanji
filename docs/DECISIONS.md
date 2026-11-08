@@ -247,3 +247,11 @@ Keputusan PM 29 Oktober 2026: bagan memfilter segmen 1, 2, dan 3 sebelum penguru
 Menindaklanjuti saran mentor FDS (alur PPID mudah di HP). Draf PPID kini punya tombol **Bagikan** (Web Share API, hanya tampil bila browser mendukung) dan **Buka di aplikasi email** (`mailto:` berisi perihal dan isi surat, tanpa penerima).
 
 Asumsi, perlu konfirmasi PM: kedua tombol hanya menyerahkan teks ke aplikasi milik pengguna (lembar bagikan sistem atau klien email). Situs tetap tidak mengirim permohonan dan tidak menyimpan isian; pengguna sendiri memilih penerima dan menekan kirim. Ini dianggap sesuai aturan "situs tidak mengirim permohonan atas nama pengguna". Alamat email PPID tidak diisi otomatis karena belum ada alamat yang diverifikasi. Beberapa klien email memotong `mailto:` yang panjang; pesan status mengarahkan pengguna ke Salin teks.
+
+## Email PPID per daerah — 8 November 2026
+
+Tabel `daerah` mendapat kolom `ppid_email` (boleh kosong, migrasi `0002`), di samping `ppid_url`. Tombol "Buka di aplikasi email" mengisi penerima dari kolom itu; bila kosong, penerima tetap kosong. Menambah daerah cukup lewat data.
+
+Jakarta diisi `ppid@jakarta.go.id`, satu-satunya email di footer ppid.jakarta.go.id dan halaman Kontak Kami (diperiksa 8 November 2026). Alamat itu kontak umum, bukan alamat khusus permohonan; halaman permohonan-informasi memakai formulir online dan tidak menyebut pengiriman lewat email. Halaman draf menampilkan catatan itu di dekat tombol. Email PPID pembantu per perangkat daerah belum dikurasi.
+
+Urutan rilis: jalankan migrasi `0002` sebelum men-deploy API baru, karena API memilih semua kolom `daerah`. Skema zod web memberi `ppidEmail` nilai bawaan `null`, jadi web baru tetap jalan dengan API lama.

@@ -80,6 +80,7 @@ export function createApp(database?: NodePgDatabase) {
         tingkat: daerah.tingkat,
         statusKurasi: daerah.statusKurasi,
         ppidUrl: daerah.ppidUrl,
+        ppidEmail: daerah.ppidEmail,
       })
       .from(daerah)
       .orderBy(asc(daerah.nama));
