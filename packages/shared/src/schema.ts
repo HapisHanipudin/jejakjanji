@@ -10,6 +10,7 @@ import {
   pgTable,
   serial,
   text,
+  timestamp,
   unique,
 } from 'drizzle-orm/pg-core';
 
@@ -162,6 +163,66 @@ export const evidence = pgTable(
     }),
   ],
 );
+
+// --- Admin accounts (Better Auth core schema) --------------------------------
+// Only curators have accounts; visitors never do. Rows are created by scripts/create-admin.ts.
+// Column set follows https://better-auth.com/docs/concepts/database#core-schema (1.7).
+const dibuat = () => timestamp('created_at').notNull().defaultNow();
+const diubah = () =>
+  timestamp('updated_at')
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date());
+
+export const adminUser = pgTable('admin_user', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  emailVerified: boolean('email_verified').notNull().default(false),
+  image: text('image'),
+  createdAt: dibuat(),
+  updatedAt: diubah(),
+});
+
+export const adminSession = pgTable('admin_session', {
+  id: text('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => adminUser.id, { onDelete: 'cascade' }),
+  token: text('token').notNull().unique(),
+  expiresAt: timestamp('expires_at').notNull(),
+  ipAddress: text('ip_address'),
+  userAgent: text('user_agent'),
+  createdAt: dibuat(),
+  updatedAt: diubah(),
+});
+
+export const adminAccount = pgTable('admin_account', {
+  id: text('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => adminUser.id, { onDelete: 'cascade' }),
+  accountId: text('account_id').notNull(),
+  providerId: text('provider_id').notNull(),
+  accessToken: text('access_token'),
+  refreshToken: text('refresh_token'),
+  accessTokenExpiresAt: timestamp('access_token_expires_at'),
+  refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+  scope: text('scope'),
+  idToken: text('id_token'),
+  password: text('password'),
+  createdAt: dibuat(),
+  updatedAt: diubah(),
+});
+
+export const adminVerification = pgTable('admin_verification', {
+  id: text('id').primaryKey(),
+  identifier: text('identifier').notNull(),
+  value: text('value').notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: dibuat(),
+  updatedAt: diubah(),
+});
 
 export type SourceDocument = typeof sourceDocument.$inferSelect;
 export type BidangUrusan = typeof bidangUrusan.$inferSelect;

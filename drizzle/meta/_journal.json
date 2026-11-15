@@ -22,6 +22,13 @@
       "when": 1794108293583,
       "tag": "0002_bitter_salo",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794734534697,
+      "tag": "0003_melodic_amazoness",
+      "breakpoints": true
     }
   ]
 }

@@ -1,5 +1,47 @@
 # Keputusan
 
+## Dasbor admin dan login kurator — 15 November 2026
+
+Keputusan pengguna: akun admin disimpan di database dengan Better Auth (email dan kata sandi), dan
+potongan pertama dasbor mencakup impor CSV serta kurasi bukti. Ini melanjutkan arahan 29 Oktober 2026. Aturan "tanpa akun" tetap berlaku untuk pengunjung: hanya kurator yang punya akun, dan situs
+publik tidak berubah.
+
+Yang diterapkan (lokal saja, belum di-deploy):
+
+- Better Auth 1.7 berjalan di `apps/api` (`/api/auth/*`), adapter Drizzle, dibuat per request
+  karena Worker tidak boleh menyimpan koneksi `pg` antar-request. Tabel `admin_user`,
+  `admin_session`, `admin_account`, `admin_verification` (migrasi `0003`); awalan `admin_` agar
+  jelas ini bukan akun pengunjung.
+- Pendaftaran lewat HTTP dimatikan (`disableSignUp`). Akun hanya dibuat lewat
+  `ADMIN_PASSWORD=... bun run admin:create <email> <nama>`. Semua akun adalah admin; belum ada
+  peran. Kata sandi minimal 12 karakter.
+- Web meneruskan `/api/auth/*` dan `/api/admin/*` ke API lewat `app/api/[...path]/route.ts`, jadi
+  cookie sesi first-party di origin web dan `API_BASE_URL` tetap tidak sampai ke browser.
+- Semua `/api/admin/*` memeriksa sesi di API, menolak origin di luar `CORS_ORIGINS`, dan membatasi
+  body 2,5 MB. Halaman `/admin` hanya menentukan tampilan; penjaga sebenarnya ada di API.
+- Aturan impor CSV dipindah dari `scripts/seed.ts` ke `packages/shared/src/impor.ts` dan dipakai
+  seed serta `POST /api/admin/impor`. "Periksa" menjalankan impor dalam transaksi lalu
+  membatalkannya. Tanggal cek bukti RENCANA kini mengikuti `checked_at` dokumen RPJMD (nilainya sama
+  dengan konstanta seed sebelumnya).
+- Kurasi bukti: tambah dan hapus `evidence`, tambah `source_document`, ubah `program.verified`.
+  Bukti wajib berupa rujukan (dokumen + halaman PDF) atau catatan pencarian (cakupan pencarian);
+  hanya rujukan yang dihitung "ada" oleh `hitungStatusBukti`.
+
+Asumsi dan hal terbuka, perlu keputusan tim sebelum deploy:
+
+- **Produksi belum bisa menulis.** Hyperdrive produksi memakai role `jejakjanji_reader`. Login dan
+  semua tulisan admin butuh role dengan hak tulis (atau Hyperdrive kedua khusus admin). Belum
+  diputuskan; tidak ada konfigurasi produksi yang diubah.
+- Secret `BETTER_AUTH_SECRET` (minimal 32 karakter) dan variabel `BETTER_AUTH_URL` (origin web)
+  harus diatur di Worker API. Tanpa keduanya, endpoint admin menjawab 500 dan tidak ada yang
+  terbuka. Migrasi `0003` dijalankan sebelum API baru.
+- Jenis dokumen sumber masih `RPJMD`/`RKPD`. Bukti anggaran dan pelaksanaan kemungkinan butuh
+  jenis lain (mis. APBD, LKPJ); itu keputusan data, belum ditambahkan.
+- Belum ada: ubah bukti (hapus lalu tambah), impor Excel, tambah daerah atau ubah status kurasi,
+  reset kata sandi, log audit per admin, dan rate limit login yang tahan lintas isolate (bawaan
+  Better Auth memakai memori per isolate). Hash kata sandi scrypt bawaan belum diukur terhadap batas
+  CPU Workers.
+
 ## Preview multi-daerah — lanjutan 3 November 2026
 
 Pengguna mengizinkan commit/push dan deployment preview, lalu menyetujui target

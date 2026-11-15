@@ -136,6 +136,79 @@ export const errorSchema = z.object({
   error: z.object({ kode: z.string(), pesan: z.string(), detail: z.unknown().optional() }),
 });
 
+// --- Admin (curator) API ---------------------------------------------------
+
+const tanggal = z.iso.date();
+const teksOpsional = z
+  .string()
+  .trim()
+  .max(2000)
+  .transform((s) => s || null)
+  .nullable();
+
+export const imporBodySchema = z.object({
+  jenis: z.enum(['bidang_urusan', 'program']),
+  daerahKode: z.string().min(1).max(20),
+  csv: z.string().min(1).max(2_000_000),
+  // false = validate only (the transaction is rolled back).
+  simpan: z.boolean(),
+});
+export const imporHasilSchema = z.object({
+  disimpan: z.boolean(),
+  ringkasan: z.record(z.string(), z.number()),
+});
+
+/**
+ * Evidence is either a citation (document + PDF page) or a search record (what was searched and
+ * found nothing). Only the first counts as "ada" in hitungStatusBukti.
+ */
+export const evidenceBodySchema = z
+  .object({
+    daerahKode: z.string().min(1).max(20),
+    programKode: z.string().min(1).max(50),
+    jenis: z.enum(['RENCANA', 'ANGGARAN', 'PELAKSANAAN']),
+    sourceDocumentId: z.number().int().positive().nullable(),
+    pageRef: z.number().int().positive().nullable(),
+    cakupanPencarian: teksOpsional,
+    checkedAt: tanggal,
+    catatan: teksOpsional,
+  })
+  .superRefine((e, ctx) => {
+    if (e.sourceDocumentId != null && e.pageRef == null)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['pageRef'],
+        message: 'Halaman PDF wajib diisi bila ada dokumen sumber.',
+      });
+    if (e.sourceDocumentId == null && e.pageRef != null)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['pageRef'],
+        message: 'Halaman PDF hanya diisi bila ada dokumen sumber.',
+      });
+    if (e.sourceDocumentId == null && !e.cakupanPencarian)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['cakupanPencarian'],
+        message: 'Tanpa dokumen sumber, cakupan pencarian wajib diisi.',
+      });
+  });
+
+export const sumberBodySchema = z.object({
+  daerahKode: z.string().min(1).max(20),
+  title: z.string().trim().min(1).max(300),
+  type: z.enum(['RPJMD', 'RKPD']),
+  url: z.url({ protocol: /^https?$/ }).nullable(),
+  version: z.string().trim().min(1).max(200),
+  checkedAt: tanggal,
+});
+
+export const verifiedBodySchema = z.object({ verified: z.boolean() });
+
+export const adminSessionSchema = z
+  .object({ user: z.object({ name: z.string(), email: z.string() }) })
+  .nullable();
+
 export type ProgramList = z.infer<typeof programListSchema>;
 export type ProgramDetail = z.infer<typeof programDetailSchema>;
 export type BidangUrusanList = z.infer<typeof bidangUrusanListSchema>;
