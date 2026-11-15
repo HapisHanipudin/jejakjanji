@@ -9,7 +9,9 @@
     "typecheck": "tsc -p ."
   },
   "dependencies": {
+    "@better-auth/drizzle-adapter": "^1.7.25",
     "@jejakjanji/shared": "workspace:*",
+    "better-auth": "^1.7.25",
     "drizzle-orm": "^0.45.4",
     "hono": "^4.13.13",
     "pg": "^8.23.1"
