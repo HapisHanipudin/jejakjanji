@@ -21,13 +21,17 @@ import {
   type ProgramList,
   type SumberList,
 } from '@jejakjanji/shared';
-
-type App = { Bindings: Env; Variables: { db: NodePgDatabase } };
+import { registerAdmin, type App } from './admin.ts';
 
 export function createApp(database?: NodePgDatabase) {
   const app = new Hono<App>();
 
-  const fail = (status: 400 | 404 | 500, kode: string, pesan: string, detail?: unknown) =>
+  const fail = (
+    status: 400 | 401 | 403 | 404 | 409 | 413 | 500,
+    kode: string,
+    pesan: string,
+    detail?: unknown,
+  ) =>
     new HTTPException(status, {
       res: Response.json({ error: { kode, pesan, detail } } satisfies ApiError, { status }),
     });
@@ -258,6 +262,8 @@ export function createApp(database?: NodePgDatabase) {
       .orderBy(asc(sourceDocument.id));
     return c.json({ daerah: region, data } satisfies SumberList);
   });
+
+  registerAdmin(app, fail);
 
   app.notFound(() => fail(404, 'TIDAK_DITEMUKAN', 'Endpoint tidak ditemukan.').getResponse());
 

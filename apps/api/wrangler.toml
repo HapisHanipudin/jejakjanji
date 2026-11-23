@@ -8,8 +8,11 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 # Comma-separated list of origins allowed by CORS.
 CORS_ORIGINS = "http://localhost:3000,https://jejakjanji-web.hapishanipudin.workers.dev"
+# Better Auth base URL. BETTER_AUTH_SECRET is a Worker secret (wrangler secret put).
+BETTER_AUTH_URL = "https://jejakjanji-api.hapishanipudin.workers.dev"
 
-# Neon direct endpoint, using the read-only jejakjanji_reader role.
+# Neon direct endpoint, using the jejakjanji_writer role (DML only, no DDL) since 2026-11-23,
+# so admin login and curation can write. Migrations still run as the owner from .env.neon.
 # Local dev does not use this id: `wrangler dev` reads
 # CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE from the environment / .env instead.
 [[hyperdrive]]
@@ -19,6 +22,7 @@ id = "b9016926dedf4fe495eb78edd35b8531"
 
 [previews.vars]
 CORS_ORIGINS = "https://jejakjanji-web.hapishanipudin.workers.dev"
+BETTER_AUTH_URL = "https://jejakjanji-api.hapishanipudin.workers.dev"
 
 [[previews.hyperdrive]]
 binding = "HYPERDRIVE"
