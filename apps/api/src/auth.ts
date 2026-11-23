@@ -1,7 +1,14 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from '@better-auth/drizzle-adapter';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { adminAccount, adminSession, adminUser, adminVerification } from '@jejakjanji/shared';
+import {
+  adminAccount,
+  adminRateLimit,
+  adminSession,
+  adminUser,
+  adminVerification,
+} from '@jejakjanji/shared';
+import { hashPassword, verifyPassword } from './password.ts';
 
 export type AuthConfig = {
   secret: string;
@@ -29,12 +36,26 @@ export function createAuth(db: NodePgDatabase, config: AuthConfig) {
         session: adminSession,
         account: adminAccount,
         verification: adminVerification,
+        rateLimit: adminRateLimit,
       },
     }),
     emailAndPassword: {
       enabled: true,
       disableSignUp: !config.allowSignUp,
       minPasswordLength: 12,
+      password: { hash: hashPassword, verify: verifyPassword },
+    },
+    // Counters live in Postgres so every isolate shares them. Sign-in is the expensive route
+    // (password hashing), so it gets the tightest limit; this also keeps CPU overruns rare.
+    rateLimit: {
+      enabled: true,
+      storage: 'database',
+      window: 60,
+      max: 100,
+      customRules: {
+        '/sign-in/email': { window: 300, max: 5 },
+        '/change-password': { window: 300, max: 5 },
+      },
     },
     advanced: { ipAddress: { ipAddressHeaders: ['cf-connecting-ip'] } },
   });

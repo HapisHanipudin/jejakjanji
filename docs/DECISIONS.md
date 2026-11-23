@@ -1,5 +1,39 @@
 # Keputusan
 
+## Dasbor admin lanjutan — 23 November 2026
+
+Permintaan pengguna: tambah ubah bukti, kelola daerah, ganti dan atur ulang kata sandi, log
+perubahan, impor Excel, jenis dokumen APBD dan LKPJ, serta pembatas laju karena akun Cloudflare
+memakai paket Workers Free. Migrasi `0004`.
+
+- **Kata sandi: PBKDF2-SHA256 100.000 iterasi lewat WebCrypto**, menggantikan scrypt bawaan Better
+  Auth. Diukur lokal: scrypt ±164 ms CPU per login, PBKDF2 100k ±36 ms. Paket Free membatasi 10 ms
+  CPU per request, dengan kelonggaran untuk pelampauan yang jarang (dokumentasi Workers "Limits",
+  dibaca 23 November 2026). Login admin jarang, jadi ±36 ms diharapkan masuk kelonggaran itu;
+  belum diuji di Workers. 100.000 adalah batas iterasi workerd dan di bawah anjuran OWASP (600.000);
+  naikkan bila pindah ke paket Paid. Hash lama (scrypt) tidak didukung lagi; belum ada akun di
+  produksi.
+- **Pembatas laju** Better Auth dengan penyimpanan database (`admin_rate_limit`), dipakai bersama
+  semua isolate: login dan ganti kata sandi 5 kali per 5 menit per IP (`cf-connecting-ip`), rute
+  auth lain 100 per menit. Pembatas tidak membuat satu login lebih murah; fungsinya menahan tebakan
+  kata sandi dan mencegah pelampauan CPU menjadi terus-menerus.
+- **Log perubahan** (`admin_audit`): setiap tulisan admin mencatat email admin, aksi, data yang
+  diubah, dan rinciannya dalam transaksi yang sama. Ganti kata sandi tidak dicatat (ditangani Better
+  Auth). Halaman `/admin/log` menampilkan 200 terakhir.
+- **Ubah bukti** lewat `PUT /api/admin/evidence/:id`; program dan daerah bukti tidak bisa diubah.
+- **Kelola daerah**: tambah dan ubah nama, status kurasi, tautan dan email PPID. Kode, slug, tingkat,
+  dan induk hanya diisi saat dibuat. Slug yang sama dengan rute tetap (`admin`, `api`, `program`,
+  dll.) ditolak.
+- **Kata sandi**: ganti sendiri di `/admin/akun`. Situs tidak mengirim email, jadi lupa kata sandi
+  diatur ulang lewat `bun run admin:reset-password` oleh pengelola server, yang juga mengeluarkan
+  semua sesi akun itu.
+- **Impor Excel** dibaca di browser dengan SheetJS 0.20.3 (dari CDN resmi SheetJS; paket npm
+  `xlsx` sudah lama tidak diperbarui), lalu diubah ke CSV dan diperiksa dengan aturan yang sama.
+  Hanya lembar pertama. Angka bulat ditulis tanpa pemisah, desimal dengan koma, dan sel berformat
+  persen dikali 100 agar 22,39% tidak terbaca 0,2239.
+- **Jenis dokumen sumber** bertambah `APBD` dan `LKPJ` untuk bukti anggaran dan pelaksanaan. Impor
+  CSV program dan bidang tetap hanya menerima RPJMD/RKPD.
+
 ## Dasbor admin dan login kurator — 15 November 2026
 
 Keputusan pengguna: akun admin disimpan di database dengan Better Auth (email dan kata sandi), dan

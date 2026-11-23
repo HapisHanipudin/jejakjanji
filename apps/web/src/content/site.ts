@@ -1,3 +1,4 @@
+import type { JENIS_DOKUMEN } from '@jejakjanji/shared';
 // Count of regional priority programs; keep the number and its source together.
 export const TOTAL_PROGRAM_RPJMD = 82;
 export const TOTAL_PROGRAM_SUMBER =
@@ -10,9 +11,11 @@ export const FOOTER_TEXT =
   'Tanpa skor atau peringkat kepala daerah. Semua angka berasal dari dokumen resmi dan diberi tanggal cek.';
 
 // What each source document type is used for on this site (editorial text, not from the API).
-export const DIPAKAI_UNTUK: Record<'RPJMD' | 'RKPD', string> = {
+export const DIPAKAI_UNTUK: Record<(typeof JENIS_DOKUMEN)[number], string> = {
   RPJMD: 'Program prioritas, indikator, target, dan pagu indikatif program 2026-2030 (juta rupiah)',
   RKPD: 'Pagu indikatif bidang urusan 2026 (rupiah)',
+  APBD: 'Bukti anggaran program',
+  LKPJ: 'Bukti pelaksanaan program',
 };
 
 export const STATUS_TEKS = {

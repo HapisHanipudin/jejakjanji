@@ -19,7 +19,10 @@ export default async function AdminSourcesPage() {
   return (
     <>
       <h1>Dokumen sumber</h1>
-      <p className="lead">Dokumen resmi yang dirujuk angka dan bukti. Saat ini RPJMD dan RKPD.</p>
+      <p className="lead">
+        Dokumen resmi yang dirujuk angka dan bukti: RPJMD dan RKPD untuk rencana dan pagu indikatif,
+        APBD dan LKPJ untuk bukti anggaran dan pelaksanaan.
+      </p>
       {lists.map(({ r, docs }) =>
         docs.ok ? null : <ErrorState key={r.kode} judul={r.nama} pesan={docs.pesan} />,
       )}

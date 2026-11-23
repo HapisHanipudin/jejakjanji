@@ -5,6 +5,7 @@ import {
   boolean,
   date,
   integer,
+  jsonb,
   numeric,
   pgEnum,
   pgTable,
@@ -13,6 +14,7 @@ import {
   timestamp,
   unique,
 } from 'drizzle-orm/pg-core';
+import { JENIS_DOKUMEN } from './api.ts';
 
 export const daerahTingkat = pgEnum('daerah_tingkat', ['PROVINSI', 'KABUPATEN', 'KOTA']);
 export const statusKurasi = pgEnum('status_kurasi', ['BELUM_DIKURASI', 'AKTIF']);
@@ -31,7 +33,7 @@ export const daerah = pgTable(
   (t) => [foreignKey({ columns: [t.indukKode], foreignColumns: [t.kode] })],
 );
 
-export const sourceDocumentType = pgEnum('source_document_type', ['RPJMD', 'RKPD']);
+export const sourceDocumentType = pgEnum('source_document_type', JENIS_DOKUMEN);
 export const fundingJenis = pgEnum('funding_jenis', ['INDIKATIF_RPJMD']);
 export const evidenceJenis = pgEnum('evidence_jenis', ['RENCANA', 'ANGGARAN', 'PELAKSANAAN']);
 
@@ -222,6 +224,25 @@ export const adminVerification = pgTable('admin_verification', {
   expiresAt: timestamp('expires_at').notNull(),
   createdAt: dibuat(),
   updatedAt: diubah(),
+});
+
+/** Better Auth rate-limit counters (storage: "database"), shared by every isolate. */
+export const adminRateLimit = pgTable('admin_rate_limit', {
+  id: text('id').primaryKey(),
+  key: text('key').notNull().unique(),
+  count: integer('count').notNull(),
+  lastRequest: bigint('last_request', { mode: 'number' }).notNull(),
+});
+
+/** One row per admin write: who did what to which record. The email survives account removal. */
+export const adminAudit = pgTable('admin_audit', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id').references(() => adminUser.id, { onDelete: 'set null' }),
+  userEmail: text('user_email').notNull(),
+  aksi: text('aksi').notNull(),
+  target: text('target').notNull(),
+  detail: jsonb('detail'),
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).notNull().defaultNow(),
 });
 
 export type SourceDocument = typeof sourceDocument.$inferSelect;

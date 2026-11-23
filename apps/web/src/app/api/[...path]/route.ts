@@ -42,4 +42,4 @@ async function forward(req: Request, ctx: RouteContext<'/api/[...path]'>) {
   return new Response(res.body, { status: res.status, headers: out });
 }
 
-export { forward as GET, forward as POST, forward as PATCH, forward as DELETE };
+export { forward as GET, forward as POST, forward as PUT, forward as PATCH, forward as DELETE };

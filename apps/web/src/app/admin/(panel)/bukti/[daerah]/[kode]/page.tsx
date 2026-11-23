@@ -12,8 +12,10 @@ const JENIS = { RENCANA: 'Rencana', ANGGARAN: 'Anggaran', PELAKSANAAN: 'Pelaksan
 
 export default async function AdminEvidencePage({
   params,
+  searchParams,
 }: PageProps<'/admin/bukti/[daerah]/[kode]'>) {
   const { daerah, kode } = await params;
+  const ubah = Number((await searchParams).ubah);
   const [result, sumber] = await Promise.all([getProgram(kode, daerah), getSumberList(daerah)]);
   if (!result.ok) {
     if (result.status === 404) notFound();
@@ -24,6 +26,8 @@ export default async function AdminEvidencePage({
   if (!p || !daerahKode) notFound();
   const docs = sumber.ok ? sumber.data.data : [];
   const judul = (id: number | null) => docs.find((d) => d.id === id)?.title;
+  // ?ubah=<id> opens the edit form for that evidence row; it works without client state.
+  const diubah = p.evidence.find((e) => e.id === ubah);
 
   return (
     <>
@@ -90,7 +94,15 @@ export default async function AdminEvidencePage({
                     <td className="num">{e.pageRef ?? '-'}</td>
                     <td>{[e.cakupanPencarian, e.catatan].filter(Boolean).join(' · ') || '-'}</td>
                     <td>{formatTanggal(e.checkedAt)}</td>
-                    <td>
+                    <td className="btn-row">
+                      <Link
+                        className="btn"
+                        href={`?ubah=${e.id}#ubah-bukti`}
+                        scroll={false}
+                        aria-current={e.id === ubah ? 'true' : undefined}
+                      >
+                        Ubah<span className="sr-only"> bukti {JENIS[e.jenis]}</span>
+                      </Link>
                       <ActionButton
                         path={`/api/admin/evidence/${e.id}`}
                         method="DELETE"
@@ -108,7 +120,17 @@ export default async function AdminEvidencePage({
       </section>
 
       {!sumber.ok && <ErrorState judul="Dokumen sumber belum bisa dimuat" pesan={sumber.pesan} />}
-      <EvidenceForm daerahKode={daerahKode} programKode={p.kode} docs={docs} />
+      {diubah ? (
+        <EvidenceForm
+          key={diubah.id}
+          daerahKode={daerahKode}
+          programKode={p.kode}
+          docs={docs}
+          bukti={diubah}
+        />
+      ) : (
+        <EvidenceForm daerahKode={daerahKode} programKode={p.kode} docs={docs} />
+      )}
     </>
   );
 }

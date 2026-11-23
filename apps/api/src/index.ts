@@ -21,9 +21,7 @@ import {
   type ProgramList,
   type SumberList,
 } from '@jejakjanji/shared';
-import { registerAdmin, type AdminEnv } from './admin.ts';
-
-type App = { Bindings: AdminEnv; Variables: { db: NodePgDatabase } };
+import { registerAdmin, type App } from './admin.ts';
 
 export function createApp(database?: NodePgDatabase) {
   const app = new Hono<App>();

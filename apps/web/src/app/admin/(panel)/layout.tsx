@@ -25,6 +25,15 @@ export default async function AdminPanelLayout({ children }: { children: ReactNo
               <li>
                 <Link href="/admin/bukti">Bukti program</Link>
               </li>
+              <li>
+                <Link href="/admin/daerah">Daerah</Link>
+              </li>
+              <li>
+                <Link href="/admin/log">Log perubahan</Link>
+              </li>
+              <li>
+                <Link href="/admin/akun">Akun</Link>
+              </li>
             </ul>
           </nav>
           <p className="small muted admin-user">

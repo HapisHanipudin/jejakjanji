@@ -7,7 +7,8 @@
     "./schema": "./src/schema.ts",
     "./format": "./src/format.ts",
     "./status": "./src/status.ts",
-    "./impor": "./src/impor.ts"
+    "./impor": "./src/impor.ts",
+    "./api": "./src/api.ts"
   },
   "scripts": {
     "typecheck": "tsc -p ."
