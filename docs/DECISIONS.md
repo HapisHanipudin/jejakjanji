@@ -31,6 +31,15 @@ memakai paket Workers Free. Migrasi `0004`.
   `xlsx` sudah lama tidak diperbarui), lalu diubah ke CSV dan diperiksa dengan aturan yang sama.
   Hanya lembar pertama. Angka bulat ditulis tanpa pemisah, desimal dengan koma, dan sel berformat
   persen dikali 100 agar 22,39% tidak terbaca 0,2239.
+- **Produksi (23 November 2026, atas persetujuan pengguna):** migrasi `0003` dan `0004` diterapkan
+  ke Neon `neondb` setelah cadangan `pg_dump` skema `public` dan `drizzle` (disimpan di luar repo,
+  `MIAWIA/jejakjanji-backups/`). Role baru `jejakjanji_writer` hanya punya SELECT, INSERT, UPDATE,
+  DELETE (tanpa CREATE); Hyperdrive `jejakjanji-db` kini memakai role itu, kredensialnya di
+  `.env.hyperdrive` (diabaikan Git). Role `jejakjanji_reader` tidak dihapus. Secret
+  `BETTER_AUTH_SECRET` dibuat acak dan dipasang di Worker `jejakjanji-api`; `BETTER_AUTH_URL`
+  memakai origin API sesuai pilihan pengguna. Hyperdrive dipakai bersama Worker produksi, preview,
+  dan `jejakjanji-api-preview`, jadi semuanya kini terhubung dengan role penulis; hanya rute
+  `/api/admin` dan `/api/auth` yang menulis.
 - **Jenis dokumen sumber** bertambah `APBD` dan `LKPJ` untuk bukti anggaran dan pelaksanaan. Impor
   CSV program dan bidang tetap hanya menerima RPJMD/RKPD.
 
